@@ -1,8 +1,5 @@
 package edu.harvard.iq.dataverse.api;
 
-import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IpAddress;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -10,7 +7,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -18,6 +15,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IpAddress;
+import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 
 
 /**
@@ -112,7 +115,7 @@ public class ApiBlockingFilter implements javax.servlet.Filter {
     
     private static final Logger logger = Logger.getLogger(ApiBlockingFilter.class.getName());
     
-    @EJB
+    @Autowired
     protected SettingsServiceBean settingsSvc;
     
     final Set<String> blockedApiEndpoints = new TreeSet<>();

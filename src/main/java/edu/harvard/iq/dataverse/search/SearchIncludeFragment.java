@@ -48,19 +48,19 @@ public class SearchIncludeFragment implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(SearchIncludeFragment.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     SearchServiceBean searchService;
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
-    @EJB
+    @Autowired
     DatasetVersionServiceBean datasetVersionService;
-    @EJB
+    @Autowired
     DataFileServiceBean dataFileService;
-    @EJB
+    @Autowired
     PermissionServiceBean permissionService;
-    @EJB
+    @Autowired
     DvObjectServiceBean dvObjectService;
     @Inject
     DataverseSession session;
@@ -74,7 +74,7 @@ public class SearchIncludeFragment implements java.io.Serializable {
     WidgetWrapper widgetWrapper;  
     @Inject
     DataversePage dataversePage;
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
 
     private String browseModeString = "browse";

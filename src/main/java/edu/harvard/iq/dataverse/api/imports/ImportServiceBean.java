@@ -5,8 +5,44 @@
  */
 package edu.harvard.iq.dataverse.api.imports;
 
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Formatter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
+import javax.ejb.EJBException;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.json.JsonObjectBuilder;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.xml.stream.XMLStreamException;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
 import edu.harvard.iq.dataverse.DataFile;
 import edu.harvard.iq.dataverse.Dataset;
 import edu.harvard.iq.dataverse.DatasetField;
@@ -35,71 +71,38 @@ import edu.harvard.iq.dataverse.search.IndexServiceBean;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.json.JsonParseException;
 import edu.harvard.iq.dataverse.util.json.JsonParser;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Formatter;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonReader;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import javax.xml.stream.XMLStreamException;
-import org.apache.commons.lang.StringUtils;
 
 /**
  *
  * @author ellenk
  */
-@Stateless
+@Service
 public class ImportServiceBean {
     @PersistenceContext(unitName="VDCNet-ejbPU")
     private EntityManager em;
     
     private static final Logger logger = Logger.getLogger(ImportServiceBean.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     protected EjbDataverseEngine engineSvc;
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     DatasetFieldServiceBean datasetfieldService;
 
-    @EJB
+    @Autowired
     MetadataBlockServiceBean metadataBlockService;
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
     
-    @EJB 
+    @Autowired 
     ImportDDIServiceBean importDDIService;
-    @EJB
+    @Autowired
     ImportGenericServiceBean importGenericService;
     
-    @EJB
+    @Autowired
     IndexServiceBean indexService;
     /**
      * This is just a convenience method, for testing migration.  It creates 

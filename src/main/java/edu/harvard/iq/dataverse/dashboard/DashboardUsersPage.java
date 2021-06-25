@@ -1,5 +1,17 @@
 package edu.harvard.iq.dataverse.dashboard;
 
+import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import edu.harvard.iq.dataverse.DataverseRequestServiceBean;
 import edu.harvard.iq.dataverse.DataverseSession;
 import edu.harvard.iq.dataverse.EjbDataverseEngine;
@@ -17,31 +29,20 @@ import edu.harvard.iq.dataverse.userdata.UserListMaker;
 import edu.harvard.iq.dataverse.userdata.UserListResult;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
-import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 @ViewScoped
 @Named("DashboardUsersPage")
 public class DashboardUsersPage implements java.io.Serializable {
 
-    @EJB
+	@Inject
     AuthenticationServiceBean authenticationService;
-    @EJB
+	@Inject
     UserServiceBean userService;
     @Inject
     DataverseSession session;
     @Inject
     PermissionsWrapper permissionsWrapper;
-    @EJB
+    @Inject
     EjbDataverseEngine commandEngine;
     @Inject
     DataverseRequestServiceBean dvRequestService;

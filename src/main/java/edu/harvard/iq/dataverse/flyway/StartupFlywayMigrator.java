@@ -1,6 +1,7 @@
 package edu.harvard.iq.dataverse.flyway;
 
 import org.flywaydb.core.Flyway;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -10,8 +11,7 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.sql.DataSource;
 
-@Startup
-@Singleton
+@Component
 @TransactionManagement(value = TransactionManagementType.BEAN)
 public class StartupFlywayMigrator {
 

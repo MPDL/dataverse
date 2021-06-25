@@ -30,7 +30,7 @@ import org.apache.commons.io.IOUtils;
 @WebServlet(name = "CustomizationFilesServlet", urlPatterns = {"/CustomizationFilesServlet"})
 public class CustomizationFilesServlet extends HttpServlet {
     
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
             
             

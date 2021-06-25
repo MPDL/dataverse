@@ -34,7 +34,7 @@ import javax.ws.rs.core.UriInfo;
 @RequestScoped
 public class MakeDataCountLoggingServiceBean {
     
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
 
     public void logEntry(MakeDataCountEntry entry) {

@@ -1,14 +1,11 @@
 package edu.harvard.iq.dataverse.api;
 
 
-import edu.harvard.iq.dataverse.DataTagsContainer;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+
 import javax.json.JsonObject;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -18,11 +15,15 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.harvard.iq.dataverse.DataTagsContainer;
+
 /**
  *
  * @author Naomi
  */
-@Stateless
+
 @Path("datatags")
 public class DataTagsAPI extends AbstractApiBean { 
     
@@ -36,7 +37,7 @@ public class DataTagsAPI extends AbstractApiBean {
     private static final Logger logger = Logger.getLogger(DataTagsAPI.class.getName());
     
     
-    @EJB
+    @Autowired
     DataTagsContainer container;
     
     

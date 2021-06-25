@@ -12,6 +12,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Inject;
 
 /**
  *
@@ -20,8 +21,9 @@ import javax.faces.convert.FacesConverter;
 @FacesConverter("controlledVocabularyValueConverter")
 public class ControlledVocabularyValueConverter implements Converter {
 
-    //@EJB
-    DatasetFieldServiceBean datasetFieldService = CDI.current().select(DatasetFieldServiceBean.class).get();
+    //@Autowired
+	@Inject
+    DatasetFieldServiceBean datasetFieldService;
 
     public Object getAsObject(FacesContext facesContext, UIComponent component, String submittedValue) {
         if (submittedValue == null || submittedValue.equals("")) {

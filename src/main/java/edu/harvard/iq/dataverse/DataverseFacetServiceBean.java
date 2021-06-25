@@ -1,20 +1,21 @@
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.util.LruCache;
 import java.util.List;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.util.LruCache;
 
 /**
  *
  * @author xyang
  * @author Michael Bar-Sinai
  */
-@Stateless
-@Named
+@Service
 public class DataverseFacetServiceBean implements java.io.Serializable {
     
     public static final LruCache<Long,List<DataverseFacet>> cache = new LruCache<>();
@@ -22,7 +23,7 @@ public class DataverseFacetServiceBean implements java.io.Serializable {
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     private EntityManager em;
     
-    @EJB
+    @Autowired
     DataverseServiceBean dataverses;
     
     public List<DataverseFacet> findByDataverseId(Long dataverseId) {

@@ -1,6 +1,29 @@
 
 package edu.harvard.iq.dataverse;
 
+import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.event.ActionEvent;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.apache.commons.lang.StringEscapeUtils;
+
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.DataverseRole;
 import edu.harvard.iq.dataverse.authorization.DataverseRolePermissionHelper;
@@ -20,28 +43,7 @@ import edu.harvard.iq.dataverse.engine.command.impl.RevokeRoleCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseDefaultContributorRoleCommand;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
-import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
 import edu.harvard.iq.dataverse.util.StringUtil;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
-import javax.faces.event.ActionEvent;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import org.apache.commons.lang.StringEscapeUtils;
 
 /**
  *
@@ -53,23 +55,23 @@ public class ManagePermissionsPage implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(ManagePermissionsPage.class.getCanonicalName());
 
-    @EJB
+    @Inject
     DvObjectServiceBean dvObjectService;
-    @EJB
+    @Inject
     DataverseRoleServiceBean roleService;
-    @EJB
+    @Inject
     RoleAssigneeServiceBean roleAssigneeService;
-    @EJB
+    @Inject
     PermissionServiceBean permissionService;
-    @EJB
+    @Inject
     AuthenticationServiceBean authenticationService;
-    @EJB
+    @Inject
     ExplicitGroupServiceBean explicitGroupService;
-    @EJB
+    @Inject
     GroupServiceBean groupService;
-    @EJB
+    @Inject
     EjbDataverseEngine commandEngine;
-    @EJB
+    @Inject
     UserNotificationServiceBean userNotificationService;
     @Inject
     DataverseRequestServiceBean dvRequestService;

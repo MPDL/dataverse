@@ -47,10 +47,10 @@ public class FileRecordProcessor implements ItemProcessor {
     @Inject
     JobContext jobContext;
     
-    @EJB
+    @Autowired
     DatasetServiceBean datasetServiceBean;
 
-    @EJB
+    @Autowired
     DataFileServiceBean dataFileServiceBean;
 
     Dataset dataset;

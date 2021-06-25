@@ -1,37 +1,46 @@
 package edu.harvard.iq.dataverse.api.imports;
 
-import edu.harvard.iq.dataverse.DatasetFieldConstant;
-import edu.harvard.iq.dataverse.DatasetFieldServiceBean;
-import edu.harvard.iq.dataverse.DatasetFieldType;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.DatasetVersion.VersionState;
-import edu.harvard.iq.dataverse.api.dto.*;  
-import edu.harvard.iq.dataverse.api.dto.FieldDTO;
-import edu.harvard.iq.dataverse.api.dto.MetadataBlockDTO;
-import edu.harvard.iq.dataverse.api.imports.ImportUtil.ImportType;
 import static edu.harvard.iq.dataverse.export.ddi.DdiExportUtil.NOTE_TYPE_CONTENTTYPE;
 import static edu.harvard.iq.dataverse.export.ddi.DdiExportUtil.NOTE_TYPE_TERMS_OF_ACCESS;
 
-import edu.harvard.iq.dataverse.util.StringUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+
 import javax.ejb.EJBException;
-import javax.ejb.Stateless;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLInputFactory;
 
-import edu.harvard.iq.dataverse.util.json.ControlledVocabularyException;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.DatasetFieldConstant;
+import edu.harvard.iq.dataverse.DatasetFieldServiceBean;
+import edu.harvard.iq.dataverse.DatasetFieldType;
+import edu.harvard.iq.dataverse.DatasetVersion;
+import edu.harvard.iq.dataverse.DatasetVersion.VersionState;
+import edu.harvard.iq.dataverse.api.dto.DataFileDTO;
+import edu.harvard.iq.dataverse.api.dto.DataTableDTO;
+import edu.harvard.iq.dataverse.api.dto.DatasetDTO;
+import edu.harvard.iq.dataverse.api.dto.DatasetVersionDTO;
+import edu.harvard.iq.dataverse.api.dto.FieldDTO;
+import edu.harvard.iq.dataverse.api.dto.FileMetadataDTO;
+import edu.harvard.iq.dataverse.api.dto.MetadataBlockDTO;
+import edu.harvard.iq.dataverse.api.imports.ImportUtil.ImportType;
+import edu.harvard.iq.dataverse.util.StringUtil;
 
 /**
  *
@@ -42,7 +51,7 @@ import org.apache.commons.lang.StringUtils;
 // a util with static methods. 
 // (it would need to be passed the fields service beans as arguments)
 // -- L.A. 4.5
-@Stateless
+@Service
 public class ImportDDIServiceBean {
     public static final String SOURCE_DVN_3_0 = "DVN_3_0";
     
@@ -99,9 +108,9 @@ public class ImportDDIServiceBean {
     private XMLInputFactory xmlInputFactory = null;
     private static final Logger logger = Logger.getLogger(ImportDDIServiceBean.class.getName());
          
-    @EJB CustomFieldServiceBean customFieldService;
+    @Autowired CustomFieldServiceBean customFieldService;
    
-    @EJB DatasetFieldServiceBean datasetFieldService;
+    @Autowired DatasetFieldServiceBean datasetFieldService;
     
     
     // TODO: stop passing the xml source as a string; (it could be huge!) -- L.A. 4.5

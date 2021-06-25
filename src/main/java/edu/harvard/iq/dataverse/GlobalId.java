@@ -6,17 +6,17 @@
 
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-import edu.harvard.iq.dataverse.util.BundleUtil;
 import static edu.harvard.iq.dataverse.util.StringUtil.isEmpty;
+
 import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.net.URL;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.ejb.EJB;
+
+import edu.harvard.iq.dataverse.util.BundleUtil;
 
 /**
  *
@@ -39,8 +39,6 @@ public class GlobalId implements java.io.Serializable {
     
     private static final Logger logger = Logger.getLogger(GlobalId.class.getName());
     
-    @EJB
-    SettingsServiceBean settingsService;
 
     /**
      * 

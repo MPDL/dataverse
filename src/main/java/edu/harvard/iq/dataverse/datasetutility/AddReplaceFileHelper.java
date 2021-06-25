@@ -5,6 +5,26 @@
  */
 package edu.harvard.iq.dataverse.datasetutility;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.ejb.EJBException;
+import javax.json.JsonObjectBuilder;
+import javax.validation.ConstraintViolation;
+import javax.ws.rs.core.Response;
+
+import org.apache.commons.io.IOUtils;
+import org.ocpsoft.common.util.Strings;
+
 import edu.harvard.iq.dataverse.DataFile;
 import edu.harvard.iq.dataverse.DataFile.ChecksumType;
 import edu.harvard.iq.dataverse.DataFileServiceBean;
@@ -19,9 +39,6 @@ import edu.harvard.iq.dataverse.authorization.users.User;
 import edu.harvard.iq.dataverse.engine.command.Command;
 import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
-import edu.harvard.iq.dataverse.engine.command.impl.AbstractCreateDatasetCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.CreateNewDatasetCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.DeleteDataFileCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.RestrictFileCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetVersionCommand;
 import edu.harvard.iq.dataverse.ingest.IngestServiceBean;
@@ -29,25 +46,6 @@ import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 import edu.harvard.iq.dataverse.util.json.JsonPrinter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJBException;
-import javax.json.JsonObjectBuilder;
-import javax.validation.ConstraintViolation;
-import javax.ws.rs.core.Response;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.io.IOUtils;
-import org.ocpsoft.common.util.Strings;
 
 /**
  *  Methods to add or replace a single file.

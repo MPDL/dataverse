@@ -5,6 +5,19 @@
  */
 package edu.harvard.iq.dataverse;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.mail.internet.InternetAddress;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import edu.harvard.iq.dataverse.branding.BrandingUtil;
 import edu.harvard.iq.dataverse.settings.Setting;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
@@ -12,16 +25,6 @@ import edu.harvard.iq.dataverse.settings.SettingsServiceBean.Key;
 import edu.harvard.iq.dataverse.util.MailUtil;
 import edu.harvard.iq.dataverse.util.StringUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import javax.ejb.EJB;
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
-import javax.mail.internet.InternetAddress;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  *
@@ -31,13 +34,13 @@ import org.json.JSONObject;
 @Named
 public class SettingsWrapper implements java.io.Serializable {
 
-    @EJB
+	@Inject
     SettingsServiceBean settingService;
 
-    @EJB
+	@Inject
     DataverseServiceBean dataverseService;
 
-    @EJB
+	@Inject
     SystemConfig systemConfig;
 
     private Map<String, String> settingsMap;

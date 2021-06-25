@@ -1,68 +1,60 @@
 package edu.harvard.iq.dataverse.api;
 
-import edu.harvard.iq.dataverse.authorization.Permission;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.authorization.users.User;
-import edu.harvard.iq.dataverse.batch.util.LoggingUtil;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
-import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetVersionCommand;
-import edu.harvard.iq.dataverse.PermissionServiceBean;
-import edu.harvard.iq.dataverse.EjbDataverseEngine;
-import edu.harvard.iq.dataverse.DataverseRequestServiceBean;
-import edu.harvard.iq.dataverse.DataverseSession;
-import edu.harvard.iq.dataverse.FileMetadata;
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.Dataset;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import edu.harvard.iq.dataverse.engine.command.Command;
-
-import edu.harvard.iq.dataverse.datavariable.VariableServiceBean;
-import edu.harvard.iq.dataverse.datavariable.VariableMetadataUtil;
-import edu.harvard.iq.dataverse.datavariable.VariableMetadata;
-import edu.harvard.iq.dataverse.datavariable.VarGroup;
-import edu.harvard.iq.dataverse.datavariable.CategoryMetadata;
-import edu.harvard.iq.dataverse.datavariable.DataVariable;
-import edu.harvard.iq.dataverse.datavariable.VariableCategory;
-import edu.harvard.iq.dataverse.datavariable.VariableMetadataDDIParser;
-import edu.harvard.iq.dataverse.search.IndexServiceBean;
-import org.apache.solr.client.solrj.SolrServerException;
-
-import javax.ejb.EJB;
 import javax.ejb.EJBException;
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.PathParam;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collection;
-import java.util.Date;
-import java.sql.Timestamp;
-
-
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
-@Stateless
+import org.apache.solr.client.solrj.SolrServerException;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.harvard.iq.dataverse.DataFile;
+import edu.harvard.iq.dataverse.Dataset;
+import edu.harvard.iq.dataverse.DatasetVersion;
+import edu.harvard.iq.dataverse.DataverseRequestServiceBean;
+import edu.harvard.iq.dataverse.DataverseSession;
+import edu.harvard.iq.dataverse.EjbDataverseEngine;
+import edu.harvard.iq.dataverse.FileMetadata;
+import edu.harvard.iq.dataverse.PermissionServiceBean;
+import edu.harvard.iq.dataverse.authorization.Permission;
+import edu.harvard.iq.dataverse.authorization.users.User;
+import edu.harvard.iq.dataverse.datavariable.CategoryMetadata;
+import edu.harvard.iq.dataverse.datavariable.DataVariable;
+import edu.harvard.iq.dataverse.datavariable.VarGroup;
+import edu.harvard.iq.dataverse.datavariable.VariableCategory;
+import edu.harvard.iq.dataverse.datavariable.VariableMetadata;
+import edu.harvard.iq.dataverse.datavariable.VariableMetadataDDIParser;
+import edu.harvard.iq.dataverse.datavariable.VariableMetadataUtil;
+import edu.harvard.iq.dataverse.datavariable.VariableServiceBean;
+import edu.harvard.iq.dataverse.engine.command.Command;
+import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
+import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
+import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetVersionCommand;
+import edu.harvard.iq.dataverse.search.IndexServiceBean;
+
+
 @Path("edit")
 public class EditDDI  extends AbstractApiBean {
     private static final Logger logger = Logger.getLogger(Access.class.getCanonicalName());
@@ -72,19 +64,19 @@ public class EditDDI  extends AbstractApiBean {
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     private EntityManager em;
 
-    @EJB
+    @Autowired
     PermissionServiceBean permissionService;
 
-    @EJB
+    @Autowired
     VariableServiceBean variableService;
 
-    @EJB
+    @Autowired
     EjbDataverseEngine commandEngine;
 
     @Inject
     DataverseRequestServiceBean dvRequestService;
 
-    @EJB
+    @Autowired
     IndexServiceBean indexService;
 
     @Inject

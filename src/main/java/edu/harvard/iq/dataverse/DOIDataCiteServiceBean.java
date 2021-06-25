@@ -10,18 +10,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
 
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 
 /**
  *
  * @author luopc
  */
-@Stateless
+@Service
 public class DOIDataCiteServiceBean extends AbstractGlobalIdServiceBean {
 
     private static final Logger logger = Logger.getLogger(DOIDataCiteServiceBean.class.getCanonicalName());
@@ -31,7 +31,7 @@ public class DOIDataCiteServiceBean extends AbstractGlobalIdServiceBean {
     private static final String RESERVED = "reserved";
     private static final String DRAFT = "draft";
 
-    @EJB
+    @Autowired
     DOIDataCiteRegisterService doiDataCiteRegisterService;
 
     public DOIDataCiteServiceBean() {

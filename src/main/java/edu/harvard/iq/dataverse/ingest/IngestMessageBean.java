@@ -54,11 +54,11 @@ import javax.jms.ObjectMessage;
 )
 public class IngestMessageBean implements MessageListener {
     private static final Logger logger = Logger.getLogger(IngestMessageBean.class.getCanonicalName());
-    @EJB DatasetServiceBean datasetService;
-    @EJB DataFileServiceBean datafileService;
-    @EJB IngestServiceBean ingestService;
-    @EJB UserNotificationServiceBean userNotificationService;
-    @EJB AuthenticationServiceBean authenticationServiceBean;
+    @Autowired DatasetServiceBean datasetService;
+    @Autowired DataFileServiceBean datafileService;
+    @Autowired IngestServiceBean ingestService;
+    @Autowired UserNotificationServiceBean userNotificationService;
+    @Autowired AuthenticationServiceBean authenticationServiceBean;
 
    
     public IngestMessageBean() {

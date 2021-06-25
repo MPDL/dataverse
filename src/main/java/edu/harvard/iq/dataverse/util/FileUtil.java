@@ -21,34 +21,17 @@
 package edu.harvard.iq.dataverse.util;
 
 
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.DataFile.ChecksumType;
-import edu.harvard.iq.dataverse.DataFileServiceBean;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.FileMetadata;
-import edu.harvard.iq.dataverse.TermsOfUseAndAccess;
-import edu.harvard.iq.dataverse.dataaccess.DataAccess;
-import edu.harvard.iq.dataverse.dataaccess.ImageThumbConverter;
-import edu.harvard.iq.dataverse.dataaccess.S3AccessIO;
-import edu.harvard.iq.dataverse.dataset.DatasetThumbnail;
-import edu.harvard.iq.dataverse.datasetutility.FileExceedsMaxSizeException;
 import static edu.harvard.iq.dataverse.datasetutility.FileSizeChecker.bytesToHumanReadable;
-import edu.harvard.iq.dataverse.ingest.IngestReport;
-import edu.harvard.iq.dataverse.ingest.IngestServiceBean;
-import edu.harvard.iq.dataverse.ingest.IngestServiceShapefileHelper;
-import edu.harvard.iq.dataverse.ingest.IngestableDataChecker;
-import edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil;
-import static edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil.formatDoc;
 import static edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil.HTML_H1;
 import static edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil.HTML_TABLE_HDR;
-import static edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil.formatTitle;
+import static edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil.formatDoc;
+import static edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil.formatLink;
 import static edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil.formatTable;
 import static edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil.formatTableCell;
-import static edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil.formatLink;
 import static edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil.formatTableCellAlignRight;
 import static edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil.formatTableRow;
-import java.awt.image.BufferedImage;
+import static edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil.formatTitle;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -70,17 +53,21 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
-import java.util.Map;
-import java.util.MissingResourceException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 import javax.activation.MimetypesFileTypeMap;
-import javax.ejb.EJBException;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.xml.stream.XMLStreamConstants;
@@ -88,19 +75,30 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.commons.io.FileUtils;
-
-import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import org.apache.commons.io.FilenameUtils;
-
-import com.amazonaws.AmazonServiceException;
-import edu.harvard.iq.dataverse.dataaccess.DataAccessOption;
-import edu.harvard.iq.dataverse.dataaccess.StorageIO;
-import edu.harvard.iq.dataverse.datasetutility.FileSizeChecker;
-import java.util.Arrays;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+
+import edu.harvard.iq.dataverse.DataFile;
+import edu.harvard.iq.dataverse.DataFile.ChecksumType;
+import edu.harvard.iq.dataverse.DataFileServiceBean;
+import edu.harvard.iq.dataverse.Dataset;
+import edu.harvard.iq.dataverse.DatasetVersion;
+import edu.harvard.iq.dataverse.FileMetadata;
+import edu.harvard.iq.dataverse.TermsOfUseAndAccess;
+import edu.harvard.iq.dataverse.dataaccess.DataAccess;
+import edu.harvard.iq.dataverse.dataaccess.DataAccessOption;
+import edu.harvard.iq.dataverse.dataaccess.ImageThumbConverter;
+import edu.harvard.iq.dataverse.dataaccess.S3AccessIO;
+import edu.harvard.iq.dataverse.dataaccess.StorageIO;
+import edu.harvard.iq.dataverse.dataset.DatasetThumbnail;
+import edu.harvard.iq.dataverse.datasetutility.FileExceedsMaxSizeException;
+import edu.harvard.iq.dataverse.datasetutility.FileSizeChecker;
+import edu.harvard.iq.dataverse.ingest.IngestReport;
+import edu.harvard.iq.dataverse.ingest.IngestServiceBean;
+import edu.harvard.iq.dataverse.ingest.IngestServiceShapefileHelper;
+import edu.harvard.iq.dataverse.ingest.IngestableDataChecker;
+import edu.harvard.iq.dataverse.util.xml.html.HtmlFormatUtil;
 
 /**
  * a 4.0 implementation of the DVN FileUtil;
@@ -638,7 +636,7 @@ public class FileUtil implements java.io.Serializable  {
             logger.fine("XML error - this is not a valid graphML file.");
             isGraphML = false;
         } catch(IOException e) {
-            throw new EJBException(e);
+            throw new RuntimeException(e);
         }
         logger.fine("end isGraphML()");
         return isGraphML;

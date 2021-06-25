@@ -1,33 +1,38 @@
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.io.InputStream;
-
-import javax.ejb.EJB;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+import edu.harvard.iq.dataverse.util.SystemConfig;
 
 public abstract class AbstractGlobalIdServiceBean implements GlobalIdServiceBean {
 
     private static final Logger logger = Logger.getLogger(AbstractGlobalIdServiceBean.class.getCanonicalName());
 
-    @EJB
+
+	@Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
-    @EJB
+    @Autowired
     EjbDataverseEngine commandEngine;
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
-    @EJB
+    @Autowired
     DataFileServiceBean datafileService;
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
     
     public static String UNAVAILABLE = ":unav";
@@ -448,5 +453,60 @@ public abstract class AbstractGlobalIdServiceBean implements GlobalIdServiceBean
         logger.log(Level.FINE, "XML to send to DataCite: {0}", xmlMetadata);
         return xmlMetadata;
     }
+    
+    
+    public DataverseServiceBean getDataverseService() {
+		return dataverseService;
+	}
+
+    @Autowired
+	public void setDataverseService(DataverseServiceBean dataverseService) {
+		this.dataverseService = dataverseService;
+	}
+
+	public SettingsServiceBean getSettingsService() {
+		return settingsService;
+	}
+
+	@Autowired
+	public void setSettingsService(SettingsServiceBean settingsService) {
+		this.settingsService = settingsService;
+	}
+
+	public EjbDataverseEngine getCommandEngine() {
+		return commandEngine;
+	}
+
+	@Autowired
+	public void setCommandEngine(EjbDataverseEngine commandEngine) {
+		this.commandEngine = commandEngine;
+	}
+
+	public DatasetServiceBean getDatasetService() {
+		return datasetService;
+	}
+
+	@Autowired
+	public void setDatasetService(DatasetServiceBean datasetService) {
+		this.datasetService = datasetService;
+	}
+
+	public DataFileServiceBean getDatafileService() {
+		return datafileService;
+	}
+
+	@Autowired
+	public void setDatafileService(DataFileServiceBean datafileService) {
+		this.datafileService = datafileService;
+	}
+
+	public SystemConfig getSystemConfig() {
+		return systemConfig;
+	}
+	
+	@Autowired
+	public void setSystemConfig(SystemConfig systemConfig) {
+		this.systemConfig = systemConfig;
+	}
     
 }

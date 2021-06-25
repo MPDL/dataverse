@@ -5,28 +5,14 @@
  */
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
-import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
-import edu.harvard.iq.dataverse.engine.command.impl.CreateHarvestingClientCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.UpdateHarvestingClientCommand;
-import edu.harvard.iq.dataverse.harvest.client.HarvestingClient;
-import edu.harvard.iq.dataverse.harvest.client.HarvestingClientServiceBean;
-import edu.harvard.iq.dataverse.harvest.server.OAIRecord;
-import edu.harvard.iq.dataverse.harvest.server.OAIRecordServiceBean;
-import edu.harvard.iq.dataverse.harvest.server.OAISet;
-import edu.harvard.iq.dataverse.harvest.server.OAISetServiceBean;
-import edu.harvard.iq.dataverse.harvest.server.OaiSetException;
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.JsfHelper;
 import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javax.ejb.EJB;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -35,7 +21,18 @@ import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import org.apache.commons.lang.StringUtils;
+
+import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
+import edu.harvard.iq.dataverse.harvest.server.OAIRecord;
+import edu.harvard.iq.dataverse.harvest.server.OAIRecordServiceBean;
+import edu.harvard.iq.dataverse.harvest.server.OAISet;
+import edu.harvard.iq.dataverse.harvest.server.OAISetServiceBean;
+import edu.harvard.iq.dataverse.harvest.server.OaiSetException;
+import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.JsfHelper;
+import edu.harvard.iq.dataverse.util.SystemConfig;
 
 /**
  *
@@ -49,18 +46,18 @@ public class HarvestingSetsPage implements java.io.Serializable {
 
     @Inject
     DataverseSession session;
-    @EJB
+    @Inject
     AuthenticationServiceBean authSvc;
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
-    @EJB
+    @Inject
     OAISetServiceBean oaiSetService;
-    @EJB
+    @Inject
     OAIRecordServiceBean oaiRecordService;
             
-    @EJB
+    @Inject
     EjbDataverseEngine engineService;
-    @EJB
+    @Inject
     SystemConfig systemConfig; 
     
     @Inject

@@ -1,17 +1,12 @@
 package edu.harvard.iq.dataverse.api.datadeposit;
 
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.DataverseServiceBean;
-import edu.harvard.iq.dataverse.PermissionServiceBean;
-import edu.harvard.iq.dataverse.authorization.Permission;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.swordapp.server.AuthCredentials;
 import org.swordapp.server.ServiceDocument;
 import org.swordapp.server.ServiceDocumentManager;
@@ -23,14 +18,21 @@ import org.swordapp.server.SwordServerException;
 import org.swordapp.server.SwordWorkspace;
 import org.swordapp.server.UriRegistry;
 
+import edu.harvard.iq.dataverse.Dataverse;
+import edu.harvard.iq.dataverse.DataverseServiceBean;
+import edu.harvard.iq.dataverse.PermissionServiceBean;
+import edu.harvard.iq.dataverse.authorization.Permission;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.util.SystemConfig;
+
 public class ServiceDocumentManagerImpl implements ServiceDocumentManager {
 
     private static final Logger logger = Logger.getLogger(ServiceDocumentManagerImpl.class.getCanonicalName());
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     PermissionServiceBean permissionService;
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
     @Inject
     SwordAuth swordAuth;

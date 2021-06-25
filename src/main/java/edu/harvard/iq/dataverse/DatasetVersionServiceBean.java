@@ -1,17 +1,7 @@
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.DatasetVersion.VersionState;
-import edu.harvard.iq.dataverse.ingest.IngestUtil;
-import edu.harvard.iq.dataverse.search.IndexServiceBean;
-import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import static edu.harvard.iq.dataverse.batch.jobs.importer.filesystem.FileRecordJobListener.SEP;
-import edu.harvard.iq.dataverse.batch.util.LoggingUtil;
-import edu.harvard.iq.dataverse.search.SolrSearchResult;
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.MarkupChecker;
-import edu.harvard.iq.dataverse.util.SystemConfig;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,47 +14,58 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.DatasetVersion.VersionState;
+import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.batch.util.LoggingUtil;
+import edu.harvard.iq.dataverse.ingest.IngestUtil;
+import edu.harvard.iq.dataverse.search.IndexServiceBean;
+import edu.harvard.iq.dataverse.search.SolrSearchResult;
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.MarkupChecker;
+import edu.harvard.iq.dataverse.util.SystemConfig;
     
 /**
  *
  * @author skraffmiller
  */
-@Stateless
-@Named
+@Service
 public class DatasetVersionServiceBean implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(DatasetVersionServiceBean.class.getCanonicalName());
 
     private static final SimpleDateFormat logFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss");
     
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
     
-    @EJB
+    @Autowired
     DataFileServiceBean datafileService;
     
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
     
-    @EJB
+    @Autowired
     AuthenticationServiceBean authService;
     
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
 
-    @EJB
+    @Autowired
     IndexServiceBean indexService;
 
     @PersistenceContext(unitName = "VDCNet-ejbPU")
@@ -439,8 +440,8 @@ public class DatasetVersionServiceBean implements java.io.Serializable {
             msg("DatasetVersion not found: " + queryString);
             logger.log(Level.FINE, "DatasetVersion not found: {0}", queryString);
             return null;
-         } catch (EJBException e) {
-             logger.log(Level.WARNING, "EJBException exception: {0}", e.getMessage());
+         } catch (Exception e) {
+             logger.log(Level.WARNING, "Exception exception: {0}", e.getMessage());
              return null;
          }
     } // end getDatasetVersionByQuery

@@ -1,5 +1,35 @@
 package edu.harvard.iq.dataverse;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.ejb.Asynchronous;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
+import javax.persistence.TypedQuery;
+
+import org.apache.commons.lang.RandomStringUtils;
+import org.ocpsoft.common.util.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.Permission;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
@@ -22,35 +52,6 @@ import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 import edu.harvard.iq.dataverse.workflows.WorkflowComment;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.Asynchronous;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.StoredProcedureQuery;
-import javax.persistence.TypedQuery;
-import org.apache.commons.lang.RandomStringUtils;
-import org.ocpsoft.common.util.Strings;
 
 /**
  *
@@ -58,42 +59,41 @@ import org.ocpsoft.common.util.Strings;
  */
 
 
-@Stateless
-@Named
+@Service
 public class DatasetServiceBean implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(DatasetServiceBean.class.getCanonicalName());
-    @EJB
+    @Autowired
     IndexServiceBean indexService;
 
-    @EJB
+    @Autowired
     DOIEZIdServiceBean doiEZIdServiceBean;
 
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
     
-    @EJB
+    @Autowired
     DatasetVersionServiceBean versionService;
     
-    @EJB
+    @Autowired
     DvObjectServiceBean dvObjectService;
     
-    @EJB
+    @Autowired
     AuthenticationServiceBean authentication;
     
-    @EJB
+    @Autowired
     DataFileServiceBean fileService; 
     
-    @EJB
+    @Autowired
     PermissionServiceBean permissionService;
     
-    @EJB
+    @Autowired
     OAIRecordServiceBean recordService;
     
-    @EJB
+    @Autowired
     EjbDataverseEngine commandEngine;
     
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
 
     private static final SimpleDateFormat logFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss");
@@ -248,7 +248,7 @@ public class DatasetServiceBean implements java.io.Serializable {
      * @throws javax.validation.ConstraintViolationException 
      */
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void instantiateDatasetInNewTransaction(Long id, boolean includeVariables) {
         Dataset dataset = find(id);
         for (DatasetVersion version : dataset.getVersions()) {
@@ -411,7 +411,7 @@ public class DatasetServiceBean implements java.io.Serializable {
         }
     }
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public DatasetLock addDatasetLock(Dataset dataset, DatasetLock lock) {
         lock.setDataset(dataset);
         dataset.addLock(lock);
@@ -421,7 +421,7 @@ public class DatasetServiceBean implements java.io.Serializable {
         return lock;
     }
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW) /*?*/
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public DatasetLock addDatasetLock(Long datasetId, DatasetLock.Reason reason, Long userId, String info) {
 
         Dataset dataset = em.find(Dataset.class, datasetId);
@@ -461,7 +461,7 @@ public class DatasetServiceBean implements java.io.Serializable {
      * @param dataset the dataset whose locks (for {@code aReason}) will be removed.
      * @param aReason The reason of the locks that will be removed.
      */
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void removeDatasetLocks(Dataset dataset, DatasetLock.Reason aReason) {
         if ( dataset != null ) {
             new HashSet<>(dataset.getLocks()).stream()
@@ -478,7 +478,7 @@ public class DatasetServiceBean implements java.io.Serializable {
         }
     }
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateDatasetLock(DatasetLock datasetLock) {
         em.merge(datasetLock);
     }
@@ -529,7 +529,7 @@ public class DatasetServiceBean implements java.io.Serializable {
         List resultList = query.getResultList();
         Dataset dataset = null;
         if (resultList.size() > 1) {
-            throw new EJBException("More than one dataset found in the dataverse (id= " + dataverse.getId() + "), with harvestIdentifier= " + harvestIdentifier);
+            throw new RuntimeException("More than one dataset found in the dataverse (id= " + dataverse.getId() + "), with harvestIdentifier= " + harvestIdentifier);
         }
         if (resultList.size() == 1) {
             dataset = (Dataset) resultList.get(0);
@@ -831,7 +831,7 @@ public class DatasetServiceBean implements java.io.Serializable {
      * Any failure notifications to users should be sent from inside the command.
      */
     @Asynchronous
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void callFinalizePublishCommandAsynchronously(Long datasetId, CommandContext ctxt, DataverseRequest request, boolean isPidPrePublished) {
 
         // Since we are calling the next command asynchronously anyway - sleep here 
@@ -1019,7 +1019,7 @@ public class DatasetServiceBean implements java.io.Serializable {
      * @param request DataverseRequest (for initializing the DestroyDatasetCommand)
      * @param hdLogger logger object (in practice, this will be a separate log file created for a specific harvesting job)
      */
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void deleteHarvestedDataset(Dataset dataset, DataverseRequest request, Logger hdLogger) {
         // Purge all the SOLR documents associated with this client from the 
         // index server: 

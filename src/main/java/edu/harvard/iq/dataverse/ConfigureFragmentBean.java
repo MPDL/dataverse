@@ -5,6 +5,16 @@
  */
 package edu.harvard.iq.dataverse;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.logging.Logger;
+
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.primefaces.PrimeFaces;
+
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.users.ApiToken;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
@@ -12,15 +22,6 @@ import edu.harvard.iq.dataverse.authorization.users.User;
 import edu.harvard.iq.dataverse.externaltools.ExternalTool;
 import edu.harvard.iq.dataverse.externaltools.ExternalToolHandler;
 import edu.harvard.iq.dataverse.util.BundleUtil;
-import org.primefaces.PrimeFaces;
-
-import java.sql.Timestamp;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.Date;
 
 
 /**
@@ -41,13 +42,13 @@ public class ConfigureFragmentBean implements java.io.Serializable{
     private String messageApi = "";
     private Long fileMetadataId = null;
     
-    @EJB
+    @Inject
     DataFileServiceBean datafileService;
     @Inject
     DataverseSession session;
-    @EJB
+    @Inject
     AuthenticationServiceBean authService;
-    @EJB
+    @Inject
     UserNotificationServiceBean userNotificationService;
     
     public String configureExternalAlert() {

@@ -5,11 +5,6 @@
  */
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.authorization.users.User;
-import edu.harvard.iq.dataverse.externaltools.ExternalTool;
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.StringUtil;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -21,25 +16,27 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIInput;
-import javax.faces.context.FacesContext;
+
 import javax.faces.model.SelectItem;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.authorization.users.User;
+import edu.harvard.iq.dataverse.externaltools.ExternalTool;
+import edu.harvard.iq.dataverse.util.StringUtil;
+
 /**
  *
  * @author skraffmiller
  */
-@Stateless
-@Named
+@Service
 public class GuestbookResponseServiceBean {
     private static final Logger logger = Logger.getLogger(GuestbookResponseServiceBean.class.getCanonicalName());
     
@@ -886,7 +883,7 @@ public class GuestbookResponseServiceBean {
         return em.find(GuestbookResponse.class, id);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void save(GuestbookResponse guestbookResponse) {
         em.persist(guestbookResponse);
     }

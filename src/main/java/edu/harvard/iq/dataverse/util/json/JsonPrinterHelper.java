@@ -1,21 +1,20 @@
 package edu.harvard.iq.dataverse.util.json;
 
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 
 /**
  * This is a small helper bean 
  * As it is a singleton and built at application start (=deployment), it will inject the (stateless)
  * settings service into the OREMap once it's ready.
  */
-@Singleton
-@Startup
+@Component
 public class JsonPrinterHelper {
-    @EJB
+    @Autowired
     SettingsServiceBean settingsSvc;
     
     @PostConstruct

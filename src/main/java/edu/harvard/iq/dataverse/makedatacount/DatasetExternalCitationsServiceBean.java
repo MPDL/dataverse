@@ -32,7 +32,7 @@ public class DatasetExternalCitationsServiceBean implements java.io.Serializable
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     protected EntityManager em;
     
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
 
   //Array of relationship types that are considered to be citations

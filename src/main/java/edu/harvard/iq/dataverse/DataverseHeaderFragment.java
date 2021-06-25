@@ -5,14 +5,6 @@
  */
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.authorization.groups.GroupServiceBean;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.authorization.users.User;
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
-
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -20,12 +12,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import org.apache.commons.lang.StringUtils;
+
+import edu.harvard.iq.dataverse.authorization.groups.GroupServiceBean;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.authorization.users.User;
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.SystemConfig;
 
 /**
  *
@@ -37,28 +37,28 @@ public class DataverseHeaderFragment implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(DataverseHeaderFragment.class.getName());
 
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
 
-    @EJB
+    @Inject
     SettingsServiceBean settingsService;
 
-    @EJB
+    @Inject
     GroupServiceBean groupService;
 
-    @EJB
+    @Inject
     PermissionServiceBean permissionService;
 
-    @EJB
+    @Inject
     SystemConfig systemConfig;
     
-    @EJB
+    @Inject
     DatasetVersionServiceBean datasetVersionService;
     
-    @EJB
+    @Inject
     DataFileServiceBean datafileService;
     
-    @EJB
+    @Inject
     BannerMessageServiceBean bannerMessageService;
 
     @Inject
@@ -70,7 +70,7 @@ public class DataverseHeaderFragment implements java.io.Serializable {
     @Inject 
     NavigationWrapper navigationWrapper;    
 
-    @EJB
+    @Inject
     UserNotificationServiceBean userNotificationService;
     
     List<Breadcrumb> breadcrumbs = new ArrayList<>();

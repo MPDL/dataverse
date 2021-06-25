@@ -30,19 +30,19 @@ public class PasswordResetServiceBean {
 
     private static final Logger logger = Logger.getLogger(PasswordResetServiceBean.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     BuiltinUserServiceBean dataverseUserService;
 
-    @EJB
+    @Autowired
     MailServiceBean mailService;
 
-    @EJB
+    @Autowired
     PasswordValidatorServiceBean passwordValidatorService;
     
-    @EJB
+    @Autowired
     AuthenticationServiceBean authService;
 
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
 
     @PersistenceContext(unitName = "VDCNet-ejbPU")

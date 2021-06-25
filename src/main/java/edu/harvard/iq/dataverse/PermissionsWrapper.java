@@ -5,17 +5,25 @@
  */
 package edu.harvard.iq.dataverse;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import edu.harvard.iq.dataverse.authorization.Permission;
 import edu.harvard.iq.dataverse.authorization.users.User;
 import edu.harvard.iq.dataverse.engine.command.Command;
 import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.engine.command.impl.*;
-import java.util.HashMap;
-import java.util.Map;
-import javax.ejb.EJB;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
+import edu.harvard.iq.dataverse.engine.command.impl.AbstractCreateDatasetCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.CreateDataverseCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.DeleteDatasetCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.DeleteDataverseCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.PublishDatasetCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.PublishDataverseCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetVersionCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseCommand;
 
 /**
  *
@@ -25,7 +33,7 @@ import javax.inject.Named;
 @Named
 public class PermissionsWrapper implements java.io.Serializable {
 
-    @EJB
+	@Inject
     PermissionServiceBean permissionService;
 
     @Inject

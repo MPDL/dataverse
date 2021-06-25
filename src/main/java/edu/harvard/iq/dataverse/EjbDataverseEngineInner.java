@@ -1,16 +1,14 @@
 
 package edu.harvard.iq.dataverse;
 
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionInterceptor;
+
 import edu.harvard.iq.dataverse.engine.command.Command;
 import edu.harvard.iq.dataverse.engine.command.CommandContext;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
-import javax.annotation.Resource;
-import javax.ejb.EJBContext;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import static javax.ejb.TransactionAttributeType.REQUIRED;
-
-import javax.inject.Named;
 
 /**
  *
@@ -22,21 +20,22 @@ import javax.inject.Named;
  * the transaction will not be rolled back
  * 
  */
-@Stateless
-@Named
+@Component
 public class EjbDataverseEngineInner {
 
+	/*
     @Resource
     EJBContext ejbCtxt;
-
-    @TransactionAttribute(REQUIRED)
+*/
+    @Transactional(propagation = Propagation.REQUIRED)
     public <R> R submit(Command<R> aCommand, CommandContext ctxt) throws CommandException {
         R retVal = null;
         try {
             retVal = aCommand.execute(ctxt);
         } catch (CommandException e) {
             try {
-                ejbCtxt.setRollbackOnly();
+            	TransactionInterceptor.currentTransactionStatus().setRollbackOnly();
+                //ejbCtxt.setRollbackOnly();
             } catch (IllegalStateException q) {
                 //If we're not in a transaction nothing to do here
             }

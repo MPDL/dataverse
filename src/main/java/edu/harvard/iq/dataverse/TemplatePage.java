@@ -1,5 +1,15 @@
 package edu.harvard.iq.dataverse;
 
+import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
+
+import java.sql.Timestamp;
+import java.util.Date;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import edu.harvard.iq.dataverse.engine.command.Command;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.impl.CreateTemplateCommand;
@@ -7,21 +17,6 @@ import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseTemplateCommand;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
-import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Set;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
 /**
  *
@@ -31,16 +26,16 @@ import javax.validation.ValidatorFactory;
 @Named("TemplatePage")
 public class TemplatePage implements java.io.Serializable {
 
-    @EJB
+	@Inject
     TemplateServiceBean templateService;
 
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
 
-    @EJB
+    @Inject
     EjbDataverseEngine commandEngine;
     
-    @EJB
+    @Inject
     DataverseFieldTypeInputLevelServiceBean dataverseFieldTypeInputLevelService; 
     
     @Inject
@@ -197,23 +192,7 @@ public class TemplatePage implements java.io.Serializable {
                 commandEngine.submit(cmd);
             }
 
-        } catch (EJBException ex) {
-            StringBuilder error = new StringBuilder();
-            error.append(ex).append(" ");
-            error.append(ex.getMessage()).append(" ");
-            Throwable cause = ex;
-            while (cause.getCause() != null) {
-                cause = cause.getCause();
-                error.append(cause).append(" ");
-                error.append(cause.getMessage()).append(" ");
-            }
-            //
-            //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Template Save Failed", " - " + error.toString()));
-            System.out.print("dataverse " + dataverse.getName());
-            System.out.print("Ejb exception");
-            System.out.print(error.toString());
-            JH.addMessage(FacesMessage.SEVERITY_FATAL, BundleUtil.getStringFromBundle("template.save.fail"));
-            return null;
+        
         } catch (CommandException ex) {
             System.out.print("command exception");
             System.out.print(ex.toString());

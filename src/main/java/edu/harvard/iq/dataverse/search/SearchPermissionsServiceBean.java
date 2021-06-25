@@ -35,21 +35,21 @@ public class SearchPermissionsServiceBean {
 
     private static final Logger logger = Logger.getLogger(SearchPermissionsServiceBean.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     AuthenticationServiceBean userServiceBean;
-    @EJB
+    @Autowired
     DvObjectServiceBean dvObjectService;
-    @EJB
+    @Autowired
     PermissionServiceBean permissionService;
-    @EJB
+    @Autowired
     RoleAssigneeServiceBean roleAssigneeService;
-    @EJB
+    @Autowired
     DataverseRoleServiceBean rolesSvc;
-    @EJB
+    @Autowired
     AuthenticationServiceBean authSvc;
-    @EJB
+    @Autowired
     GroupServiceBean groupService;
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
 
     LinkedHashMap<String, RoleAssignee> roleAssigneeCache = new LinkedHashMap<>(100, 0.7f, true);

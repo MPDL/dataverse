@@ -1,113 +1,12 @@
 package edu.harvard.iq.dataverse.api;
 
-import edu.harvard.iq.dataverse.ControlledVocabularyValue;
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.DataFileServiceBean;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetField;
-import edu.harvard.iq.dataverse.DatasetFieldCompoundValue;
-import edu.harvard.iq.dataverse.DatasetFieldServiceBean;
-import edu.harvard.iq.dataverse.DatasetFieldType;
-import edu.harvard.iq.dataverse.DatasetFieldValue;
-import edu.harvard.iq.dataverse.DatasetLock;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.DataverseRequestServiceBean;
-import edu.harvard.iq.dataverse.DataverseServiceBean;
-import edu.harvard.iq.dataverse.DataverseSession;
-import edu.harvard.iq.dataverse.DvObject;
-import edu.harvard.iq.dataverse.EjbDataverseEngine;
-import edu.harvard.iq.dataverse.MetadataBlock;
-import edu.harvard.iq.dataverse.MetadataBlockServiceBean;
-import edu.harvard.iq.dataverse.PermissionServiceBean;
-import edu.harvard.iq.dataverse.RoleAssignment;
-import edu.harvard.iq.dataverse.UserNotification;
-import edu.harvard.iq.dataverse.UserNotificationServiceBean;
-import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
-import edu.harvard.iq.dataverse.authorization.DataverseRole;
-import edu.harvard.iq.dataverse.authorization.Permission;
-import edu.harvard.iq.dataverse.authorization.RoleAssignee;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.authorization.users.User;
-import edu.harvard.iq.dataverse.batch.jobs.importer.ImportMode;
-import edu.harvard.iq.dataverse.datacapturemodule.DataCaptureModuleUtil;
-import edu.harvard.iq.dataverse.datacapturemodule.ScriptRequestResponse;
-import edu.harvard.iq.dataverse.dataset.DatasetThumbnail;
-import edu.harvard.iq.dataverse.dataset.DatasetUtil;
-import edu.harvard.iq.dataverse.datasetutility.AddReplaceFileHelper;
-import edu.harvard.iq.dataverse.datasetutility.DataFileTagException;
-import edu.harvard.iq.dataverse.datasetutility.NoFilesException;
-import edu.harvard.iq.dataverse.datasetutility.OptionalFileParams;
-import edu.harvard.iq.dataverse.engine.command.Command;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.engine.command.impl.AbstractSubmitToArchiveCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.AddLockCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.AssignRoleCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.CreateDatasetVersionCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.CreatePrivateUrlCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.CuratePublishedDatasetVersionCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.DeleteDatasetCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.DeleteDatasetVersionCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.DeleteDatasetLinkingDataverseCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.DeletePrivateUrlCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.DestroyDatasetCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.GetDatasetCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.GetSpecificPublishedDatasetVersionCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.GetDraftDatasetVersionCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.GetLatestAccessibleDatasetVersionCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.GetLatestPublishedDatasetVersionCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.GetPrivateUrlCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.ImportFromFileSystemCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.LinkDatasetCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.ListRoleAssignments;
-import edu.harvard.iq.dataverse.engine.command.impl.ListVersionsCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.MoveDatasetCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.PublishDatasetCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.PublishDatasetResult;
-import edu.harvard.iq.dataverse.engine.command.impl.RemoveLockCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.RequestRsyncScriptCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.ReturnDatasetToAuthorCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.SetDatasetCitationDateCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.SubmitDatasetForReviewCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetVersionCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetTargetURLCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetThumbnailCommand;
-import edu.harvard.iq.dataverse.export.DDIExportServiceBean;
-import edu.harvard.iq.dataverse.export.ExportService;
-import edu.harvard.iq.dataverse.ingest.IngestServiceBean;
-import edu.harvard.iq.dataverse.privateurl.PrivateUrl;
-import edu.harvard.iq.dataverse.S3PackageImporter;
-import static edu.harvard.iq.dataverse.api.AbstractApiBean.error;
-import edu.harvard.iq.dataverse.api.dto.RoleAssignmentDTO;
-import edu.harvard.iq.dataverse.batch.util.LoggingUtil;
-import edu.harvard.iq.dataverse.dataaccess.DataAccess;
-import edu.harvard.iq.dataverse.dataaccess.ImageThumbConverter;
-import edu.harvard.iq.dataverse.dataaccess.S3AccessIO;
-import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
-import edu.harvard.iq.dataverse.engine.command.exception.UnforcedCommandException;
-import edu.harvard.iq.dataverse.engine.command.impl.GetDatasetStorageSizeCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.RevokeRoleCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.UpdateDvObjectPIDMetadataCommand;
-import edu.harvard.iq.dataverse.makedatacount.DatasetExternalCitations;
-import edu.harvard.iq.dataverse.makedatacount.DatasetExternalCitationsServiceBean;
-import edu.harvard.iq.dataverse.makedatacount.DatasetMetrics;
-import edu.harvard.iq.dataverse.makedatacount.DatasetMetricsServiceBean;
-import edu.harvard.iq.dataverse.makedatacount.MakeDataCountLoggingServiceBean;
-import edu.harvard.iq.dataverse.makedatacount.MakeDataCountLoggingServiceBean.MakeDataCountEntry;
-import edu.harvard.iq.dataverse.metrics.MetricsUtil;
-import edu.harvard.iq.dataverse.makedatacount.MakeDataCountUtil;
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-import edu.harvard.iq.dataverse.util.ArchiverUtil;
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.EjbUtil;
-import edu.harvard.iq.dataverse.util.FileUtil;
-import edu.harvard.iq.dataverse.util.SystemConfig;
-import edu.harvard.iq.dataverse.util.json.JsonParseException;
-import edu.harvard.iq.dataverse.search.IndexServiceBean;
-import static edu.harvard.iq.dataverse.util.json.JsonPrinter.*;
+import static edu.harvard.iq.dataverse.util.json.JsonPrinter.json;
+import static edu.harvard.iq.dataverse.util.json.JsonPrinter.jsonByBlocks;
+import static edu.harvard.iq.dataverse.util.json.JsonPrinter.jsonFileMetadatas;
+import static edu.harvard.iq.dataverse.util.json.JsonPrinter.toJsonArray;
 import static edu.harvard.iq.dataverse.util.json.NullSafeJsonBuilder.jsonObjectBuilder;
-import edu.harvard.iq.dataverse.util.json.NullSafeJsonBuilder;
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -122,10 +21,11 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+
 import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.json.Json;
@@ -151,16 +51,121 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import javax.ws.rs.core.UriInfo;
+
 import org.apache.solr.client.solrj.SolrServerException;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.amazonaws.services.s3.model.PartETag;
-import edu.harvard.iq.dataverse.FileMetadata;
-import java.util.Map.Entry;
+
+import edu.harvard.iq.dataverse.ControlledVocabularyValue;
+import edu.harvard.iq.dataverse.DataFile;
+import edu.harvard.iq.dataverse.DataFileServiceBean;
+import edu.harvard.iq.dataverse.Dataset;
+import edu.harvard.iq.dataverse.DatasetField;
+import edu.harvard.iq.dataverse.DatasetFieldCompoundValue;
+import edu.harvard.iq.dataverse.DatasetFieldServiceBean;
+import edu.harvard.iq.dataverse.DatasetFieldType;
+import edu.harvard.iq.dataverse.DatasetFieldValue;
+import edu.harvard.iq.dataverse.DatasetLock;
+import edu.harvard.iq.dataverse.DatasetServiceBean;
+import edu.harvard.iq.dataverse.DatasetVersion;
+import edu.harvard.iq.dataverse.Dataverse;
+import edu.harvard.iq.dataverse.DataverseRequestServiceBean;
+import edu.harvard.iq.dataverse.DataverseServiceBean;
+import edu.harvard.iq.dataverse.DataverseSession;
+import edu.harvard.iq.dataverse.DvObject;
+import edu.harvard.iq.dataverse.EjbDataverseEngine;
+import edu.harvard.iq.dataverse.MetadataBlock;
+import edu.harvard.iq.dataverse.MetadataBlockServiceBean;
+import edu.harvard.iq.dataverse.PermissionServiceBean;
+import edu.harvard.iq.dataverse.RoleAssignment;
+import edu.harvard.iq.dataverse.S3PackageImporter;
+import edu.harvard.iq.dataverse.UserNotification;
+import edu.harvard.iq.dataverse.UserNotificationServiceBean;
+import edu.harvard.iq.dataverse.api.dto.RoleAssignmentDTO;
+import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
+import edu.harvard.iq.dataverse.authorization.DataverseRole;
+import edu.harvard.iq.dataverse.authorization.Permission;
+import edu.harvard.iq.dataverse.authorization.RoleAssignee;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.authorization.users.User;
+import edu.harvard.iq.dataverse.batch.jobs.importer.ImportMode;
+import edu.harvard.iq.dataverse.batch.util.LoggingUtil;
+import edu.harvard.iq.dataverse.dataaccess.DataAccess;
+import edu.harvard.iq.dataverse.dataaccess.ImageThumbConverter;
+import edu.harvard.iq.dataverse.dataaccess.S3AccessIO;
+import edu.harvard.iq.dataverse.datacapturemodule.DataCaptureModuleUtil;
+import edu.harvard.iq.dataverse.datacapturemodule.ScriptRequestResponse;
+import edu.harvard.iq.dataverse.dataset.DatasetThumbnail;
+import edu.harvard.iq.dataverse.dataset.DatasetUtil;
+import edu.harvard.iq.dataverse.datasetutility.AddReplaceFileHelper;
+import edu.harvard.iq.dataverse.datasetutility.DataFileTagException;
+import edu.harvard.iq.dataverse.datasetutility.NoFilesException;
+import edu.harvard.iq.dataverse.datasetutility.OptionalFileParams;
+import edu.harvard.iq.dataverse.engine.command.Command;
+import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
+import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
+import edu.harvard.iq.dataverse.engine.command.exception.UnforcedCommandException;
+import edu.harvard.iq.dataverse.engine.command.impl.AbstractSubmitToArchiveCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.AddLockCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.AssignRoleCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.CreateDatasetVersionCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.CreatePrivateUrlCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.CuratePublishedDatasetVersionCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.DeleteDatasetCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.DeleteDatasetLinkingDataverseCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.DeleteDatasetVersionCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.DeletePrivateUrlCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.DestroyDatasetCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.GetDatasetCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.GetDatasetStorageSizeCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.GetDraftDatasetVersionCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.GetLatestAccessibleDatasetVersionCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.GetLatestPublishedDatasetVersionCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.GetPrivateUrlCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.GetSpecificPublishedDatasetVersionCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.ImportFromFileSystemCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.LinkDatasetCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.ListRoleAssignments;
+import edu.harvard.iq.dataverse.engine.command.impl.ListVersionsCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.MoveDatasetCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.PublishDatasetCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.PublishDatasetResult;
+import edu.harvard.iq.dataverse.engine.command.impl.RemoveLockCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.RequestRsyncScriptCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.ReturnDatasetToAuthorCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.RevokeRoleCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.SetDatasetCitationDateCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.SubmitDatasetForReviewCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetTargetURLCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetThumbnailCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetVersionCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.UpdateDvObjectPIDMetadataCommand;
+import edu.harvard.iq.dataverse.export.DDIExportServiceBean;
+import edu.harvard.iq.dataverse.export.ExportService;
+import edu.harvard.iq.dataverse.ingest.IngestServiceBean;
+import edu.harvard.iq.dataverse.makedatacount.DatasetExternalCitations;
+import edu.harvard.iq.dataverse.makedatacount.DatasetExternalCitationsServiceBean;
+import edu.harvard.iq.dataverse.makedatacount.DatasetMetrics;
+import edu.harvard.iq.dataverse.makedatacount.DatasetMetricsServiceBean;
+import edu.harvard.iq.dataverse.makedatacount.MakeDataCountLoggingServiceBean;
+import edu.harvard.iq.dataverse.makedatacount.MakeDataCountLoggingServiceBean.MakeDataCountEntry;
+import edu.harvard.iq.dataverse.makedatacount.MakeDataCountUtil;
+import edu.harvard.iq.dataverse.metrics.MetricsUtil;
+import edu.harvard.iq.dataverse.privateurl.PrivateUrl;
+import edu.harvard.iq.dataverse.search.IndexServiceBean;
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+import edu.harvard.iq.dataverse.util.ArchiverUtil;
+import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.EjbUtil;
+import edu.harvard.iq.dataverse.util.FileUtil;
+import edu.harvard.iq.dataverse.util.SystemConfig;
+import edu.harvard.iq.dataverse.util.json.JsonParseException;
+import edu.harvard.iq.dataverse.util.json.NullSafeJsonBuilder;
 
 @Path("datasets")
 public class Datasets extends AbstractApiBean {
@@ -169,53 +174,53 @@ public class Datasets extends AbstractApiBean {
     
     @Inject DataverseSession session;    
 
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
 
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
     
-    @EJB
+    @Autowired
     UserNotificationServiceBean userNotificationService;
     
-    @EJB
+    @Autowired
     PermissionServiceBean permissionService;
     
-    @EJB
+    @Autowired
     AuthenticationServiceBean authenticationServiceBean;
     
-    @EJB
+    @Autowired
     DDIExportServiceBean ddiExportService;
     
-    @EJB
+    @Autowired
     DatasetFieldServiceBean datasetfieldService;
 
-    @EJB
+    @Autowired
     MetadataBlockServiceBean metadataBlockService;
     
-    @EJB
+    @Autowired
     DataFileServiceBean fileService;
 
-    @EJB
+    @Autowired
     IngestServiceBean ingestService;
 
-    @EJB
+    @Autowired
     EjbDataverseEngine commandEngine;
     
-    @EJB
+    @Autowired
     IndexServiceBean indexService;
 
-    @EJB
+    @Autowired
     S3PackageImporter s3PackageImporter;
      
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
 
     // TODO: Move to AbstractApiBean
-    @EJB
+    @Autowired
     DatasetMetricsServiceBean datasetMetricsSvc;
     
-    @EJB
+    @Autowired
     DatasetExternalCitationsServiceBean datasetExternalCitationsService;
     
     @Inject

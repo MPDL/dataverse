@@ -1,31 +1,41 @@
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.DatasetLock.Reason;
+import static edu.harvard.iq.dataverse.engine.command.CommandHelper.CH;
+import static java.util.stream.Collectors.toList;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.DataverseRole;
-import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinUserServiceBean;
-import edu.harvard.iq.dataverse.authorization.users.GuestUser;
 import edu.harvard.iq.dataverse.authorization.Permission;
 import edu.harvard.iq.dataverse.authorization.RoleAssignee;
 import edu.harvard.iq.dataverse.authorization.groups.Group;
 import edu.harvard.iq.dataverse.authorization.groups.GroupServiceBean;
 import edu.harvard.iq.dataverse.authorization.groups.GroupUtil;
+import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinUserServiceBean;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.authorization.users.GuestUser;
 import edu.harvard.iq.dataverse.authorization.users.User;
 import edu.harvard.iq.dataverse.engine.command.Command;
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.HashSet;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import static edu.harvard.iq.dataverse.engine.command.CommandHelper.CH;
 import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
 import edu.harvard.iq.dataverse.engine.command.impl.PublishDatasetCommand;
@@ -33,15 +43,6 @@ import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetVersionCommand;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.workflow.PendingWorkflowInvocation;
 import edu.harvard.iq.dataverse.workflow.WorkflowServiceBean;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-import static java.util.stream.Collectors.toList;
-import javax.persistence.Query;
 
 /**
  * Your one-stop-shop for deciding which user can do what action on which
@@ -51,8 +52,7 @@ import javax.persistence.Query;
  *
  * @author michael
  */
-@Stateless
-@Named
+@Service
 public class PermissionServiceBean {
 
     private static final Logger logger = Logger.getLogger(PermissionServiceBean.class.getName());
@@ -62,31 +62,31 @@ public class PermissionServiceBean {
                     .filter(Permission::requiresAuthenticatedUser)
                     .collect(Collectors.toList()));
 
-    @EJB
+    @Autowired
     BuiltinUserServiceBean userService;
 
-    @EJB
+    @Autowired
     AuthenticationServiceBean authenticationService;
 
-    @EJB
+    @Autowired
     DataverseRoleServiceBean roleService;
 
-    @EJB
+    @Autowired
     RoleAssigneeServiceBean roleAssigneeService;
 
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
     
-    @EJB
+    @Autowired
     DvObjectServiceBean dvObjectServiceBean;
     
-    @EJB 
+    @Autowired 
     WorkflowServiceBean workflowService;
 
     @PersistenceContext
     EntityManager em;
 
-    @EJB
+    @Autowired
     GroupServiceBean groupService;
 
     @Inject

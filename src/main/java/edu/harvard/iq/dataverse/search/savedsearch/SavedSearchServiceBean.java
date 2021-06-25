@@ -46,13 +46,13 @@ public class SavedSearchServiceBean {
 
     private static final Logger logger = Logger.getLogger(SavedSearchServiceBean.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     SearchServiceBean searchService;
-    @EJB
+    @Autowired
     DvObjectServiceBean dvObjectService;
-    @EJB
+    @Autowired
     EjbDataverseEngine commandEngine;
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
 
     private final String resultString = "result";

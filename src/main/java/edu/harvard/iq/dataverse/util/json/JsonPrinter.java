@@ -1,54 +1,20 @@
 package edu.harvard.iq.dataverse.util.json;
 
-import edu.harvard.iq.dataverse.AuxiliaryFile;
-import edu.harvard.iq.dataverse.ControlledVocabularyValue;
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.DataFileTag;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetDistributor;
-import edu.harvard.iq.dataverse.DatasetFieldType;
-import edu.harvard.iq.dataverse.DatasetField;
-import edu.harvard.iq.dataverse.DatasetFieldCompoundValue;
-import edu.harvard.iq.dataverse.DatasetFieldValue;
-import edu.harvard.iq.dataverse.DatasetLock;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.DataverseContact;
-import edu.harvard.iq.dataverse.DataverseFacet;
-import edu.harvard.iq.dataverse.DataverseTheme;
-import edu.harvard.iq.dataverse.authorization.DataverseRole;
-import edu.harvard.iq.dataverse.authorization.groups.impl.maildomain.MailDomainGroup;
-import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinUser;
-import edu.harvard.iq.dataverse.FileMetadata;
-import edu.harvard.iq.dataverse.GlobalId;
-import edu.harvard.iq.dataverse.MetadataBlock;
-import edu.harvard.iq.dataverse.RoleAssignment;
-import edu.harvard.iq.dataverse.TermsOfUseAndAccess;
-import edu.harvard.iq.dataverse.api.Util;
-import edu.harvard.iq.dataverse.authorization.Permission;
-import edu.harvard.iq.dataverse.authorization.RoleAssigneeDisplayInfo;
-import edu.harvard.iq.dataverse.authorization.groups.impl.explicit.ExplicitGroup;
-import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.IpGroup;
-import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IpAddress;
-import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IpAddressRange;
-import edu.harvard.iq.dataverse.authorization.groups.impl.shib.ShibGroup;
-import edu.harvard.iq.dataverse.authorization.providers.AuthenticationProviderRow;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.authorization.users.User;
-import edu.harvard.iq.dataverse.branding.BrandingUtil;
-import edu.harvard.iq.dataverse.dataaccess.DataAccess;
-import edu.harvard.iq.dataverse.privateurl.PrivateUrl;
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-import edu.harvard.iq.dataverse.util.DatasetFieldWalker;
-import edu.harvard.iq.dataverse.util.StringUtil;
 import static edu.harvard.iq.dataverse.util.json.NullSafeJsonBuilder.jsonObjectBuilder;
-import edu.harvard.iq.dataverse.workflow.Workflow;
-import edu.harvard.iq.dataverse.workflow.step.WorkflowStepData;
+import static java.util.stream.Collectors.toList;
 
-import java.util.*;
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Deque;
+import java.util.EnumSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -56,24 +22,69 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import static java.util.stream.Collectors.toList;
 
-import javax.ejb.EJB;
-import javax.ejb.Singleton;
+import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import edu.harvard.iq.dataverse.AuxiliaryFile;
+import edu.harvard.iq.dataverse.ControlledVocabularyValue;
+import edu.harvard.iq.dataverse.DataFile;
+import edu.harvard.iq.dataverse.DataFileTag;
+import edu.harvard.iq.dataverse.Dataset;
+import edu.harvard.iq.dataverse.DatasetDistributor;
+import edu.harvard.iq.dataverse.DatasetField;
+import edu.harvard.iq.dataverse.DatasetFieldCompoundValue;
+import edu.harvard.iq.dataverse.DatasetFieldType;
+import edu.harvard.iq.dataverse.DatasetFieldValue;
+import edu.harvard.iq.dataverse.DatasetLock;
+import edu.harvard.iq.dataverse.DatasetVersion;
+import edu.harvard.iq.dataverse.Dataverse;
+import edu.harvard.iq.dataverse.DataverseContact;
+import edu.harvard.iq.dataverse.DataverseFacet;
+import edu.harvard.iq.dataverse.DataverseTheme;
+import edu.harvard.iq.dataverse.FileMetadata;
+import edu.harvard.iq.dataverse.GlobalId;
+import edu.harvard.iq.dataverse.MetadataBlock;
+import edu.harvard.iq.dataverse.RoleAssignment;
+import edu.harvard.iq.dataverse.TermsOfUseAndAccess;
+import edu.harvard.iq.dataverse.api.Util;
+import edu.harvard.iq.dataverse.authorization.DataverseRole;
+import edu.harvard.iq.dataverse.authorization.Permission;
+import edu.harvard.iq.dataverse.authorization.RoleAssigneeDisplayInfo;
+import edu.harvard.iq.dataverse.authorization.groups.impl.explicit.ExplicitGroup;
+import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.IpGroup;
+import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IpAddress;
+import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IpAddressRange;
+import edu.harvard.iq.dataverse.authorization.groups.impl.maildomain.MailDomainGroup;
+import edu.harvard.iq.dataverse.authorization.groups.impl.shib.ShibGroup;
+import edu.harvard.iq.dataverse.authorization.providers.AuthenticationProviderRow;
+import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinUser;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.authorization.users.User;
+import edu.harvard.iq.dataverse.branding.BrandingUtil;
+import edu.harvard.iq.dataverse.dataaccess.DataAccess;
+import edu.harvard.iq.dataverse.privateurl.PrivateUrl;
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+import edu.harvard.iq.dataverse.util.DatasetFieldWalker;
+import edu.harvard.iq.dataverse.workflow.Workflow;
+import edu.harvard.iq.dataverse.workflow.step.WorkflowStepData;
 
 /**
  * Convert objects to Json.
  *
  * @author michael
  */
-@Singleton
+
 public class JsonPrinter {
 
     private static final Logger logger = Logger.getLogger(JsonPrinter.class.getCanonicalName());
 
-    @EJB
     static SettingsServiceBean settingsService;
 
     public static void injectSettingsService(SettingsServiceBean ssb) {
@@ -81,7 +92,7 @@ public class JsonPrinter {
     }
 
     public JsonPrinter() {
-   
+    		
     }
 
     public static final BriefJsonPrinter brief = new BriefJsonPrinter();
@@ -473,6 +484,7 @@ public class JsonPrinter {
      * @param fields
      * @return JSON Object builder with the block and fields information.
      */
+    
     public static JsonObjectBuilder json(MetadataBlock block, List<DatasetField> fields) {
         JsonObjectBuilder blockBld = jsonObjectBuilder();
 
@@ -484,6 +496,7 @@ public class JsonPrinter {
         blockBld.add("fields", fieldsArray);
         return blockBld;
     }
+    
 
     public static String typeClassString(DatasetFieldType typ) {
         if (typ.isControlledVocabulary()) {

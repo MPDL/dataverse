@@ -5,15 +5,16 @@
  */
 package edu.harvard.iq.dataverse.api.imports;
 
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author ellenk
  */
-@Stateless
+@Service
 public class CustomFieldServiceBean {
 
    

@@ -14,7 +14,7 @@ public class IndexAsync {
 
     private static final Logger logger = Logger.getLogger(IndexAsync.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     SolrIndexServiceBean solrIndexService;
 
     @Asynchronous

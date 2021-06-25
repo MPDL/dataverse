@@ -1,7 +1,5 @@
 package edu.harvard.iq.dataverse.validation;
 
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -18,9 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import org.passay.CharacterCharacteristicsRule;
 import org.passay.CharacterRule;
 import org.passay.DictionaryRule;
@@ -36,6 +32,11 @@ import org.passay.RuleResultDetail;
 import org.passay.dictionary.WordListDictionary;
 import org.passay.dictionary.WordLists;
 import org.passay.dictionary.sort.ArraysSort;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.SystemConfig;
 
 /**
  * PasswordValidatorServiceBean
@@ -70,8 +71,7 @@ import org.passay.dictionary.sort.ArraysSort;
  *
  * @author Lucien van Wouw <lwo@iisg.nl>
  */
-@Named
-@Stateless
+@Service
 public class PasswordValidatorServiceBean implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(PasswordValidatorServiceBean.class.getCanonicalName());
@@ -94,7 +94,7 @@ public class PasswordValidatorServiceBean implements java.io.Serializable {
     private String dictionaries = DICTIONARY_FILES;
     private PropertiesMessageResolver messageResolver;
 
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
 
     public PasswordValidatorServiceBean() {

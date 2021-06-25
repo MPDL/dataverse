@@ -1,5 +1,23 @@
 package edu.harvard.iq.dataverse;
 
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Logger;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+
 import edu.harvard.iq.dataverse.authorization.AuthenticatedUserDisplayInfo;
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.UserIdentifier;
@@ -15,24 +33,6 @@ import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
 import edu.harvard.iq.dataverse.util.SystemConfig;
-import org.apache.commons.lang.StringUtils;
-
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 
 @ViewScoped
 @Named("Shib")
@@ -43,19 +43,19 @@ public class Shib implements java.io.Serializable {
     @Inject
     DataverseSession session;
 
-    @EJB
+    @Inject
     AuthenticationServiceBean authSvc;
-    @EJB
+    @Inject
     ShibServiceBean shibService;
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
-    @EJB
+    @Inject
     GroupServiceBean groupService;
-    @EJB
+    @Inject
     UserNotificationServiceBean userNotificationService;
-    @EJB
+    @Inject
     SettingsServiceBean settingsService;
-	@EJB
+    @Inject
 	SystemConfig systemConfig;
 
     HttpServletRequest request;
@@ -307,7 +307,7 @@ public class Shib implements java.io.Serializable {
         try {
             au = authSvc.createAuthenticatedUser(
                     new UserRecordIdentifier(shibAuthProvider.getId(), lookupStringPerAuthProvider), internalUserIdentifer, displayInfo, true);
-        } catch (EJBException ex) {
+        } catch (Exception ex) {
             /**
              * @todo Show the ConstraintViolationException, if any.
              */

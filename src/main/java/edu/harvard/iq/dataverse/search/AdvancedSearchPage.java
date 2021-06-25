@@ -31,10 +31,10 @@ public class AdvancedSearchPage implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(AdvancedSearchPage.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseServiceBean;
 
-    @EJB
+    @Autowired
     DatasetFieldServiceBean datasetFieldService;
     
     @Inject WidgetWrapper widgetWrapper;

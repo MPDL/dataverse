@@ -1,16 +1,5 @@
 package edu.harvard.iq.dataverse.util;
 
-import com.ocpsoft.pretty.PrettyContext;
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DataverseServiceBean;
-import edu.harvard.iq.dataverse.DvObjectContainer;
-import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
-import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinAuthenticationProvider;
-import edu.harvard.iq.dataverse.authorization.providers.oauth2.AbstractOAuth2AuthenticationProvider;
-import static edu.harvard.iq.dataverse.datasetutility.FileSizeChecker.bytesToHumanReadable;
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-import edu.harvard.iq.dataverse.validation.PasswordValidatorUtil;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,28 +12,38 @@ import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Named;
-import org.passay.CharacterRule;
+
 import org.apache.commons.io.IOUtils;
+import org.passay.CharacterRule;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.ocpsoft.pretty.PrettyContext;
+
+import edu.harvard.iq.dataverse.DataFile;
+import edu.harvard.iq.dataverse.DataverseServiceBean;
+import edu.harvard.iq.dataverse.DvObjectContainer;
+import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
+import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinAuthenticationProvider;
+import edu.harvard.iq.dataverse.authorization.providers.oauth2.AbstractOAuth2AuthenticationProvider;
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+import edu.harvard.iq.dataverse.validation.PasswordValidatorUtil;
 
 /**
  * System-wide configuration
  */
-@Stateless
-@Named
+@Component
 public class SystemConfig {
 
     private static final Logger logger = Logger.getLogger(SystemConfig.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
 
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
 
-    @EJB
+    @Autowired
     AuthenticationServiceBean authenticationService;
     
    public static final String DATAVERSE_PATH = "/dataverse/";

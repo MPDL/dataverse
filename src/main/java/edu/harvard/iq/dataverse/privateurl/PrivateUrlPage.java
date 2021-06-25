@@ -18,7 +18,7 @@ public class PrivateUrlPage implements Serializable {
 
     private static final Logger logger = Logger.getLogger(PrivateUrlPage.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     PrivateUrlServiceBean privateUrlService;
     @Inject
     DataverseSession session;

@@ -125,15 +125,15 @@ import javax.faces.application.FacesMessage;
 @Named
 public class IngestServiceBean {
     private static final Logger logger = Logger.getLogger(IngestServiceBean.class.getCanonicalName());
-    @EJB
+    @Autowired
     VariableServiceBean variableService;
-    @EJB 
+    @Autowired 
     DatasetServiceBean datasetService;
-    @EJB
+    @Autowired
     DatasetFieldServiceBean fieldService;
-    @EJB
+    @Autowired
     DataFileServiceBean fileService; 
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
 
     @Resource(lookup = "java:app/jms/queue/ingest")

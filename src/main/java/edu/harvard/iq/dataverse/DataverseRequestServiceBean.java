@@ -1,11 +1,12 @@
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+
+import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 
 /**
  * The service bean to go to when one needs the current {@link DataverseRequest}.

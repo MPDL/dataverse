@@ -1,18 +1,23 @@
 package edu.harvard.iq.dataverse;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.springframework.stereotype.Service;
+
 import edu.ucsb.nceas.ezid.EZIDException;
 import edu.ucsb.nceas.ezid.EZIDService;
 import edu.ucsb.nceas.ezid.EZIDServiceRequest;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.Stateless;
 
 /**
  *
  * @author skraffmiller
  */
-@Stateless
+@Service
 public class DOIEZIdServiceBean extends AbstractGlobalIdServiceBean {
 
     EZIDService ezidService;

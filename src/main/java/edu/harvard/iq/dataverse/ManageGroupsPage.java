@@ -1,5 +1,28 @@
 package edu.harvard.iq.dataverse;
 
+import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.apache.commons.lang.StringUtils;
+
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.RoleAssignee;
 import edu.harvard.iq.dataverse.authorization.groups.Group;
@@ -14,26 +37,6 @@ import edu.harvard.iq.dataverse.engine.command.impl.DeleteExplicitGroupCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.UpdateExplicitGroupCommand;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
-import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
-import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * @author michaelsuo
@@ -44,17 +47,17 @@ public class ManageGroupsPage implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(ManageGroupsPage.class.getCanonicalName());
 
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
-    @EJB
+    @Inject
     ExplicitGroupServiceBean explicitGroupService;
-    @EJB
+    @Inject
     EjbDataverseEngine engineService;
-    @EJB
+    @Inject
     RoleAssigneeServiceBean roleAssigneeService;
-    @EJB
+    @Inject
     AuthenticationServiceBean authenticationService;
-    @EJB
+    @Inject
     GroupServiceBean groupService;
     @Inject
     DataverseRequestServiceBean dvRequestService;

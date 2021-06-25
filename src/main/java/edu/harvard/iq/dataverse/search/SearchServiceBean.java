@@ -63,17 +63,17 @@ public class SearchServiceBean {
     /**
      * @todo Can we do without the DatasetFieldServiceBean?
      */
-    @EJB
+    @Autowired
     DvObjectServiceBean dvObjectService;
-    @EJB
+    @Autowired
     DatasetVersionServiceBean datasetVersionService;
-    @EJB
+    @Autowired
     DatasetFieldServiceBean datasetFieldService;
-    @EJB
+    @Autowired
     GroupServiceBean groupService;
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
-    @EJB
+    @Autowired
     SolrClientService solrClientService;
     
     /**

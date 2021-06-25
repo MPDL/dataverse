@@ -33,17 +33,17 @@ public class IndexBatchServiceBean {
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     private EntityManager em;
 
-    @EJB
+    @Autowired
     IndexServiceBean indexService;
-    @EJB
+    @Autowired
     SolrIndexServiceBean solrIndexService;
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
-    @EJB
+    @Autowired
     DvObjectServiceBean dvObjectService;
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
     
     @Asynchronous

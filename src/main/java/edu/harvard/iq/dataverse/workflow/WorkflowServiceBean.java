@@ -1,12 +1,31 @@
 package edu.harvard.iq.dataverse.workflow;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import edu.harvard.iq.dataverse.DatasetLock;
 import edu.harvard.iq.dataverse.DatasetServiceBean;
 import edu.harvard.iq.dataverse.DataverseRequestServiceBean;
 import edu.harvard.iq.dataverse.EjbDataverseEngine;
 import edu.harvard.iq.dataverse.RoleAssigneeServiceBean;
 import edu.harvard.iq.dataverse.UserNotification;
-import edu.harvard.iq.dataverse.UserNotification.Type;
 import edu.harvard.iq.dataverse.UserNotificationServiceBean;
 import edu.harvard.iq.dataverse.authorization.users.ApiToken;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
@@ -25,30 +44,12 @@ import edu.harvard.iq.dataverse.workflow.step.WorkflowStepData;
 import edu.harvard.iq.dataverse.workflow.step.WorkflowStepResult;
 import edu.harvard.iq.dataverse.workflows.WorkflowComment;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.Asynchronous;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
 /**
  * Service bean for managing and executing {@link Workflow}s
  *
  * @author michael
  */
-@Stateless
+@Service
 public class WorkflowServiceBean {
 
     private static final Logger logger = Logger.getLogger(WorkflowServiceBean.class.getName());
@@ -57,22 +58,22 @@ public class WorkflowServiceBean {
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     EntityManager em;
     
-    @EJB
+    @Autowired
     DatasetServiceBean datasets;
 
-    @EJB
+    @Autowired
     SettingsServiceBean settings;
 
-    @EJB
+    @Autowired
     RoleAssigneeServiceBean roleAssignees;
     
-    @EJB 
+    @Autowired 
     SystemConfig systemConfig;
 
-    @EJB
+    @Autowired
     UserNotificationServiceBean userNotificationService;
     
-    @EJB
+    @Autowired
     EjbDataverseEngine engine;
     
     @Inject
@@ -107,7 +108,7 @@ public class WorkflowServiceBean {
      * @throws CommandException If the dataset could not be locked.
      */
     //ToDo - should this be @Async? or just the forward() method?
-    @Asynchronous
+    @Async
     public void start(Workflow wf, WorkflowContext ctxt, boolean findDataset) throws CommandException {
         /*
          * Workflows appear to start running prior to the caller's transaction
@@ -197,14 +198,14 @@ public class WorkflowServiceBean {
      * #doResume(edu.harvard.iq.dataverse.workflow.PendingWorkflowInvocation,
      * java.lang.String)
      */
-    @Asynchronous
+    @Async
     public void resume(PendingWorkflowInvocation pending, String body) {
         em.remove(em.merge(pending));
         doResume(pending, body);
     }
     
     
-    @Asynchronous
+    @Async
     private void forward(Workflow wf, WorkflowContext ctxt) {
         executeSteps(wf, ctxt, 0);
     }
@@ -238,7 +239,7 @@ public class WorkflowServiceBean {
         }
     }
 
-    @Asynchronous
+    @Async
     private void rollback(Workflow wf, WorkflowContext ctxt, Failure failure, int lastCompletedStepIdx) {
         ctxt = refresh(ctxt);
         final List<WorkflowStepData> steps = wf.getSteps();
@@ -311,22 +312,22 @@ public class WorkflowServiceBean {
     // Internal methods to run each step in its own transaction.
     //
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     WorkflowStepResult runStep( WorkflowStep step, WorkflowContext ctxt ) {
         return step.run(ctxt);
     }
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     WorkflowStepResult resumeStep( WorkflowStep step, WorkflowContext ctxt, Map<String,String> localData, String externalData ) {
         return step.resume(ctxt, localData, externalData);
     }
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     void rollbackStep( WorkflowStep step, WorkflowContext ctxt, Failure reason ) {
         step.rollback(ctxt, reason);
     }
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     void lockDataset(WorkflowContext ctxt, DatasetLock datasetLock) throws CommandException {
         /*
          * Note that this method directly adds a lock to the database rather than adding
@@ -344,7 +345,7 @@ public class WorkflowServiceBean {
         ctxt.setLockId(datasetLock.getId());
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     void unlockDataset(WorkflowContext ctxt) throws CommandException {
         /*
          * Since the lockDataset command above directly persists a lock to the database,

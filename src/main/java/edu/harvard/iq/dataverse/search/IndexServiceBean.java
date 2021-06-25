@@ -89,37 +89,37 @@ public class IndexServiceBean {
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     private EntityManager em;
 
-    @EJB
+    @Autowired
     DvObjectServiceBean dvObjectService;
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
-    @EJB
+    @Autowired
     BuiltinUserServiceBean dataverseUserServiceBean;
-    @EJB
+    @Autowired
     PermissionServiceBean permissionService;
-    @EJB
+    @Autowired
     AuthenticationServiceBean userServiceBean;
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
-    @EJB
+    @Autowired
     SearchPermissionsServiceBean searchPermissionsService;
-    @EJB
+    @Autowired
     SolrIndexServiceBean solrIndexService;
-    @EJB
+    @Autowired
     DatasetLinkingServiceBean dsLinkingService;
-    @EJB
+    @Autowired
     DataverseLinkingServiceBean dvLinkingService;
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
-    @EJB
+    @Autowired
     SolrClientService solrClientService;
 
-    @EJB
+    @Autowired
     VariableServiceBean variableService;
     
-    @EJB
+    @Autowired
     IndexBatchServiceBean indexBatchService;
 
     public static final String solrDocIdentifierDataverse = "dataverse_";

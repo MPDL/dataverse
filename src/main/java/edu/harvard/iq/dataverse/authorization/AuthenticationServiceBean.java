@@ -1,50 +1,11 @@
 package edu.harvard.iq.dataverse.authorization;
 
-import edu.harvard.iq.dataverse.DatasetVersionServiceBean;
-import edu.harvard.iq.dataverse.DvObjectServiceBean;
-import edu.harvard.iq.dataverse.GuestbookResponseServiceBean;
-import edu.harvard.iq.dataverse.RoleAssigneeServiceBean;
-import edu.harvard.iq.dataverse.UserNotificationServiceBean;
-import edu.harvard.iq.dataverse.UserServiceBean;
-import edu.harvard.iq.dataverse.authorization.providers.oauth2.oidc.OIDCAuthenticationProviderFactory;
-import edu.harvard.iq.dataverse.search.IndexServiceBean;
-import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
-import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
-import edu.harvard.iq.dataverse.authorization.exceptions.AuthenticationFailedException;
-import edu.harvard.iq.dataverse.authorization.exceptions.AuthenticationProviderFactoryNotFoundException;
-import edu.harvard.iq.dataverse.authorization.exceptions.AuthorizationSetupException;
-import edu.harvard.iq.dataverse.authorization.groups.impl.explicit.ExplicitGroup;
-import edu.harvard.iq.dataverse.authorization.groups.impl.explicit.ExplicitGroupServiceBean;
-import edu.harvard.iq.dataverse.authorization.providers.AuthenticationProviderFactory;
-import edu.harvard.iq.dataverse.authorization.providers.AuthenticationProviderRow;
-import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinAuthenticationProvider;
-import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinAuthenticationProviderFactory;
-import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinUser;
-import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinUserServiceBean;
-import edu.harvard.iq.dataverse.authorization.providers.builtin.PasswordEncryption;
-import edu.harvard.iq.dataverse.authorization.providers.oauth2.AbstractOAuth2AuthenticationProvider;
-import edu.harvard.iq.dataverse.authorization.providers.oauth2.OAuth2AuthenticationProviderFactory;
-import edu.harvard.iq.dataverse.authorization.providers.shib.ShibAuthenticationProvider;
-import edu.harvard.iq.dataverse.authorization.providers.shib.ShibAuthenticationProviderFactory;
-import edu.harvard.iq.dataverse.authorization.users.ApiToken;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.confirmemail.ConfirmEmailData;
-import edu.harvard.iq.dataverse.confirmemail.ConfirmEmailServiceBean;
-import edu.harvard.iq.dataverse.engine.command.impl.RevokeAllRolesCommand;
-import edu.harvard.iq.dataverse.passwordreset.PasswordResetData;
-import edu.harvard.iq.dataverse.passwordreset.PasswordResetServiceBean;
-import edu.harvard.iq.dataverse.search.savedsearch.SavedSearchServiceBean;
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.validation.PasswordValidatorServiceBean;
-import edu.harvard.iq.dataverse.workflow.PendingWorkflowInvocation;
-import edu.harvard.iq.dataverse.workflows.WorkflowComment;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -53,11 +14,8 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
+
 import javax.ejb.EJBException;
-import javax.ejb.Stateless;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -69,6 +27,40 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.DatasetVersionServiceBean;
+import edu.harvard.iq.dataverse.DvObjectServiceBean;
+import edu.harvard.iq.dataverse.GuestbookResponseServiceBean;
+import edu.harvard.iq.dataverse.RoleAssigneeServiceBean;
+import edu.harvard.iq.dataverse.UserNotificationServiceBean;
+import edu.harvard.iq.dataverse.UserServiceBean;
+import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
+import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
+import edu.harvard.iq.dataverse.authorization.exceptions.AuthenticationFailedException;
+import edu.harvard.iq.dataverse.authorization.groups.impl.explicit.ExplicitGroup;
+import edu.harvard.iq.dataverse.authorization.groups.impl.explicit.ExplicitGroupServiceBean;
+import edu.harvard.iq.dataverse.authorization.providers.AuthenticationProviderFactory;
+import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinAuthenticationProvider;
+import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinUser;
+import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinUserServiceBean;
+import edu.harvard.iq.dataverse.authorization.providers.builtin.PasswordEncryption;
+import edu.harvard.iq.dataverse.authorization.providers.oauth2.AbstractOAuth2AuthenticationProvider;
+import edu.harvard.iq.dataverse.authorization.providers.shib.ShibAuthenticationProvider;
+import edu.harvard.iq.dataverse.authorization.users.ApiToken;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.confirmemail.ConfirmEmailData;
+import edu.harvard.iq.dataverse.confirmemail.ConfirmEmailServiceBean;
+import edu.harvard.iq.dataverse.passwordreset.PasswordResetData;
+import edu.harvard.iq.dataverse.passwordreset.PasswordResetServiceBean;
+import edu.harvard.iq.dataverse.search.IndexServiceBean;
+import edu.harvard.iq.dataverse.search.savedsearch.SavedSearchServiceBean;
+import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.validation.PasswordValidatorServiceBean;
+import edu.harvard.iq.dataverse.workflow.PendingWorkflowInvocation;
+import edu.harvard.iq.dataverse.workflows.WorkflowComment;
+
 /**
  * AuthenticationService is for general authentication-related operations.
  * It's no longer responsible for registering and listing
@@ -77,54 +69,53 @@ import javax.validation.ValidatorFactory;
  * related code has been moved there. 
  * 
  */
-@Named
-@Stateless
+@Service
 public class AuthenticationServiceBean {
     private static final Logger logger = Logger.getLogger(AuthenticationServiceBean.class.getName());
     
-    @EJB
+    @Autowired
     AuthenticationProvidersRegistrationServiceBean authProvidersRegistrationService;
     
-    @EJB
+    @Autowired
     BuiltinUserServiceBean builtinUserServiceBean;
     
-    @EJB
+    @Autowired
     IndexServiceBean indexService;
     
-    @EJB
+    @Autowired
     protected ActionLogServiceBean actionLogSvc;
     
-    @EJB
+    @Autowired
     UserNotificationServiceBean userNotificationService;
 
-    @EJB
+    @Autowired
     ConfirmEmailServiceBean confirmEmailService;
     
-    @EJB
+    @Autowired
     PasswordResetServiceBean passwordResetServiceBean;
 
-    @EJB
+    @Autowired
     UserServiceBean userService;
 
-    @EJB
+    @Autowired
     PasswordValidatorServiceBean passwordValidatorService;
     
-    @EJB
+    @Autowired
     DvObjectServiceBean dvObjSvc;
     
-    @EJB
+    @Autowired
     RoleAssigneeServiceBean roleAssigneeSvc;
     
-    @EJB
+    @Autowired
     GuestbookResponseServiceBean gbRespSvc;
     
-    @EJB
+    @Autowired
     DatasetVersionServiceBean datasetVersionService;
     
-    @EJB 
+    @Autowired 
     ExplicitGroupServiceBean explicitGroupService;
 
-    @EJB
+    @Autowired
     SavedSearchServiceBean savedSearchService;
 
     @PersistenceContext(unitName = "VDCNet-ejbPU")

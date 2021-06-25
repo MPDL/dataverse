@@ -2,17 +2,18 @@ package edu.harvard.iq.dataverse.authorization.providers.oauth2;
 
 import java.util.List;
 import java.util.Optional;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import org.springframework.stereotype.Service;
 
 /**
  * CRUD for {@link OAuth2TokenData}.
  * 
  * @author michael
  */
-@Stateless
+@Service
 public class OAuth2TokenDataServiceBean {
     
     @PersistenceContext

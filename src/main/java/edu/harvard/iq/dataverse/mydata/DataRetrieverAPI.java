@@ -61,21 +61,21 @@ public class DataRetrieverAPI extends AbstractApiBean {
     @Inject
     DataverseSession session;    
 
-    @EJB
+    @Autowired
     DataverseRoleServiceBean dataverseRoleService;
-    @EJB
+    @Autowired
     RoleAssigneeServiceBean roleAssigneeService;
-    @EJB
+    @Autowired
     DvObjectServiceBean dvObjectServiceBean;
-    @EJB
+    @Autowired
     SearchServiceBean searchService;
-    @EJB
+    @Autowired
     AuthenticationServiceBean authenticationService;
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    //@EJB
+    //@Autowired
     //MyDataQueryHelperServiceBean myDataQueryHelperServiceBean;
-    @EJB
+    @Autowired
     GroupServiceBean groupService;
     
     private List<DataverseRole> roleList;

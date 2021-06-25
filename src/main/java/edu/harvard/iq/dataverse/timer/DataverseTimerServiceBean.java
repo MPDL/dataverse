@@ -5,17 +5,6 @@
  */
 package edu.harvard.iq.dataverse.timer;
 
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.harvest.client.HarvestingClient;
-import edu.harvard.iq.dataverse.harvest.client.HarvestTimerInfo;
-import edu.harvard.iq.dataverse.harvest.client.HarvesterServiceBean;
-import edu.harvard.iq.dataverse.harvest.client.HarvestingClientServiceBean;
-import edu.harvard.iq.dataverse.harvest.server.OAISetServiceBean;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -25,17 +14,29 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
 import javax.ejb.Timeout;
-import javax.ejb.Timer;
 import javax.ejb.TimerConfig;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.DatasetServiceBean;
+import edu.harvard.iq.dataverse.Dataverse;
+import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
+import edu.harvard.iq.dataverse.harvest.client.HarvestTimerInfo;
+import edu.harvard.iq.dataverse.harvest.client.HarvesterServiceBean;
+import edu.harvard.iq.dataverse.harvest.client.HarvestingClient;
+import edu.harvard.iq.dataverse.harvest.client.HarvestingClientServiceBean;
+import edu.harvard.iq.dataverse.harvest.server.OAISetServiceBean;
+import edu.harvard.iq.dataverse.util.SystemConfig;
 
 
 /**
@@ -48,25 +49,24 @@ import javax.servlet.http.HttpServletRequest;
  */
 //@Stateless
 
-@Singleton
-@Startup
+@Service
 public class DataverseTimerServiceBean implements Serializable {
     
     private static final Logger logger = Logger.getLogger("edu.harvard.iq.dataverse.timer.DataverseTimerServiceBean");
     
     @Resource
     javax.ejb.TimerService timerService;
-    @EJB
+    @Autowired
     HarvesterServiceBean harvesterService;
-    @EJB
+    @Autowired
     HarvestingClientServiceBean harvestingClientService;
-    @EJB 
+    @Autowired 
     AuthenticationServiceBean authSvc;
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
-    @EJB
+    @Autowired
     OAISetServiceBean oaiSetService;
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
     
     

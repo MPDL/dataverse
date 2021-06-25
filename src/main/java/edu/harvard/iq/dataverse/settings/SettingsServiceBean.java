@@ -445,7 +445,7 @@ public class SettingsServiceBean {
     @PersistenceContext
     EntityManager em;
     
-    @EJB
+    @Autowired
     ActionLogServiceBean actionLogSvc;
     
     /**

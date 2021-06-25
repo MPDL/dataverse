@@ -1,16 +1,9 @@
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.branding.BrandingUtil;
-import edu.harvard.iq.dataverse.feedback.Feedback;
-import edu.harvard.iq.dataverse.feedback.FeedbackUtil;
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.MailUtil;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -20,7 +13,16 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.mail.internet.InternetAddress;
+
 import org.apache.commons.validator.routines.EmailValidator;
+
+import edu.harvard.iq.dataverse.branding.BrandingUtil;
+import edu.harvard.iq.dataverse.feedback.Feedback;
+import edu.harvard.iq.dataverse.feedback.FeedbackUtil;
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.MailUtil;
+import edu.harvard.iq.dataverse.util.SystemConfig;
 
 @ViewScoped
 @Named
@@ -69,16 +71,16 @@ public class SendFeedbackDialog implements java.io.Serializable {
      */
     private InternetAddress systemAddress;
 
-    @EJB
+    @Inject
     MailServiceBean mailService;
 
-    @EJB
+    @Inject
     SettingsServiceBean settingsService;
 
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
 
-    @EJB
+    @Inject
     SystemConfig systemConfig;
 
     @Inject

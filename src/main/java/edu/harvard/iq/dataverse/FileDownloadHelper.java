@@ -5,25 +5,24 @@
  */
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.authorization.Permission;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.authorization.users.PrivateUrlUser;
-import edu.harvard.iq.dataverse.externaltools.ExternalTool;
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.FileUtil;
-import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
+
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import org.primefaces.PrimeFaces;
 //import org.primefaces.context.RequestContext;
+
+import edu.harvard.iq.dataverse.authorization.Permission;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.authorization.users.PrivateUrlUser;
+import edu.harvard.iq.dataverse.externaltools.ExternalTool;
+import edu.harvard.iq.dataverse.util.FileUtil;
 
 /**
  *
@@ -42,16 +41,16 @@ public class FileDownloadHelper implements java.io.Serializable {
     @Inject
     DataverseRequestServiceBean dvRequestService;
 
-    @EJB
+    @Inject
     PermissionServiceBean  permissionService;
     
-    @EJB
+    @Inject
     FileDownloadServiceBean  fileDownloadService;
     
-    @EJB
+    @Inject
     GuestbookResponseServiceBean guestbookResponseService;
     
-    @EJB
+    @Inject
     DataFileServiceBean datafileService;
 
     private final Map<Long, Boolean> fileDownloadPermissionMap = new HashMap<>(); // { FileMetadata.id : Boolean } 

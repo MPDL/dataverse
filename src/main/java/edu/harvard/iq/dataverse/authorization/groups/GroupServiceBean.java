@@ -1,5 +1,21 @@
 package edu.harvard.iq.dataverse.authorization.groups;
 
+import static java.util.stream.Collectors.toSet;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Stream;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import edu.harvard.iq.dataverse.DvObject;
 import edu.harvard.iq.dataverse.RoleAssigneeServiceBean;
 import edu.harvard.iq.dataverse.authorization.RoleAssignee;
@@ -14,37 +30,22 @@ import edu.harvard.iq.dataverse.authorization.groups.impl.maildomain.MailDomainG
 import edu.harvard.iq.dataverse.authorization.groups.impl.shib.ShibGroupProvider;
 import edu.harvard.iq.dataverse.authorization.groups.impl.shib.ShibGroupServiceBean;
 import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import static java.util.stream.Collectors.toSet;
-import java.util.stream.Stream;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  *
  * @author michael
  */
-@Stateless
-@Named
+@Service
 public class GroupServiceBean {
     private static final Logger logger = Logger.getLogger(GroupServiceBean.class.getName());
     
-    @EJB
+    @Autowired
     IpGroupsServiceBean ipGroupsService;
-    @EJB
+    @Autowired
     ShibGroupServiceBean shibGroupService;
-    @EJB
+    @Autowired
     ExplicitGroupServiceBean explicitGroupService;
-    @EJB
+    @Autowired
     MailDomainGroupServiceBean mailDomainGroupService;
     
     private final Map<String, GroupProvider> groupProviders = new HashMap<>();
@@ -54,7 +55,7 @@ public class GroupServiceBean {
     private ExplicitGroupProvider explicitGroupProvider;
     private MailDomainGroupProvider mailDomainGroupProvider;
     
-    @EJB
+    @Autowired
     RoleAssigneeServiceBean roleAssigneeSvc;
     
     @PostConstruct

@@ -5,26 +5,27 @@
  */
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.engine.command.Command;
-import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
-import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseGuestbookCommand;
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.JsfHelper;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import org.apache.commons.lang.StringUtils;
+
+import edu.harvard.iq.dataverse.engine.command.Command;
+import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
+import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseGuestbookCommand;
+import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.JsfHelper;
 
 /**
  *
@@ -36,16 +37,16 @@ public class GuestbookPage implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(GuestbookPage.class.getCanonicalName());
     
-    @EJB
+    @Inject
     GuestbookServiceBean guestbookService;
 
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
 
-    @EJB
+    @Inject
     EjbDataverseEngine commandEngine;
     
-    @EJB
+    @Inject
     GuestbookResponseServiceBean guestbookResponseService;
     
     @Inject
@@ -301,21 +302,6 @@ public class GuestbookPage implements java.io.Serializable {
                 commandEngine.submit(cmd);
             }
 
-        } catch (EJBException ex) {
-            StringBuilder error = new StringBuilder();
-            error.append(ex).append(" ");
-            error.append(ex.getMessage()).append(" ");
-            Throwable cause = ex;
-            while (cause.getCause() != null) {
-                cause = cause.getCause();
-                error.append(cause).append(" ");
-                error.append(cause.getMessage()).append(" ");
-            }
-            //
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, BundleUtil.getStringFromBundle("guestbook.save.fail"), " - " + error.toString()));
-            logger.info("Guestbook Page EJB Exception. Dataverse: " + dataverse.getName());
-            logger.info(error.toString());
-            return null;
         } catch (CommandException ex) {
             logger.info("Guestbook Page Command Exception. Dataverse: " + dataverse.getName());
             logger.info(ex.toString());

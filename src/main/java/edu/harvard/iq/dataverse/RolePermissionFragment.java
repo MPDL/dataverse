@@ -5,6 +5,28 @@
  */
 package edu.harvard.iq.dataverse;
 
+import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.event.ActionEvent;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.DataverseRole;
 import edu.harvard.iq.dataverse.authorization.Permission;
@@ -17,27 +39,7 @@ import edu.harvard.iq.dataverse.engine.command.impl.AssignRoleCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.CreateRoleCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.RevokeRoleCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.UpdatePermissionRootCommand;
-import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
-import javax.faces.event.ActionEvent;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import edu.harvard.iq.dataverse.util.BundleUtil;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -49,15 +51,15 @@ public class RolePermissionFragment implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(RolePermissionFragment.class.getCanonicalName());
 
-    @EJB
+    @Inject
     DataverseRoleServiceBean roleService;
-    @EJB
+    @Inject
     RoleAssigneeServiceBean roleAssigneeService;
-    @EJB
+    @Inject
     PermissionServiceBean permissionService;
-    @EJB
+    @Inject
     AuthenticationServiceBean authenticationService;
-    @EJB
+    @Inject
     EjbDataverseEngine commandEngine;
     @Inject
     DataverseRequestServiceBean dvRequestService;

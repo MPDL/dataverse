@@ -1,16 +1,54 @@
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.provenance.ProvPopupFragmentBean;
+import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.FacesEvent;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.primefaces.PrimeFaces;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.file.UploadedFile;
+
 import edu.harvard.iq.dataverse.DataFile.ChecksumType;
 import edu.harvard.iq.dataverse.api.AbstractApiBean;
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.Permission;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.branding.BrandingUtil;
-import edu.harvard.iq.dataverse.datasetutility.AddReplaceFileHelper;
-import edu.harvard.iq.dataverse.datasetutility.FileSizeChecker;
-import edu.harvard.iq.dataverse.datasetutility.FileReplaceException;
-import edu.harvard.iq.dataverse.datasetutility.FileReplacePageHelper;
 import edu.harvard.iq.dataverse.dataaccess.DataAccess;
 import edu.harvard.iq.dataverse.dataaccess.DataAccessOption;
 import edu.harvard.iq.dataverse.dataaccess.ImageThumbConverter;
@@ -20,6 +58,10 @@ import edu.harvard.iq.dataverse.datacapturemodule.DataCaptureModuleUtil;
 import edu.harvard.iq.dataverse.datacapturemodule.ScriptRequestResponse;
 import edu.harvard.iq.dataverse.dataset.DatasetThumbnail;
 import edu.harvard.iq.dataverse.dataset.DatasetUtil;
+import edu.harvard.iq.dataverse.datasetutility.AddReplaceFileHelper;
+import edu.harvard.iq.dataverse.datasetutility.FileReplaceException;
+import edu.harvard.iq.dataverse.datasetutility.FileReplacePageHelper;
+import edu.harvard.iq.dataverse.datasetutility.FileSizeChecker;
 import edu.harvard.iq.dataverse.engine.command.Command;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
@@ -29,56 +71,14 @@ import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetVersionCommand;
 import edu.harvard.iq.dataverse.ingest.IngestRequest;
 import edu.harvard.iq.dataverse.ingest.IngestServiceBean;
 import edu.harvard.iq.dataverse.ingest.IngestUtil;
+import edu.harvard.iq.dataverse.provenance.ProvPopupFragmentBean;
 import edu.harvard.iq.dataverse.search.IndexServiceBean;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.FileMetadataUtil;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
 import edu.harvard.iq.dataverse.util.SystemConfig;
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.EjbUtil;
-import edu.harvard.iq.dataverse.util.FileMetadataUtil;
-
-import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.file.UploadedFile;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonArray;
-import javax.json.JsonReader;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.httpclient.methods.GetMethod;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
-import java.util.logging.Level;
-import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.FacesEvent;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.primefaces.PrimeFaces;
 
 /**
  *
@@ -99,33 +99,33 @@ public class EditDatafilesPage implements java.io.Serializable {
         DATASET, FILE
     };
     
-    @EJB
+    @Inject
     DatasetServiceBean datasetService;
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
-    @EJB
+    @Inject
     DatasetVersionServiceBean datasetVersionService;
-    @EJB
+    @Inject
     DataFileServiceBean datafileService;
-    @EJB
+    @Inject
     PermissionServiceBean permissionService;
-    @EJB
+    @Inject
     IngestServiceBean ingestService;
-    @EJB
+    @Inject
     EjbDataverseEngine commandEngine;
     @Inject
     DataverseSession session;
-    @EJB
+    @Inject
     UserNotificationServiceBean userNotificationService;
-    @EJB
+    @Inject
     SettingsServiceBean settingsService;
-    @EJB
+    @Inject
     AuthenticationServiceBean authService;
-    @EJB
+    @Inject
     SystemConfig systemConfig;
-    @EJB
+    @Inject
     DataverseLinkingServiceBean dvLinkingService;
-    @EJB
+    @Inject
     IndexServiceBean indexService;
     @Inject
     DataverseRequestServiceBean dvRequestService;
@@ -1085,19 +1085,7 @@ public class EditDatafilesPage implements java.io.Serializable {
             ((UpdateDatasetVersionCommand) cmd).setValidateLenient(true);
             dataset = commandEngine.submit(cmd);
 
-        } catch (EJBException ex) {
-            StringBuilder error = new StringBuilder();
-            error.append(ex).append(" ");
-            error.append(ex.getMessage()).append(" ");
-            Throwable cause = ex;
-            while (cause.getCause() != null) {
-                cause = cause.getCause();
-                error.append(cause).append(" ");
-                error.append(cause.getMessage()).append(" ");
-            }
-            logger.log(Level.INFO, "Couldn''t save dataset: {0}", error.toString());
-            populateDatasetUpdateFailureMessage();
-            return null;
+        
         } catch (CommandException ex) {
             // FacesContext.getCurrentInstance().addMessage(null, new
             // FacesMessage(FacesMessage.SEVERITY_ERROR, "Dataset Save Failed", " - " +
@@ -1525,8 +1513,6 @@ public class EditDatafilesPage implements java.io.Serializable {
                 } else {
                     setHasRsyncScript(false);
                 }
-            } catch (EJBException ex) {
-                logger.warning("Problem getting rsync script (EJBException): " + EjbUtil.ejbExceptionToString(ex));
             } catch (RuntimeException ex) {
                 logger.warning("Problem getting rsync script (RuntimeException): " + ex.getLocalizedMessage());
             } catch (CommandException cex) {

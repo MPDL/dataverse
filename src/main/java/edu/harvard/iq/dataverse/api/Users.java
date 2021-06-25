@@ -5,17 +5,10 @@
  */
 package edu.harvard.iq.dataverse.api;
 
-import static edu.harvard.iq.dataverse.api.AbstractApiBean.error;
-import edu.harvard.iq.dataverse.authorization.users.ApiToken;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.authorization.users.User;
-import edu.harvard.iq.dataverse.engine.command.impl.ChangeUserIdentifierCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.GetUserTracesCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.MergeInAccountCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.RevokeAllRolesCommand;
 import static edu.harvard.iq.dataverse.util.json.JsonPrinter.json;
+
 import java.util.logging.Logger;
-import javax.ejb.Stateless;
+
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -24,11 +17,19 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
+import edu.harvard.iq.dataverse.authorization.users.ApiToken;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.authorization.users.User;
+import edu.harvard.iq.dataverse.engine.command.impl.ChangeUserIdentifierCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.GetUserTracesCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.MergeInAccountCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.RevokeAllRolesCommand;
+
 /**
  *
  * @author madunlap
  */
-@Stateless
+
 @Path("users")
 public class Users extends AbstractApiBean {
     

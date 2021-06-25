@@ -6,12 +6,12 @@
 
 package edu.harvard.iq.dataverse;
 
-import javax.ejb.EJB;
-import javax.enterprise.inject.spi.CDI;
+import javax.faces.annotation.ManagedProperty;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Inject;
 
 /**
  *
@@ -21,8 +21,11 @@ import javax.faces.convert.FacesConverter;
 public class DataverseConverter implements Converter {
 
     
-    //@EJB
-    DataverseServiceBean dataverseService = CDI.current().select(DataverseServiceBean.class).get();
+    //@Autowired
+	@Inject
+    DataverseServiceBean dataverseService;
+
+    
 
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent component, String submittedValue) {

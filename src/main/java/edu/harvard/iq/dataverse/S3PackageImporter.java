@@ -5,6 +5,19 @@
  */
 package edu.harvard.iq.dataverse;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
@@ -16,24 +29,10 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+
 import edu.harvard.iq.dataverse.api.AbstractApiBean;
-import edu.harvard.iq.dataverse.batch.jobs.importer.filesystem.FileRecordWriter;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.FileUtil;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Named;
 
 /**
  * This class is for importing files added to s3 outside of dataverse.
@@ -43,18 +42,17 @@ import javax.inject.Named;
  * @author matthew
  */
 
-@Named
-@Stateless
+@Service
 public class S3PackageImporter extends AbstractApiBean implements java.io.Serializable{
     
     private static final Logger logger = Logger.getLogger(S3PackageImporter.class.getName());
 
     private AmazonS3 s3 = null;
     
-    @EJB
+    @Autowired
     DataFileServiceBean dataFileServiceBean;
 
-    @EJB
+    @Autowired
     EjbDataverseEngine commandEngine;
     
     //Copies from another s3 bucket to our own

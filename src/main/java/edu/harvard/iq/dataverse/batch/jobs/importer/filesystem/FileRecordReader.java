@@ -66,10 +66,10 @@ public class FileRecordReader extends AbstractItemReader {
     @BatchProperty
     String excludes;
     
-    @EJB
+    @Autowired
     DatasetServiceBean datasetServiceBean;
 
-    @EJB
+    @Autowired
     AuthenticationServiceBean authenticationServiceBean;
 
     File directory;

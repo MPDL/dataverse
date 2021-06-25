@@ -6,15 +6,17 @@
 
 package edu.harvard.iq.dataverse;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Named;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author skraffmiller
  */
+@Component("dfc")
+/*
 @Named("dfc")
 @Dependent
+*/
 public class DatasetFieldConstant implements java.io.Serializable  {
     
     public final static String publication = "publication";

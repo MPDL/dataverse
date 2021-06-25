@@ -20,19 +20,23 @@
 
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.security.PrivateKey;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import java.security.PrivateKey;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 /* Handlenet imports: */
 import net.handle.hdllib.AbstractMessage;
 import net.handle.hdllib.AbstractResponse;
@@ -48,7 +52,6 @@ import net.handle.hdllib.ModifyValueRequest;
 import net.handle.hdllib.PublicKeyAuthenticationInfo;
 import net.handle.hdllib.ResolutionRequest;
 import net.handle.hdllib.Util;
-import org.apache.commons.lang.NotImplementedException;
 
 /**
  *
@@ -59,12 +62,12 @@ import org.apache.commons.lang.NotImplementedException;
  * As of now, it only does the registration updates, to accommodate 
  * the modifyRegistration datasets API sub-command.
  */
-@Stateless
+@Service
 public class HandlenetServiceBean extends AbstractGlobalIdServiceBean {
 
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB 
+    @Autowired 
     SettingsServiceBean settingsService;    
     private static final Logger logger = Logger.getLogger(HandlenetServiceBean.class.getCanonicalName());
     

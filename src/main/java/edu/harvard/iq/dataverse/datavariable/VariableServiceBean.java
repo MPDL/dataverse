@@ -7,12 +7,12 @@
 package edu.harvard.iq.dataverse.datavariable;
 
 import java.util.List;
-import java.util.logging.Logger;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
+import org.springframework.stereotype.Service;
 
 /**
  *
@@ -21,8 +21,7 @@ import javax.persistence.TypedQuery;
  * Basic skeleton of the new DataVariable service for DVN 4.0
  */
 
-@Stateless
-@Named
+@Service
 public class VariableServiceBean {
     public static final String[] summaryStatisticTypes = {"mean", "medn", "mode", "vald", "invd", "min", "max", "stdev"};
     

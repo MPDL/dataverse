@@ -5,6 +5,20 @@
  */
 package edu.harvard.iq.dataverse.authorization;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.stereotype.Service;
+
 import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
 import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
 import edu.harvard.iq.dataverse.authorization.exceptions.AuthenticationProviderFactoryNotFoundException;
@@ -18,19 +32,6 @@ import edu.harvard.iq.dataverse.authorization.providers.oauth2.OAuth2Authenticat
 import edu.harvard.iq.dataverse.authorization.providers.oauth2.oidc.OIDCAuthenticationProviderFactory;
 import edu.harvard.iq.dataverse.authorization.providers.shib.ShibAuthenticationProviderFactory;
 import edu.harvard.iq.dataverse.validation.PasswordValidatorServiceBean;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Lock;
-import static javax.ejb.LockType.READ;
-import static javax.ejb.LockType.WRITE;
-import javax.ejb.Singleton;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -42,23 +43,22 @@ import javax.persistence.PersistenceContext;
  * 
  * Register the providers in the {@link #startup()} method.
  */
-@Named
-@Lock(READ)
-@Singleton
+
+@Service
 public class AuthenticationProvidersRegistrationServiceBean {
 
     private static final Logger logger = Logger.getLogger(AuthenticationProvidersRegistrationServiceBean.class.getName());
     
-    @EJB
+    @Autowired
     BuiltinUserServiceBean builtinUserServiceBean;
 
-    @EJB
+    @Autowired
     PasswordValidatorServiceBean passwordValidatorService;
     
-    @EJB
+    @Autowired
     protected ActionLogServiceBean actionLogSvc;
     
-    @EJB
+    @Autowired
     AuthenticationServiceBean authenticationService;
     
     /**
@@ -91,6 +91,7 @@ public class AuthenticationProvidersRegistrationServiceBean {
     // - I'm assuming not; since it's guaranteed to only be called once,
     // via @PostConstruct in this @Singleton. -- L.A.
     @PostConstruct
+    @Lock(LockModeType.READ)
     public void startup() {
         
         // First, set up the factories
@@ -123,6 +124,7 @@ public class AuthenticationProvidersRegistrationServiceBean {
         });
     }
 
+    @Lock(LockModeType.READ)
     private void registerProviderFactory(AuthenticationProviderFactory aFactory) 
             throws AuthorizationSetupException 
     {
@@ -142,7 +144,7 @@ public class AuthenticationProvidersRegistrationServiceBean {
      * @throws AuthenticationProviderFactoryNotFoundException If the row specifies a non-existent factory
      * @throws AuthorizationSetupException If the factory failed to instantiate a provider from the row.
      */
-    @Lock(WRITE)
+    @Lock(LockModeType.WRITE)
     public AuthenticationProvider loadProvider( AuthenticationProviderRow aRow )
                 throws AuthenticationProviderFactoryNotFoundException, AuthorizationSetupException {
         AuthenticationProviderFactory fact = providerFactories.get((aRow.getFactoryAlias()));
@@ -152,7 +154,7 @@ public class AuthenticationProvidersRegistrationServiceBean {
         return fact.buildProvider(aRow);
     }
     
-    @Lock(WRITE)
+    @Lock(LockModeType.WRITE)
     public void registerProvider(AuthenticationProvider aProvider) throws AuthorizationSetupException {
         if ( authenticationProviders.containsKey(aProvider.getId()) ) {
             throw new AuthorizationSetupException(
@@ -166,7 +168,7 @@ public class AuthenticationProvidersRegistrationServiceBean {
         }
     }
     
-    @Lock(READ)
+    @Lock(LockModeType.READ)
     public Map<String, AbstractOAuth2AuthenticationProvider> getOAuth2AuthProvidersMap() {
         return oAuth2authenticationProviders;
     }
@@ -186,12 +188,12 @@ public class AuthenticationProvidersRegistrationServiceBean {
         return new HashSet<>(oAuth2authenticationProviders.values());
     }*/
     
-    @Lock(READ)
+    @Lock(LockModeType.READ)
     public Map<String, AuthenticationProvider> getAuthenticationProvidersMap() {
         return authenticationProviders;
     }
     
-    @Lock(WRITE)
+    @Lock(LockModeType.WRITE)
     public void deregisterProvider( String id ) {
         oAuth2authenticationProviders.remove( id );
         if ( authenticationProviders.remove(id) != null ) {
@@ -233,7 +235,7 @@ public class AuthenticationProvidersRegistrationServiceBean {
     }
     */
     
-    @Lock(READ)
+    @Lock(LockModeType.READ)
     public Map<String, AuthenticationProviderFactory> getProviderFactoriesMap() {
         return providerFactories; 
     }

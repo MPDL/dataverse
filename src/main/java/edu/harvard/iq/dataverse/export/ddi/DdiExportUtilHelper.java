@@ -1,9 +1,9 @@
 package edu.harvard.iq.dataverse.export.ddi;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 
@@ -12,11 +12,10 @@ import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
      * As it is a singleton and built at application start (=deployment), it will inject the (stateless)
      * dataverse service into the DdiExportUtil once it's ready.
      */
-    @Singleton
-    @Startup
+    @Component
     public class DdiExportUtilHelper {
 
-        @EJB SettingsServiceBean settingsSvc;
+        @Autowired SettingsServiceBean settingsSvc;
         
         @PostConstruct
         public void injectService() {

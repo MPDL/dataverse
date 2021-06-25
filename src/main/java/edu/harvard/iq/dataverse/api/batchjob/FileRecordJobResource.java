@@ -15,21 +15,24 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.logging.Logger;
 import javax.json.Json;
 import javax.json.JsonObject;
 
-@Stateless
+
 @Path("batch/jobs")
 @Produces(MediaType.APPLICATION_JSON)
 public class FileRecordJobResource extends AbstractApiBean {
 
     private static final Logger logger = Logger.getLogger(FileRecordJobResource.class.getName());
 
-    @EJB
+    @Autowired
     PermissionServiceBean permissionServiceBean;
 
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
 
     @POST

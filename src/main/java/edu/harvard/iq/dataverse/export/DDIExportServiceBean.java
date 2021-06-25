@@ -5,45 +5,44 @@
  */
 package edu.harvard.iq.dataverse.export;
 
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
+import java.io.File;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.ejb.EJBException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import edu.harvard.iq.dataverse.DataFile;
 import edu.harvard.iq.dataverse.DataFileServiceBean;
 import edu.harvard.iq.dataverse.DataTable;
+import edu.harvard.iq.dataverse.Dataset;
+import edu.harvard.iq.dataverse.DatasetServiceBean;
+import edu.harvard.iq.dataverse.DatasetVersion;
 import edu.harvard.iq.dataverse.FileMetadata;
-import edu.harvard.iq.dataverse.datavariable.VariableMetadata;
-import edu.harvard.iq.dataverse.datavariable.CategoryMetadata;
-import edu.harvard.iq.dataverse.datavariable.VarGroup;
 import edu.harvard.iq.dataverse.dataaccess.DataConverter;
-
+import edu.harvard.iq.dataverse.datavariable.CategoryMetadata;
 import edu.harvard.iq.dataverse.datavariable.DataVariable;
+import edu.harvard.iq.dataverse.datavariable.SummaryStatistic;
+import edu.harvard.iq.dataverse.datavariable.VarGroup;
+import edu.harvard.iq.dataverse.datavariable.VariableCategory;
+import edu.harvard.iq.dataverse.datavariable.VariableMetadata;
 import edu.harvard.iq.dataverse.datavariable.VariableRange;
 import edu.harvard.iq.dataverse.datavariable.VariableServiceBean;
-import edu.harvard.iq.dataverse.datavariable.SummaryStatistic;
-import edu.harvard.iq.dataverse.datavariable.VariableCategory;
 import edu.harvard.iq.dataverse.ingest.IngestServiceBean;
-
-import java.io.File;
-
-import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.ArrayList;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.io.OutputStream;
-import javax.ejb.Stateless;
-import javax.inject.Named;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.xml.stream.XMLStreamWriter;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLOutputFactory;
 
 /**
  *
@@ -57,21 +56,20 @@ import javax.xml.stream.XMLOutputFactory;
  * hasn't been finalized yet, this version follows the v2-3 scheme of using
  * programmed/hard-coded metadata fields and formatting.
  */
-@Stateless
-@Named
+@Service
 public class DDIExportServiceBean {
 
     private static final Logger logger = Logger.getLogger(DDIExportServiceBean.class.getCanonicalName());
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
 
-    @EJB
+    @Autowired
     DataFileServiceBean fileService;
 
-    @EJB
+    @Autowired
     VariableServiceBean variableService;
 
-    @EJB
+    @Autowired
     IngestServiceBean ingestService;
 
     @PersistenceContext(unitName = "VDCNet-ejbPU")
@@ -112,19 +110,19 @@ public class DDIExportServiceBean {
         xmlOutputFactory = javax.xml.stream.XMLOutputFactory.newInstance();
     }
 
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void exportDataVariable(Long varId, OutputStream os, String partialExclude, String partialInclude, Long fileMetadataId) {
 
         export(OBJECT_TAG_VARIABLE, varId, os, partialExclude, partialInclude, fileMetadataId);
     }
 
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void exportDataset(Long datasetId, OutputStream os, String partialExclude, String partialInclude) {
         export(OBJECT_TAG_DATASET, datasetId, os, partialExclude, partialInclude, null);
 
     }
 
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public void exportDataFile(Long varId, OutputStream os, String partialExclude, String partialInclude, Long fileMetadataId) {
         export(OBJECT_TAG_DATAFILE, varId, os, partialExclude, partialInclude, fileMetadataId);
 

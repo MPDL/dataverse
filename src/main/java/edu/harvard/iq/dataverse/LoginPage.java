@@ -1,28 +1,18 @@
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.authorization.AuthenticationProvider;
-import edu.harvard.iq.dataverse.authorization.AuthenticationProviderDisplayInfo;
-import edu.harvard.iq.dataverse.authorization.AuthenticationRequest;
-import edu.harvard.iq.dataverse.authorization.AuthenticationResponse;
-import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
-import edu.harvard.iq.dataverse.authorization.CredentialsAuthenticationProvider;
-import edu.harvard.iq.dataverse.authorization.exceptions.AuthenticationFailedException;
-import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinUserServiceBean;
-import edu.harvard.iq.dataverse.authorization.providers.shib.ShibAuthenticationProvider;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.JsfHelper;
-import edu.harvard.iq.dataverse.util.SessionUtil;
-
-import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -31,7 +21,20 @@ import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
+
+import edu.harvard.iq.dataverse.authorization.AuthenticationProvider;
+import edu.harvard.iq.dataverse.authorization.AuthenticationProviderDisplayInfo;
+import edu.harvard.iq.dataverse.authorization.AuthenticationRequest;
+import edu.harvard.iq.dataverse.authorization.AuthenticationResponse;
+import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
+import edu.harvard.iq.dataverse.authorization.CredentialsAuthenticationProvider;
+import edu.harvard.iq.dataverse.authorization.exceptions.AuthenticationFailedException;
+import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinUserServiceBean;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.JsfHelper;
+import edu.harvard.iq.dataverse.util.SystemConfig;
 
 /**
  *
@@ -76,22 +79,22 @@ public class LoginPage implements java.io.Serializable {
     
     @Inject DataverseSession session;    
     
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
     
-    @EJB
+    @Inject
     BuiltinUserServiceBean dataverseUserService;
     
-    @EJB
+    @Inject
     UserServiceBean userService;
     
-    @EJB
+    @Inject
     AuthenticationServiceBean authSvc;
 
-    @EJB
+    @Inject
     SettingsServiceBean settingsService;
 
-    @EJB
+    @Inject
     SystemConfig systemConfig;
     
     @Inject

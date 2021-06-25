@@ -5,28 +5,28 @@
  */
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.dataaccess.DataAccess;
-import edu.harvard.iq.dataverse.dataaccess.StorageIO;
-import edu.harvard.iq.dataverse.dataaccess.ImageThumbConverter;
-import edu.harvard.iq.dataverse.dataset.DatasetUtil;
 import static edu.harvard.iq.dataverse.dataset.DatasetUtil.datasetLogoThumbnail;
-import edu.harvard.iq.dataverse.search.SolrSearchResult;
-import edu.harvard.iq.dataverse.util.FileUtil;
-import java.io.File;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
-import javax.faces.view.ViewScoped;
+
+import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import edu.harvard.iq.dataverse.dataaccess.DataAccess;
+import edu.harvard.iq.dataverse.dataaccess.ImageThumbConverter;
+import edu.harvard.iq.dataverse.dataaccess.StorageIO;
+import edu.harvard.iq.dataverse.search.SolrSearchResult;
+import edu.harvard.iq.dataverse.util.FileUtil;
 
 /**
  *
@@ -38,13 +38,13 @@ import org.apache.commons.io.IOUtils;
 public class ThumbnailServiceWrapper implements java.io.Serializable  {
     @Inject
     PermissionsWrapper permissionsWrapper;
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
-    @EJB
+    @Inject
     DatasetServiceBean datasetService;
-    @EJB
+    @Inject
     DatasetVersionServiceBean datasetVersionService;
-    @EJB
+    @Inject
     DataFileServiceBean dataFileService;
     
     private Map<Long, String> dvobjectThumbnailsMap = new HashMap<>();

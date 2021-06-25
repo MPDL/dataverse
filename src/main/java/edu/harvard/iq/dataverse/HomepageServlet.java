@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author skraffmi
  */
 public class HomepageServlet extends HttpServlet {
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

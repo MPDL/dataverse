@@ -17,7 +17,7 @@ import javax.ejb.Startup;
 @Singleton
 @Startup
 public class DbSettingConfigHelper {
-    @EJB
+    @Autowired
     SettingsServiceBean settingsSvc;
     
     @PostConstruct

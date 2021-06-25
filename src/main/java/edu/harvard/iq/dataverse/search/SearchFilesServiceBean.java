@@ -19,7 +19,7 @@ public class SearchFilesServiceBean {
 
     private static final Logger logger = Logger.getLogger(SearchFilesServiceBean.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     SearchServiceBean searchService;
     
     public FileView getFileView(DatasetVersion datasetVersion, User user, String userSuppliedQuery) {

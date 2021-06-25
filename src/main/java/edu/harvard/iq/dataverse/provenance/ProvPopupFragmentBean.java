@@ -76,7 +76,7 @@ public class ProvPopupFragmentBean extends AbstractApiBean implements java.io.Se
     //but equality is "broken" for entities like DataFile --mad 4.8.5    
     HashMap<String,UpdatesEntry> provenanceUpdates = new HashMap<>();
     
-    @EJB
+    @Autowired
     DataFileServiceBean dataFileService;
     @Inject
     DataverseRequestServiceBean dvRequestService;

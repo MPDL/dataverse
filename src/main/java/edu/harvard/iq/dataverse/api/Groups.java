@@ -1,5 +1,27 @@
 package edu.harvard.iq.dataverse.api;
 
+import static edu.harvard.iq.dataverse.util.json.JsonPrinter.json;
+import static edu.harvard.iq.dataverse.util.json.JsonPrinter.toJsonArray;
+import static org.apache.commons.lang.StringUtils.isNumeric;
+
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
+import javax.annotation.PostConstruct;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
+import javax.json.JsonString;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
+
 import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.IpGroup;
 import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.IpGroupProvider;
 import edu.harvard.iq.dataverse.authorization.groups.impl.maildomain.MailDomainGroup;
@@ -9,34 +31,11 @@ import edu.harvard.iq.dataverse.authorization.groups.impl.shib.ShibGroupProvider
 import edu.harvard.iq.dataverse.util.json.JsonParseException;
 import edu.harvard.iq.dataverse.util.json.JsonParser;
 
-import javax.ejb.Stateless;
-import javax.interceptor.Interceptors;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
-import static edu.harvard.iq.dataverse.util.json.JsonPrinter.*;
-
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
-import javax.annotation.PostConstruct;
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonString;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.PathParam;
-import static org.apache.commons.lang.StringUtils.isNumeric;
-
 /**
  *
  * @author michael
  */
 @Path("admin/groups")
-@Stateless
 public class Groups extends AbstractApiBean {
     private static final Logger logger = Logger.getLogger(Groups.class.getName());
 

@@ -1,13 +1,7 @@
 package edu.harvard.iq.dataverse.api;
 
-import edu.harvard.iq.dataverse.DataverseSession;
-import edu.harvard.iq.dataverse.DvObject;
-import edu.harvard.iq.dataverse.DvObjectServiceBean;
-import edu.harvard.iq.dataverse.branding.BrandingUtil;
-import edu.harvard.iq.dataverse.feedback.Feedback;
-import edu.harvard.iq.dataverse.feedback.FeedbackUtil;
 import java.util.List;
-import javax.ejb.EJB;
+
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonNumber;
@@ -18,10 +12,19 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.harvard.iq.dataverse.DataverseSession;
+import edu.harvard.iq.dataverse.DvObject;
+import edu.harvard.iq.dataverse.DvObjectServiceBean;
+import edu.harvard.iq.dataverse.branding.BrandingUtil;
+import edu.harvard.iq.dataverse.feedback.Feedback;
+import edu.harvard.iq.dataverse.feedback.FeedbackUtil;
+
 @Path("admin/feedback")
 public class FeedbackApi extends AbstractApiBean {
 
-    @EJB
+    @Autowired
     DvObjectServiceBean dvObjectSvc;
 
     @POST

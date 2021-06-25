@@ -8,27 +8,26 @@ package edu.harvard.iq.dataverse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author skraffmiller
  */
-@Stateless
-@Named
+@Service
 public class DataverseLinkingServiceBean implements java.io.Serializable {
     private static final Logger logger = Logger.getLogger(DataverseLinkingServiceBean.class.getCanonicalName());
 
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     private EntityManager em;
     
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
     
     

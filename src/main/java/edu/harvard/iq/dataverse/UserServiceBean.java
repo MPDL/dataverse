@@ -1,29 +1,30 @@
 package edu.harvard.iq.dataverse;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.search.IndexServiceBean;
-import edu.harvard.iq.dataverse.userdata.UserUtil;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Named;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import org.apache.commons.lang.StringUtils;
 import org.ocpsoft.common.util.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-@Stateless
-@Named
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.search.IndexServiceBean;
+import edu.harvard.iq.dataverse.userdata.UserUtil;
+
+@Service
 public class UserServiceBean {
 
     private static final Logger logger = Logger.getLogger(UserServiceBean.class.getCanonicalName());
@@ -39,7 +40,7 @@ public class UserServiceBean {
     @PersistenceContext
     EntityManager em;
 
-    @EJB IndexServiceBean indexService;
+    @Autowired IndexServiceBean indexService;
 
     public AuthenticatedUser find(Object pk) {
         return (AuthenticatedUser) em.find(AuthenticatedUser.class, pk);
@@ -525,7 +526,7 @@ public class UserServiceBean {
         return save(user);
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public AuthenticatedUser updateLastApiUseTime(AuthenticatedUser user) {
         //assumes that AuthenticatedUser user already exists
         user.setLastApiUseTime(new Timestamp(new Date().getTime()));

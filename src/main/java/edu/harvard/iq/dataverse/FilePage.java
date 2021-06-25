@@ -5,8 +5,27 @@
  */
 package edu.harvard.iq.dataverse;
 
+import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.validation.ConstraintViolation;
+
+import org.primefaces.component.tabview.TabView;
+import org.primefaces.event.TabChangeEvent;
+
 import edu.harvard.iq.dataverse.DatasetVersionServiceBean.RetrieveDatasetVersionResponse;
-import edu.harvard.iq.dataverse.dataaccess.SwiftAccessIO;
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.Permission;
 import edu.harvard.iq.dataverse.authorization.users.ApiToken;
@@ -14,6 +33,7 @@ import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.authorization.users.PrivateUrlUser;
 import edu.harvard.iq.dataverse.authorization.users.User;
 import edu.harvard.iq.dataverse.dataaccess.StorageIO;
+import edu.harvard.iq.dataverse.dataaccess.SwiftAccessIO;
 import edu.harvard.iq.dataverse.engine.command.Command;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
@@ -29,32 +49,13 @@ import edu.harvard.iq.dataverse.externaltools.ExternalToolHandler;
 import edu.harvard.iq.dataverse.externaltools.ExternalToolServiceBean;
 import edu.harvard.iq.dataverse.makedatacount.MakeDataCountLoggingServiceBean;
 import edu.harvard.iq.dataverse.makedatacount.MakeDataCountLoggingServiceBean.MakeDataCountEntry;
-import edu.harvard.iq.dataverse.makedatacount.MakeDataCountUtil;
 import edu.harvard.iq.dataverse.privateurl.PrivateUrl;
 import edu.harvard.iq.dataverse.privateurl.PrivateUrlServiceBean;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
-import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
 import edu.harvard.iq.dataverse.util.SystemConfig;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.validation.ConstraintViolation;
-import org.primefaces.component.tabview.TabView;
-import org.primefaces.event.TabChangeEvent;
 
 /**
  *
@@ -86,34 +87,34 @@ public class FilePage implements java.io.Serializable {
      */
     private boolean termsMet;
 
-    @EJB
+    @Inject
     DataFileServiceBean datafileService;
     
-    @EJB
+    @Inject
     DatasetVersionServiceBean datasetVersionService;
 
-    @EJB
+    @Inject
     PermissionServiceBean permissionService;
-    @EJB
+    @Inject
     SettingsServiceBean settingsService;
-    @EJB
+    @Inject
     FileDownloadServiceBean fileDownloadService;
-    @EJB
+    @Inject
     GuestbookResponseServiceBean guestbookResponseService;
-    @EJB
+    @Inject
     AuthenticationServiceBean authService;
     
-    @EJB
+    @Inject
     SystemConfig systemConfig;
 
 
     @Inject
     DataverseSession session;
-    @EJB
+    @Inject
     EjbDataverseEngine commandEngine;
-    @EJB
+    @Inject
     ExternalToolServiceBean externalToolService;
-    @EJB
+    @Inject
     PrivateUrlServiceBean privateUrlService;
 
     @Inject
@@ -597,20 +598,7 @@ public class FilePage implements java.io.Serializable {
             commandEngine.submit(cmd);
             updateCommandSuccess = true;
 
-        } catch (EJBException ex) {
-            
-            StringBuilder error = new StringBuilder();
-            error.append(ex).append(" ");
-            error.append(ex.getMessage()).append(" ");
-            
-            
-            Throwable cause = ex;
-            while (cause.getCause()!= null) {
-                cause = cause.getCause();
-                error.append(cause).append(" ");
-                error.append(cause.getMessage()).append(" ");
-            }
-            return null;
+        
         } catch (CommandException ex) {
             fileDeleteInProgress = false;
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, BundleUtil.getStringFromBundle("dataset.save.fail"), " - " + ex.toString()));

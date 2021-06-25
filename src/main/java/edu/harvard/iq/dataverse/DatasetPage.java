@@ -1,6 +1,66 @@
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.provenance.ProvPopupFragmentBean;
+import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
+import static edu.harvard.iq.dataverse.util.StringUtil.isEmpty;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+//import org.primefaces.context.RequestContext;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.response.FacetField;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
+import org.primefaces.PrimeFaces;
+import org.primefaces.component.tabview.TabView;
+import org.primefaces.event.CloseEvent;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.TabChangeEvent;
+import org.primefaces.event.data.PageEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+import org.primefaces.model.file.UploadedFile;
+
 import edu.harvard.iq.dataverse.api.AbstractApiBean;
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.Permission;
@@ -10,8 +70,8 @@ import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.authorization.users.PrivateUrlUser;
 import edu.harvard.iq.dataverse.authorization.users.User;
 import edu.harvard.iq.dataverse.branding.BrandingUtil;
-import edu.harvard.iq.dataverse.dataaccess.StorageIO;
 import edu.harvard.iq.dataverse.dataaccess.ImageThumbConverter;
+import edu.harvard.iq.dataverse.dataaccess.StorageIO;
 import edu.harvard.iq.dataverse.dataaccess.SwiftAccessIO;
 import edu.harvard.iq.dataverse.datacapturemodule.DataCaptureModuleUtil;
 import edu.harvard.iq.dataverse.datacapturemodule.ScriptRequestResponse;
@@ -22,27 +82,49 @@ import edu.harvard.iq.dataverse.datavariable.VariableServiceBean;
 import edu.harvard.iq.dataverse.engine.command.Command;
 import edu.harvard.iq.dataverse.engine.command.CommandContext;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
+import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
+import edu.harvard.iq.dataverse.engine.command.impl.AbstractSubmitToArchiveCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.CreateNewDatasetCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.CreatePrivateUrlCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.CuratePublishedDatasetVersionCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.DeaccessionDatasetVersionCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.DeleteDatasetVersionCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.DeletePrivateUrlCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.DestroyDatasetCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.GetLatestPublishedDatasetVersionCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.GetPrivateUrlCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.LinkDatasetCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.PublishDatasetCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.PublishDatasetResult;
 import edu.harvard.iq.dataverse.engine.command.impl.PublishDataverseCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.RequestRsyncScriptCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.RestrictFileCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.ReturnDatasetToAuthorCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.SubmitDatasetForReviewCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetVersionCommand;
 import edu.harvard.iq.dataverse.export.ExportException;
 import edu.harvard.iq.dataverse.export.ExportService;
+import edu.harvard.iq.dataverse.export.SchemaDotOrgExporter;
 import edu.harvard.iq.dataverse.export.spi.Exporter;
+import edu.harvard.iq.dataverse.externaltools.ExternalTool;
+import edu.harvard.iq.dataverse.externaltools.ExternalToolHandler;
+import edu.harvard.iq.dataverse.externaltools.ExternalToolServiceBean;
 import edu.harvard.iq.dataverse.ingest.IngestRequest;
 import edu.harvard.iq.dataverse.ingest.IngestServiceBean;
+import edu.harvard.iq.dataverse.makedatacount.MakeDataCountLoggingServiceBean;
+import edu.harvard.iq.dataverse.makedatacount.MakeDataCountLoggingServiceBean.MakeDataCountEntry;
 import edu.harvard.iq.dataverse.metadataimport.ForeignMetadataImportServiceBean;
 import edu.harvard.iq.dataverse.privateurl.PrivateUrl;
 import edu.harvard.iq.dataverse.privateurl.PrivateUrlServiceBean;
 import edu.harvard.iq.dataverse.privateurl.PrivateUrlUtil;
+import edu.harvard.iq.dataverse.provenance.ProvPopupFragmentBean;
+import edu.harvard.iq.dataverse.search.FacetLabel;
+import edu.harvard.iq.dataverse.search.SearchConstants;
+import edu.harvard.iq.dataverse.search.SearchFields;
 import edu.harvard.iq.dataverse.search.SearchFilesServiceBean;
+import edu.harvard.iq.dataverse.search.SearchServiceBean;
+import edu.harvard.iq.dataverse.search.SearchUtil;
+import edu.harvard.iq.dataverse.search.SolrClientService;
 import edu.harvard.iq.dataverse.search.SortBy;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.ArchiverUtil;
@@ -50,96 +132,9 @@ import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.FileSortFieldAndOrder;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
-import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
-import static edu.harvard.iq.dataverse.util.StringUtil.isEmpty;
-
 import edu.harvard.iq.dataverse.util.StringUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 import edu.harvard.iq.dataverse.workflows.WorkflowComment;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.Collection;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ValueChangeEvent;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.file.UploadedFile;
-import javax.validation.ConstraintViolation;
-import org.apache.commons.httpclient.HttpClient;
-//import org.primefaces.context.RequestContext;
-import java.util.Arrays;
-import java.util.HashSet;
-import javax.faces.model.SelectItem;
-import java.util.logging.Level;
-import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
-import edu.harvard.iq.dataverse.engine.command.impl.AbstractSubmitToArchiveCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.CreateNewDatasetCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.GetLatestPublishedDatasetVersionCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.RequestRsyncScriptCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.PublishDatasetResult;
-import edu.harvard.iq.dataverse.engine.command.impl.RestrictFileCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.ReturnDatasetToAuthorCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.SubmitDatasetForReviewCommand;
-import edu.harvard.iq.dataverse.externaltools.ExternalTool;
-import edu.harvard.iq.dataverse.externaltools.ExternalToolServiceBean;
-import edu.harvard.iq.dataverse.export.SchemaDotOrgExporter;
-import edu.harvard.iq.dataverse.externaltools.ExternalToolHandler;
-import edu.harvard.iq.dataverse.makedatacount.MakeDataCountLoggingServiceBean;
-import edu.harvard.iq.dataverse.makedatacount.MakeDataCountLoggingServiceBean.MakeDataCountEntry;
-import java.util.Collections;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
-
-import javax.faces.event.AjaxBehaviorEvent;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.apache.commons.io.IOUtils;
-
-import org.primefaces.component.tabview.TabView;
-import org.primefaces.event.CloseEvent;
-import org.primefaces.event.TabChangeEvent;
-import org.primefaces.event.data.PageEvent;
-
-import edu.harvard.iq.dataverse.search.FacetLabel;
-import edu.harvard.iq.dataverse.search.SearchConstants;
-import edu.harvard.iq.dataverse.search.SearchFields;
-import edu.harvard.iq.dataverse.search.SearchServiceBean;
-import edu.harvard.iq.dataverse.search.SearchUtil;
-import edu.harvard.iq.dataverse.search.SolrClientService;
-import java.util.Comparator;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.response.FacetField;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
-import org.primefaces.PrimeFaces;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
 
 /**
  *
@@ -162,59 +157,59 @@ public class DatasetPage implements java.io.Serializable {
     };
 
 
-    @EJB
+    @Inject
     DatasetServiceBean datasetService;
-    @EJB
+    @Inject
     DatasetVersionServiceBean datasetVersionService;
-    @EJB
+    @Inject
     DataFileServiceBean datafileService;
-    @EJB
+    @Inject
     PermissionServiceBean permissionService;
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
-    @EJB
+    @Inject
     DatasetFieldServiceBean fieldService;
-    @EJB
+    @Inject
     VariableServiceBean variableService;
-    @EJB
+    @Inject
     IngestServiceBean ingestService;
-    @EJB
+    @Inject
     ForeignMetadataImportServiceBean metadataImportService;
-    @EJB
+    @Inject
     EjbDataverseEngine commandEngine;
     @Inject
     DataverseSession session;
-    @EJB
+    @Inject
     UserNotificationServiceBean userNotificationService;
-    @EJB
+    @Inject
     BuiltinUserServiceBean builtinUserService;
-    @EJB
+    @Inject
     DataverseFieldTypeInputLevelServiceBean dataverseFieldTypeInputLevelService;
-    @EJB
+    @Inject
     SettingsServiceBean settingsService;
-    @EJB
+    @Inject
     SearchServiceBean searchService;
-    @EJB
+    @Inject
     AuthenticationServiceBean authService;
-    @EJB
+    @Inject
     SystemConfig systemConfig;
-    @EJB
+    @Inject
     GuestbookResponseServiceBean guestbookResponseService;
-    @EJB
+    @Inject
     FileDownloadServiceBean fileDownloadService;
-    @EJB
+    @Inject
     DataverseLinkingServiceBean dvLinkingService;
-    @EJB
+    @Inject
     DatasetLinkingServiceBean dsLinkingService;
-    @EJB
+    @Inject
     SearchFilesServiceBean searchFilesService;
-    @EJB
+    @Inject
     DataverseRoleServiceBean dataverseRoleService;
-    @EJB
+    @Inject
     PrivateUrlServiceBean privateUrlService;
-    @EJB
+    @Inject
     ExternalToolServiceBean externalToolService;
-    @EJB
+    @Inject
     SolrClientService solrClientService;
     @Inject
     DataverseRequestServiceBean dvRequestService;
@@ -3444,7 +3439,13 @@ public class DatasetPage implements java.io.Serializable {
                 }
             }
             logger.fine("Successfully executed SaveDatasetCommand.");
-        } catch (EJBException ex) {
+        }  catch (CommandException ex) {
+            //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Dataset Save Failed", " - " + ex.toString()));
+            logger.log(Level.SEVERE, "CommandException, when attempting to update the dataset: " + ex.getMessage(), ex);
+            populateDatasetUpdateFailureMessage();
+            return returnToDraftVersion();
+        }
+        catch (Exception ex) {
             StringBuilder error = new StringBuilder();
             error.append(ex).append(" ");
             error.append(ex.getMessage()).append(" ");
@@ -3455,11 +3456,6 @@ public class DatasetPage implements java.io.Serializable {
                 error.append(cause.getMessage()).append(" ");
             }
             logger.log(Level.FINE, "Couldn''t save dataset: {0}", error.toString());
-            populateDatasetUpdateFailureMessage();
-            return returnToDraftVersion();
-        } catch (CommandException ex) {
-            //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Dataset Save Failed", " - " + ex.toString()));
-            logger.log(Level.SEVERE, "CommandException, when attempting to update the dataset: " + ex.getMessage(), ex);
             populateDatasetUpdateFailureMessage();
             return returnToDraftVersion();
         }

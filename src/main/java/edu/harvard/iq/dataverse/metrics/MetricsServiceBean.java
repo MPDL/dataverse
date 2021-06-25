@@ -46,7 +46,7 @@ public class MetricsServiceBean implements Serializable {
 
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     private EntityManager em;
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
 
     /** Dataverses */

@@ -1,31 +1,38 @@
 package edu.harvard.iq.dataverse.authorization.groups.impl.maildomain;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.ws.rs.NotFoundException;
+
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.stereotype.Service;
+
 import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
 import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.confirmemail.ConfirmEmailServiceBean;
-
-import java.util.*;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import javax.ejb.*;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.ws.rs.NotFoundException;
+import net.sf.ehcache.concurrent.LockType;
 
 /**
  * A bean providing the {@link MailDomainGroupProvider}s with container services, such as database connectivity.
  * Also containing the business logic to decide about matching groups.
  */
-@Named
-@Singleton
-@Startup
-@DependsOn("StartupFlywayMigrator")
+@Service
+//@DependsOn("StartupFlywayMigrator")
 public class MailDomainGroupServiceBean {
     
     private static final Logger logger = Logger.getLogger(edu.harvard.iq.dataverse.authorization.groups.impl.explicit.ExplicitGroupServiceBean.class.getName());
@@ -52,7 +59,7 @@ public class MailDomainGroupServiceBean {
      * Update the groups from the database.
      * This is done because regex compilation is an expensive operation and should be cached.
      */
-    @Lock(LockType.WRITE)
+    @Lock(LockModeType.WRITE)
     public void updateGroups() {
         List<MailDomainGroup> all = findAll();
         this.simpleGroups = all.stream().filter(mg -> !mg.isRegEx()).collect(Collectors.toList());
@@ -64,7 +71,7 @@ public class MailDomainGroupServiceBean {
             ));
     }
     
-    @Lock(LockType.READ)
+    @Lock(LockModeType.READ)
     public MailDomainGroupProvider getProvider() {
         return provider;
     }
@@ -74,7 +81,7 @@ public class MailDomainGroupServiceBean {
      * @param user
      * @return A collection of groups with matching email domains
      */
-    @Lock(LockType.READ)
+    @Lock(LockModeType.READ)
     public Set<MailDomainGroup> findAllWithDomain(AuthenticatedUser user) {
         
         // if the mail address is not verified, escape...
@@ -106,7 +113,7 @@ public class MailDomainGroupServiceBean {
      * Get all mail domain groups from the database.
      * @return A result list from the database. May be null if no results found.
      */
-    @Lock(LockType.READ)
+    @Lock(LockModeType.READ)
     public List<MailDomainGroup> findAll() {
         return em.createNamedQuery("MailDomainGroup.findAll", MailDomainGroup.class).getResultList();
     }
@@ -116,7 +123,7 @@ public class MailDomainGroupServiceBean {
      * @param groupAlias
      * @return
      */
-    @Lock(LockType.READ)
+    @Lock(LockModeType.READ)
     Optional<MailDomainGroup> findByAlias(String groupAlias) {
         try  {
             return Optional.of(
@@ -137,7 +144,7 @@ public class MailDomainGroupServiceBean {
      * @return The saved entity, including updated group provider attribute
      * @throws NotFoundException if groupName does not match both a group in database and the alias of the provided group
      */
-    @Lock(LockType.WRITE)
+    @Lock(LockModeType.WRITE)
     public MailDomainGroup saveOrUpdate(Optional<String> groupAlias, MailDomainGroup grp ) {
         ActionLogRecord alr = new ActionLogRecord(ActionLogRecord.ActionType.GlobalGroups, "mailDomainCreate");
         alr.setInfo(grp.getIdentifier());
@@ -175,7 +182,7 @@ public class MailDomainGroupServiceBean {
      * @param groupAlias
      * @throws NotFoundException if no group with given groupAlias exists.
      */
-    @Lock(LockType.WRITE)
+    @Lock(LockModeType.WRITE)
     public void delete(String groupAlias) {
         ActionLogRecord alr = new ActionLogRecord(ActionLogRecord.ActionType.GlobalGroups, "mailDomainDelete");
         alr.setInfo(groupAlias);

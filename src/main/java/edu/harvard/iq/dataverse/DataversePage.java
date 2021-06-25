@@ -1,5 +1,33 @@
 package edu.harvard.iq.dataverse;
 
+import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.primefaces.PrimeFaces;
+import org.primefaces.event.TransferEvent;
+import org.primefaces.model.DualListModel;
+
 import edu.harvard.iq.dataverse.UserNotification.Type;
 import edu.harvard.iq.dataverse.authorization.Permission;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
@@ -7,7 +35,6 @@ import edu.harvard.iq.dataverse.authorization.users.User;
 import edu.harvard.iq.dataverse.dataaccess.DataAccess;
 import edu.harvard.iq.dataverse.dataverse.DataverseUtil;
 import edu.harvard.iq.dataverse.engine.command.Command;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.impl.CreateDataverseCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.CreateSavedSearchCommand;
@@ -17,7 +44,6 @@ import edu.harvard.iq.dataverse.engine.command.impl.PublishDataverseCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseCommand;
 import edu.harvard.iq.dataverse.search.FacetCategory;
 import edu.harvard.iq.dataverse.search.IndexServiceBean;
-import edu.harvard.iq.dataverse.search.SearchException;
 import edu.harvard.iq.dataverse.search.SearchFields;
 import edu.harvard.iq.dataverse.search.SearchIncludeFragment;
 import edu.harvard.iq.dataverse.search.SearchServiceBean;
@@ -26,36 +52,7 @@ import edu.harvard.iq.dataverse.search.savedsearch.SavedSearchFilterQuery;
 import edu.harvard.iq.dataverse.search.savedsearch.SavedSearchServiceBean;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
-import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
 import edu.harvard.iq.dataverse.util.SystemConfig;
-import java.util.List;
-import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
-import org.primefaces.model.DualListModel;
-import javax.ejb.EJBException;
-import javax.faces.event.ValueChangeEvent;
-import javax.faces.model.SelectItem;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
-import org.primefaces.PrimeFaces;
-import org.primefaces.event.TransferEvent;
 
 /**
  *
@@ -75,42 +72,42 @@ public class DataversePage implements java.io.Serializable {
         SAVEDSEARCH,  LINKDATAVERSE
     }
 
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
-    @EJB
+    @Inject
     DatasetServiceBean datasetService;
     @Inject
     DataverseSession session;
-    @EJB
+    @Inject
     EjbDataverseEngine commandEngine;
-    @EJB
+    @Inject
     SearchServiceBean searchService;
-    @EJB
+    @Inject
     DatasetFieldServiceBean datasetFieldService;
-    @EJB
+    @Inject
     DataverseFacetServiceBean dataverseFacetService;
-    @EJB
+    @Inject
     UserNotificationServiceBean userNotificationService;
-    @EJB
+    @Inject
     FeaturedDataverseServiceBean featuredDataverseService;
-    @EJB
+    @Inject
     DataverseFieldTypeInputLevelServiceBean dataverseFieldTypeInputLevelService;
-    @EJB
+    @Inject
     PermissionServiceBean permissionService;
-    @EJB
+    @Inject
     ControlledVocabularyValueServiceBean controlledVocabularyValueServiceBean;
-    @EJB
+    @Inject
     SavedSearchServiceBean savedSearchService;
-    @EJB
+    @Inject
     SystemConfig systemConfig;
-    @EJB DataverseRoleServiceBean dataverseRoleServiceBean;
+    @Inject DataverseRoleServiceBean dataverseRoleServiceBean;
     @Inject
     SearchIncludeFragment searchIncludeFragment;
     @Inject
     DataverseRequestServiceBean dvRequestService;
     @Inject
     SettingsWrapper settingsWrapper; 
-    @EJB
+    @Inject
     DataverseLinkingServiceBean linkingService;
     @Inject PermissionsWrapper permissionsWrapper;
     @Inject DataverseHeaderFragment dataverseHeaderFragment; 
@@ -323,7 +320,7 @@ public class DataversePage implements java.io.Serializable {
             } else {
                 try {
                     dataverse = dataverseService.findRootDataverse();
-                } catch (EJBException e) {
+                } catch (Exception e) {
                     // @todo handle case with no root dataverse (a fresh installation) with message about using API to create the root 
                     dataverse = null;
                 }

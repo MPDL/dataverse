@@ -31,7 +31,7 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 public class SolrClientService {
     private static final Logger logger = Logger.getLogger(SolrClientService.class.getCanonicalName());
     
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
     
     private SolrClient solrClient;

@@ -1,13 +1,14 @@
 package edu.harvard.iq.dataverse;
 
-import javax.ejb.Stateless;
 import javax.json.JsonObject;
+
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Naomi
  */
-@Stateless
+@Component
 public class DataTagsContainer {
     
     private String datasetName;

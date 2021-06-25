@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  */
 public class IngestServiceShapefileHelper {
     
-    //@EJB
+    //@Autowired
     //DataFileServiceBean fileService; 
 
     /*

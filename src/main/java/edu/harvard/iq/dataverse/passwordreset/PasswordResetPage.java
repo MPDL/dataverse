@@ -38,26 +38,26 @@ public class PasswordResetPage implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(PasswordResetPage.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     PasswordResetServiceBean passwordResetService;
-    @EJB
+    @Autowired
     BuiltinUserServiceBean dataverseUserService;
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;    
-    @EJB
+    @Autowired
     AuthenticationServiceBean authSvc;
     @Inject
     DataverseSession session;
     @Inject
     SettingsWrapper settingsWrapper; 
     
-    @EJB
+    @Autowired
     ActionLogServiceBean actionLogSvc;
 
-    @EJB
+    @Autowired
     PasswordValidatorServiceBean passwordValidatorService;
     
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
 
     /**

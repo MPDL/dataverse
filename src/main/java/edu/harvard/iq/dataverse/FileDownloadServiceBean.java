@@ -1,5 +1,25 @@
 package edu.harvard.iq.dataverse;
 
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Logger;
+
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.primefaces.PrimeFaces;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.Permission;
 import edu.harvard.iq.dataverse.authorization.users.ApiToken;
@@ -20,26 +40,6 @@ import edu.harvard.iq.dataverse.privateurl.PrivateUrlServiceBean;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.StringUtil;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-
-import org.primefaces.PrimeFaces;
 //import org.primefaces.context.RequestContext;
 
 /**
@@ -48,38 +48,37 @@ import org.primefaces.PrimeFaces;
  * Handles All File Download processes
  * including Guestbook responses
  */
-@Stateless
-@Named
+@Service
 public class FileDownloadServiceBean implements java.io.Serializable {
 
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     private EntityManager em;
     
-    @EJB
+    @Inject
     GuestbookResponseServiceBean guestbookResponseService;
-    @EJB
+    @Inject
     DatasetServiceBean datasetService;
-    @EJB
+    @Inject
     DatasetVersionServiceBean datasetVersionService;
-    @EJB
+    @Inject
     DataFileServiceBean datafileService;
-    @EJB
+    @Inject
     PermissionServiceBean permissionService;
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
-    @EJB
+    @Inject
     UserNotificationServiceBean userNotificationService;
-    @EJB
+    @Inject
     AuthenticationServiceBean authService;
-    @EJB
+    @Inject
     PrivateUrlServiceBean privateUrlService;
-    @EJB
+    @Inject
     SettingsServiceBean settingsService;
 
     @Inject
     DataverseSession session;
     
-    @EJB
+    @Autowired
     EjbDataverseEngine commandEngine;
     
     @Inject

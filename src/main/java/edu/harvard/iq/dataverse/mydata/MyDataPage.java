@@ -46,15 +46,15 @@ public class MyDataPage implements java.io.Serializable {
 
     @Inject DataverseSession session;    
 
-    @EJB
+    @Autowired
     DataverseRoleServiceBean dataverseRoleService;
-    @EJB
+    @Autowired
     RoleAssigneeServiceBean roleAssigneeService;
-    @EJB
+    @Autowired
     DvObjectServiceBean dvObjectServiceBean;
-    @EJB
+    @Autowired
     SearchServiceBean searchService;
-//    @EJB
+//    @Autowired
 //    MyDataQueryHelperServiceBean myDataQueryHelperServiceBean;
     @Inject
     PermissionsWrapper permissionsWrapper;

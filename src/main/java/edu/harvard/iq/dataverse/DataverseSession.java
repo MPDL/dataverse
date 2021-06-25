@@ -1,10 +1,26 @@
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinUserServiceBean;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.logging.Logger;
+
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import edu.harvard.iq.dataverse.PermissionServiceBean.StaticPermissionQuery;
 import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
 import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
+import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinUserServiceBean;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.authorization.users.GuestUser;
 import edu.harvard.iq.dataverse.authorization.users.User;
@@ -12,19 +28,6 @@ import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
 import edu.harvard.iq.dataverse.util.SessionUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -37,13 +40,13 @@ public class DataverseSession implements Serializable{
     /* Note that on logout, variables must be cleared manually in DataverseHeaderFragment*/
     private User user;
 
-    @EJB
+    @Inject
     PermissionServiceBean permissionsService;
 
-    @EJB
+    @Inject
     BuiltinUserServiceBean usersSvc;
 	
-    @EJB 
+    @Inject 
     ActionLogServiceBean logSvc;
     
     @Inject
@@ -52,13 +55,13 @@ public class DataverseSession implements Serializable{
     @Inject
     DataverseHeaderFragment headerFragment;
     
-    @EJB
+    @Inject
     SystemConfig systemConfig;
     
-    @EJB
+    @Inject
     BannerMessageServiceBean bannerMessageService;
 
-    @EJB
+    @Inject
     AuthenticationServiceBean authenticationService;
 
     private static final Logger logger = Logger.getLogger(DataverseSession.class.getCanonicalName());

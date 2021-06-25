@@ -17,9 +17,9 @@ public class RepositoryStorageAbstractionLayerPage {
 
     private static final Logger logger = Logger.getLogger(RepositoryStorageAbstractionLayerPage.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
-    @EJB
+    @Autowired
     StorageSiteServiceBean storageSiteServiceBean;
 
     public String getLocalDataAccessDirectory(DatasetVersion datasetVersion) {

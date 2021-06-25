@@ -1,9 +1,6 @@
 
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.dataaccess.StorageIO;
-import edu.harvard.iq.dataverse.util.FileUtil;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.DigestInputStream;
@@ -11,29 +8,33 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
 import org.apache.tika.Tika;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.dataaccess.StorageIO;
+import edu.harvard.iq.dataverse.util.FileUtil;
+import edu.harvard.iq.dataverse.util.SystemConfig;
 
 /**
  *
  * @author ekraffmiller
  *  Methods related to the AuxiliaryFile Entity.
  */
-@Stateless
-@Named
+@Service
 public class AuxiliaryFileServiceBean implements java.io.Serializable {
    private static final Logger logger = Logger.getLogger(AuxiliaryFileServiceBean.class.getCanonicalName());
 
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     protected EntityManager em;
     
-    @EJB
+    @Autowired
     private SystemConfig systemConfig;
     
 

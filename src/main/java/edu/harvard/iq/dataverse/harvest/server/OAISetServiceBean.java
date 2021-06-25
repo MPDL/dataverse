@@ -47,16 +47,16 @@ public class OAISetServiceBean implements java.io.Serializable {
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     private EntityManager em;
     
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
     
-    @EJB
+    @Autowired
     OAIRecordServiceBean oaiRecordService;
     
-    @EJB 
+    @Autowired 
     DatasetServiceBean datasetService;
     
-    @EJB
+    @Autowired
     SolrClientService solrClientService;
     
     private static final Logger logger = Logger.getLogger("edu.harvard.iq.dataverse.harvest.server.OAISetServiceBean");

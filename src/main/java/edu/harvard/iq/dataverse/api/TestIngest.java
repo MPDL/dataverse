@@ -6,6 +6,26 @@
 
 package edu.harvard.iq.dataverse.api;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.logging.Logger;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.UriInfo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import edu.harvard.iq.dataverse.DataFile;
 import edu.harvard.iq.dataverse.DataTable;
 import edu.harvard.iq.dataverse.Dataset;
@@ -16,24 +36,6 @@ import edu.harvard.iq.dataverse.ingest.tabulardata.TabularDataFileReader;
 import edu.harvard.iq.dataverse.ingest.tabulardata.TabularDataIngest;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.StringUtil;
-import java.io.BufferedInputStream;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.UriInfo;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.QueryParam;
 
 
 
@@ -58,12 +60,12 @@ import javax.ws.rs.QueryParam;
 public class TestIngest {
     private static final Logger logger = Logger.getLogger(TestIngest.class.getCanonicalName());
     
-    @EJB 
+    @Autowired 
     DatasetServiceBean datasetService; 
-    @EJB
+    @Autowired
     IngestServiceBean ingestService;
 
-    //@EJB
+    //@Autowired
     
     @Path("test/file")
     @GET

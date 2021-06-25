@@ -1,17 +1,12 @@
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
-import edu.harvard.iq.dataverse.engine.command.impl.DeleteGuestbookCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseGuestbookRootCommand;
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.JsfHelper;
 import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -23,6 +18,13 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
+import edu.harvard.iq.dataverse.engine.command.impl.DeleteGuestbookCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseGuestbookRootCommand;
+import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.JsfHelper;
+
 /**
  *
  * @author skraffmiller
@@ -32,16 +34,16 @@ import javax.servlet.http.HttpServletResponse;
 public class ManageGuestbooksPage implements java.io.Serializable {
     private static final Logger logger = Logger.getLogger(ManageGuestbooksPage.class.getCanonicalName());
 
-    @EJB
+    @Inject
     DataverseServiceBean dvService;
 
-    @EJB
+    @Inject
     GuestbookResponseServiceBean guestbookResponseService;
 
-    @EJB
+    @Inject
     GuestbookServiceBean guestbookService;
 
-    @EJB
+    @Inject
     EjbDataverseEngine engineService;
 
     @PersistenceContext(unitName = "VDCNet-ejbPU")

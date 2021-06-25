@@ -1,15 +1,16 @@
 package edu.harvard.iq.dataverse.confirmemail;
 
+import java.util.logging.Logger;
+
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import edu.harvard.iq.dataverse.DataverseSession;
 import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  *
@@ -21,12 +22,12 @@ public class ConfirmEmailPage implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(ConfirmEmailPage.class.getCanonicalName());
 
-    @EJB
+    @Inject
     ConfirmEmailServiceBean confirmEmailService;
     @Inject
     DataverseSession session;
 
-    @EJB
+    @Inject
     ActionLogServiceBean actionLogSvc;
 
     /**

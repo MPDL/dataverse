@@ -32,6 +32,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.abdera.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.swordapp.server.AuthCredentials;
 import org.swordapp.server.ContainerManager;
 import org.swordapp.server.Deposit;
@@ -47,28 +48,28 @@ public class ContainerManagerImpl implements ContainerManager {
 
     private static final Logger logger = Logger.getLogger(ContainerManagerImpl.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     protected EjbDataverseEngine engineSvc;
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
-    @EJB
+    @Autowired
     IndexServiceBean indexService;
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     EntityManager em;
-    @EJB
+    @Autowired
     ImportGenericServiceBean importGenericService;
-    @EJB
+    @Autowired
     PermissionServiceBean permissionService;
-    @EJB
+    @Autowired
     DataFileServiceBean datafileService;
     @Inject
     SwordAuth swordAuth;
     @Inject
     UrlManager urlManager;
     SwordConfigurationImpl swordConfiguration = new SwordConfigurationImpl();
-    @EJB
+    @Autowired
     SwordServiceBean swordService;
     private HttpServletRequest httpRequest;
 
@@ -306,7 +307,7 @@ public class ContainerManagerImpl implements ContainerManager {
                     Dataset dataset = null;
                     try {
                         dataset = datasetService.findByGlobalId(globalId);
-                    } catch (EJBException ex) {
+                    } catch (Exception ex) {
                         throw new SwordError(UriRegistry.ERROR_BAD_REQUEST, "Could not find dataset based on global id (" + globalId + ") in URL: " + uri);
                     }
                     if (dataset != null) {

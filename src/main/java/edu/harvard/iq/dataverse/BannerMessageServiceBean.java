@@ -5,22 +5,23 @@
  */
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 
 /**
  *
  * @author skraffmi
  */
-@Stateless
-@Named
+@Service
 public class BannerMessageServiceBean implements java.io.Serializable {
     private static final Logger logger = Logger.getLogger(BannerMessageServiceBean.class.getCanonicalName());
 

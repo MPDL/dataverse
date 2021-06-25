@@ -37,21 +37,21 @@ public class SolrIndexServiceBean {
 
     private static final Logger logger = Logger.getLogger(SolrIndexServiceBean.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
-    @EJB
+    @Autowired
     DvObjectServiceBean dvObjectService;
-    @EJB
+    @Autowired
     SearchPermissionsServiceBean searchPermissionsService;
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
-    @EJB
+    @Autowired
     DataverseRoleServiceBean rolesSvc;
-    @EJB
+    @Autowired
     IndexServiceBean indexService;
-    @EJB
+    @Autowired
     SolrClientService solrClientService;
 
     public static String numRowsClearedByClearAllIndexTimes = "numRowsClearedByClearAllIndexTimes";

@@ -5,19 +5,20 @@
  */
 package edu.harvard.iq.dataverse.api;
 
-import edu.harvard.iq.dataverse.DatasetServiceBean;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.PUT;
-import edu.harvard.iq.dataverse.harvest.server.OAISetServiceBean;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.harvard.iq.dataverse.DatasetServiceBean;
 import edu.harvard.iq.dataverse.harvest.server.OAISet;
+import edu.harvard.iq.dataverse.harvest.server.OAISetServiceBean;
 
 /**
  *
@@ -29,10 +30,10 @@ import edu.harvard.iq.dataverse.harvest.server.OAISet;
 public class Metadata extends AbstractApiBean {
     private static final Logger logger = Logger.getLogger(Metadata.class.getName());
 
-    @EJB
+    @Autowired
     OAISetServiceBean oaiSetService;
 
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
 
     // The following 2 commands start export all jobs in the background, 

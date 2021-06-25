@@ -32,10 +32,10 @@ public class PrivateUrlServiceBean implements Serializable {
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     private EntityManager em;
 
-    @EJB
+    @Autowired
     DatasetServiceBean datasetServiceBean;
 
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
 
     /**

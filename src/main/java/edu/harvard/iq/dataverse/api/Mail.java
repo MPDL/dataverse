@@ -1,11 +1,13 @@
 package edu.harvard.iq.dataverse.api;
 
-import edu.harvard.iq.dataverse.MailServiceBean;
-import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
-import javax.ejb.EJB;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.harvard.iq.dataverse.MailServiceBean;
+import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
 
 /**
  *
@@ -15,7 +17,7 @@ import javax.ws.rs.core.Response;
 @Path("mail")
 public class Mail extends AbstractApiBean {
     
-    @EJB
+    @Autowired
     MailServiceBean mailService;
     
     @GET

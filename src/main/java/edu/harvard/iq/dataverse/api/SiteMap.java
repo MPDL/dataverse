@@ -1,20 +1,20 @@
 package edu.harvard.iq.dataverse.api;
 
-import edu.harvard.iq.dataverse.sitemap.SiteMapServiceBean;
-import edu.harvard.iq.dataverse.sitemap.SiteMapUtil;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Stateless
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.harvard.iq.dataverse.sitemap.SiteMapServiceBean;
+import edu.harvard.iq.dataverse.sitemap.SiteMapUtil;
+
 @Path("admin/sitemap")
 public class SiteMap extends AbstractApiBean {
 
-    @EJB
+    @Autowired
     SiteMapServiceBean siteMapSvc;
 
     @POST

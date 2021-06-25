@@ -1,17 +1,19 @@
 package edu.harvard.iq.dataverse.actionlogging;
 
 import java.util.Date;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * A service bean that persists {@link ActionLogRecord}s to the DB.
  * @author michael
  */
-@Stateless
+@Service
 public class ActionLogServiceBean {
     
     @PersistenceContext(unitName = "VDCNet-ejbPU")
@@ -21,7 +23,7 @@ public class ActionLogServiceBean {
      * Log the record. Set default values.
      * @param rec 
      */
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void log( ActionLogRecord rec ) {
         if ( rec.getEndTime() == null ) {
             rec.setEndTime( new Date() );

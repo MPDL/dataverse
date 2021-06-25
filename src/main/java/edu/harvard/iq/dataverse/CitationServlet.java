@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class CitationServlet extends HttpServlet {
 
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;    
     
     /**

@@ -1,29 +1,30 @@
 package edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import edu.harvard.iq.dataverse.RoleAssigneeServiceBean;
 import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
 import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
 import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IPv4Address;
 import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IPv6Address;
 import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IpAddress;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 
 /**
  * Provides CRUD tools to efficiently manage IP groups in a Java EE container.
  * 
  * @author michael
  */
-@Named
-@Stateless
+@Service
 public class IpGroupsServiceBean {
     
     private static final Logger logger = Logger.getLogger(IpGroupsServiceBean.class.getName());
@@ -31,10 +32,10 @@ public class IpGroupsServiceBean {
     @PersistenceContext(unitName = "VDCNet-ejbPU")
 	protected EntityManager em;
     
-    @EJB
+    @Autowired
     ActionLogServiceBean actionLogSvc;
 	
-    @EJB
+    @Autowired
     RoleAssigneeServiceBean roleAssigneeSvc;
     
     /**

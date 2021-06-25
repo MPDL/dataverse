@@ -1,29 +1,15 @@
 package edu.harvard.iq.dataverse.api.datadeposit;
 
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetFieldServiceBean;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.DataverseServiceBean;
-import edu.harvard.iq.dataverse.EjbDataverseEngine;
-import edu.harvard.iq.dataverse.PermissionServiceBean;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
-import edu.harvard.iq.dataverse.engine.command.impl.AbstractCreateDatasetCommand;
-import edu.harvard.iq.dataverse.api.imports.ImportGenericServiceBean;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.engine.command.impl.CreateNewDatasetCommand;
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+
 import org.apache.abdera.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.swordapp.server.AuthCredentials;
 import org.swordapp.server.CollectionDepositManager;
 import org.swordapp.server.Deposit;
@@ -35,28 +21,44 @@ import org.swordapp.server.SwordError;
 import org.swordapp.server.SwordServerException;
 import org.swordapp.server.UriRegistry;
 
+import edu.harvard.iq.dataverse.Dataset;
+import edu.harvard.iq.dataverse.DatasetFieldServiceBean;
+import edu.harvard.iq.dataverse.DatasetServiceBean;
+import edu.harvard.iq.dataverse.DatasetVersion;
+import edu.harvard.iq.dataverse.Dataverse;
+import edu.harvard.iq.dataverse.DataverseServiceBean;
+import edu.harvard.iq.dataverse.EjbDataverseEngine;
+import edu.harvard.iq.dataverse.PermissionServiceBean;
+import edu.harvard.iq.dataverse.api.imports.ImportGenericServiceBean;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
+import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
+import edu.harvard.iq.dataverse.engine.command.impl.AbstractCreateDatasetCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.CreateNewDatasetCommand;
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+
 public class CollectionDepositManagerImpl implements CollectionDepositManager {
 
     private static final Logger logger = Logger.getLogger(CollectionDepositManagerImpl.class.getCanonicalName());
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
-    @EJB
+    @Autowired
     PermissionServiceBean permissionService;
     @Inject
     SwordAuth swordAuth;
     @Inject
     UrlManager urlManager;
-    @EJB
+    @Autowired
     EjbDataverseEngine engineSvc;
-    @EJB
+    @Autowired
     DatasetFieldServiceBean datasetFieldService;
-    @EJB
+    @Autowired
     ImportGenericServiceBean importGenericService;
-    @EJB
+    @Autowired
     SwordServiceBean swordService;
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
 
     private HttpServletRequest request;
@@ -127,7 +129,7 @@ public class CollectionDepositManagerImpl implements CollectionDepositManager {
                     Dataset createdDataset = null;
                     try {
                         createdDataset = engineSvc.submit(createDatasetCommand);
-                    } catch (EJBException | CommandException ex) {
+                    } catch (CommandException ex) {
                         Throwable cause = ex;
                         StringBuilder sb = new StringBuilder();
                         sb.append(ex.getLocalizedMessage());

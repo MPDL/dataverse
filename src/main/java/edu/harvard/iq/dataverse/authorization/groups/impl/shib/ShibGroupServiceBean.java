@@ -1,31 +1,32 @@
 package edu.harvard.iq.dataverse.authorization.groups.impl.shib;
 
-import edu.harvard.iq.dataverse.RoleAssigneeServiceBean;
-import edu.harvard.iq.dataverse.RoleAssignment;
-import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
-import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
-import edu.harvard.iq.dataverse.authorization.groups.GroupServiceBean;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.RoleAssigneeServiceBean;
+import edu.harvard.iq.dataverse.RoleAssignment;
+import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
+import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
+import edu.harvard.iq.dataverse.authorization.groups.GroupServiceBean;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+
 /**
  * @todo Consider merging this bean into the newer and more generic
  * ShibServiceBean.
  */
-@Named
-@Stateless
+@Service
 public class ShibGroupServiceBean {
 
     private static final Logger logger = Logger.getLogger(ShibGroupServiceBean.class.getCanonicalName());
@@ -33,11 +34,11 @@ public class ShibGroupServiceBean {
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     private EntityManager em;
 
-    @EJB
+    @Autowired
     RoleAssigneeServiceBean roleAssigneeSvc;
-    @EJB
+    @Autowired
     GroupServiceBean groupService;
-    @EJB
+    @Autowired
     ActionLogServiceBean actionLogSvc;
 
     /**

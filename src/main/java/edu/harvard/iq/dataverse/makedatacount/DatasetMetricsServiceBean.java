@@ -39,7 +39,7 @@ public class DatasetMetricsServiceBean implements java.io.Serializable {
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     protected EntityManager em;
     
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
     
     public DatasetMetrics getDatasetMetricsByDatasetMonthCountry(Dataset dataset, String monthYear, String country) {

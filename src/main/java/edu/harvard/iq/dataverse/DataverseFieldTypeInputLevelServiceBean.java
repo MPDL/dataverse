@@ -5,22 +5,22 @@
  */
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.util.LruCache;
 import java.util.List;
-import java.util.logging.Logger;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.util.LruCache;
+
 /**
  *
  * @author skraffmiller
  */
-@Stateless
-@Named
+@Service
 public class DataverseFieldTypeInputLevelServiceBean {
 
 //    private static final Logger logger = Logger.getLogger(DataverseFieldTypeInputLevelServiceBean.class.getCanonicalName());

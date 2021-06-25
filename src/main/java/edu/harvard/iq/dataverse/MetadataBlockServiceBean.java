@@ -1,18 +1,18 @@
 package edu.harvard.iq.dataverse;
 
 import java.util.List;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author michael
  */
-@Stateless
-@Named
+@Service
 public class MetadataBlockServiceBean {
     
     @PersistenceContext(unitName = "VDCNet-ejbPU")

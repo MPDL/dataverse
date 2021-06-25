@@ -5,31 +5,16 @@
  */
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
-import edu.harvard.iq.dataverse.engine.command.impl.CreateHarvestingClientCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.DeleteHarvestingClientCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.UpdateHarvestingClientCommand;
-import edu.harvard.iq.dataverse.harvest.client.HarvesterServiceBean;
-import edu.harvard.iq.dataverse.harvest.client.HarvestingClient;
-import edu.harvard.iq.dataverse.harvest.client.HarvestingClientServiceBean;
-import edu.harvard.iq.dataverse.harvest.client.oai.OaiHandler;
-import edu.harvard.iq.dataverse.search.IndexServiceBean;
-import edu.harvard.iq.dataverse.timer.DataverseTimerServiceBean;
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.JsfHelper;
 import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
-import edu.harvard.iq.dataverse.util.StringUtil;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javax.ejb.EJB;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
@@ -40,7 +25,23 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
+
+import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
+import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
+import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
+import edu.harvard.iq.dataverse.engine.command.impl.CreateHarvestingClientCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.UpdateHarvestingClientCommand;
+import edu.harvard.iq.dataverse.harvest.client.HarvesterServiceBean;
+import edu.harvard.iq.dataverse.harvest.client.HarvestingClient;
+import edu.harvard.iq.dataverse.harvest.client.HarvestingClientServiceBean;
+import edu.harvard.iq.dataverse.harvest.client.oai.OaiHandler;
+import edu.harvard.iq.dataverse.search.IndexServiceBean;
+import edu.harvard.iq.dataverse.timer.DataverseTimerServiceBean;
+import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.JsfHelper;
+import edu.harvard.iq.dataverse.util.StringUtil;
 
 /**
  *
@@ -54,21 +55,21 @@ public class HarvestingClientsPage implements java.io.Serializable {
 
     @Inject
     DataverseSession session;
-    @EJB
+    @Inject
     AuthenticationServiceBean authSvc;
-    @EJB
+    @Inject
     DataverseServiceBean dataverseService;
-    @EJB
+    @Inject
     HarvestingClientServiceBean harvestingClientService; 
-    @EJB
+    @Inject
     HarvesterServiceBean harvesterService;
-    @EJB
+    @Inject
     DatasetServiceBean datasetService;
-    @EJB
+    @Inject
     IndexServiceBean indexService;
-    @EJB
+    @Inject
     EjbDataverseEngine engineService;
-    @EJB
+    @Inject
     DataverseTimerServiceBean dataverseTimerService;
     @Inject
     DataverseRequestServiceBean dvRequestService;

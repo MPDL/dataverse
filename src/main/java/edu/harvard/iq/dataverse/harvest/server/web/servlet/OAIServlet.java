@@ -70,18 +70,18 @@ import javax.xml.stream.XMLStreamException;
  * The servlet itself is somewhat influenced by the older OCLC OAIcat implementation.
  */
 public class OAIServlet extends HttpServlet {
-    @EJB 
+    @Autowired 
     OAISetServiceBean setService;
-    @EJB
+    @Autowired
     OAIRecordServiceBean recordService;
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
     
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
     
     private static final Logger logger = Logger.getLogger("edu.harvard.iq.dataverse.harvest.server.web.servlet.OAIServlet");

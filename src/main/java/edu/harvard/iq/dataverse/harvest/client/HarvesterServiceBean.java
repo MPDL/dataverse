@@ -57,21 +57,21 @@ public class HarvesterServiceBean {
     @PersistenceContext(unitName="VDCNet-ejbPU")
     private EntityManager em;
     
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
     @Resource
     javax.ejb.TimerService timerService;
-    @EJB
+    @Autowired
     DataverseTimerServiceBean dataverseTimerService;
-    @EJB
+    @Autowired
     HarvestingClientServiceBean harvestingClientService;
-    @EJB
+    @Autowired
     ImportServiceBean importService;
-    @EJB
+    @Autowired
     EjbDataverseEngine engineService;
-    @EJB
+    @Autowired
     IndexServiceBean indexService;
     
     private static final Logger logger = Logger.getLogger("edu.harvard.iq.dataverse.harvest.client.HarvesterServiceBean");

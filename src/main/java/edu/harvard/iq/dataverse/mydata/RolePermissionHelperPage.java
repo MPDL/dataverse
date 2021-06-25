@@ -31,9 +31,9 @@ public class RolePermissionHelperPage implements java.io.Serializable {
 
     @Inject DataverseSession session;    
 
-    @EJB
+    @Autowired
     DataverseRoleServiceBean dataverseRoleService;
-    @EJB
+    @Autowired
     RoleAssigneeServiceBean roleAssigneeService;
     
     

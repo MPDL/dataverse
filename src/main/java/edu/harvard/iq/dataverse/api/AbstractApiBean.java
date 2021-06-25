@@ -62,6 +62,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -159,94 +160,94 @@ public abstract class AbstractApiBean {
         }
     }
 
-    @EJB
+    @Inject
     protected EjbDataverseEngine engineSvc;
 
-    @EJB
+    @Inject
     protected DatasetServiceBean datasetSvc;
     
-    @EJB
+    @Inject
     protected DataFileServiceBean fileService;
 
-    @EJB
+    @Inject
     protected DataverseServiceBean dataverseSvc;
 
-    @EJB
+    @Inject
     protected AuthenticationServiceBean authSvc;
 
-    @EJB
+    @Inject
     protected DatasetFieldServiceBean datasetFieldSvc;
 
-    @EJB
+    @Inject
     protected MetadataBlockServiceBean metadataBlockSvc;
 
-    @EJB
+    @Inject
     protected UserServiceBean userSvc;
 
-	@EJB
+    @Inject
 	protected DataverseRoleServiceBean rolesSvc;
 
-    @EJB
+    @Inject
     protected SettingsServiceBean settingsSvc;
 
-    @EJB
+    @Inject
     protected RoleAssigneeServiceBean roleAssigneeSvc;
 
-    @EJB
+    @Inject
     protected PermissionServiceBean permissionSvc;
 
-    @EJB
+    @Inject
     protected GroupServiceBean groupSvc;
 
-    @EJB
+    @Inject
     protected ActionLogServiceBean actionLogSvc;
 
-    @EJB
+    @Inject
     protected SavedSearchServiceBean savedSearchSvc;
 
-    @EJB
+    @Inject
     protected PrivateUrlServiceBean privateUrlSvc;
 
-    @EJB
+    @Inject
     protected ConfirmEmailServiceBean confirmEmailSvc;
 
-    @EJB
+    @Inject
     protected UserNotificationServiceBean userNotificationSvc;
 
-    @EJB
+    @Inject
     protected DatasetVersionServiceBean datasetVersionSvc;
 
-    @EJB
+    @Inject
     protected SystemConfig systemConfig;
 
-    @EJB
+    @Inject
     protected DataCaptureModuleServiceBean dataCaptureModuleSvc;
     
-    @EJB
+    @Inject
     protected DatasetLinkingServiceBean dsLinkingService;
     
-    @EJB
+    @Inject
     protected DataverseLinkingServiceBean dvLinkingService;
 
-    @EJB
+    @Inject
     protected PasswordValidatorServiceBean passwordValidatorService;
 
-    @EJB
+    @Inject
     protected ExternalToolServiceBean externalToolService;
 
-    @EJB
+    @Inject
     DataFileServiceBean fileSvc;
 
-    @EJB
+    @Inject
     StorageSiteServiceBean storageSiteSvc;
 
-    @EJB
+    @Inject
     MetricsServiceBean metricsSvc;
     
-    @EJB 
+    @Inject 
     DvObjectServiceBean dvObjSvc;
     
-    @EJB 
+    @Inject 
     GuestbookResponseServiceBean gbRespSvc;
 
     @PersistenceContext(unitName = "VDCNet-ejbPU")

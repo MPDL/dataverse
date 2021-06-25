@@ -89,22 +89,22 @@ public class FileRecordJobListener implements ItemReadListener, StepListener, Jo
     @Inject
     private StepContext stepContext;
 
-    @EJB
+    @Autowired
     UserNotificationServiceBean notificationServiceBean;
 
-    @EJB
+    @Autowired
     AuthenticationServiceBean authenticationServiceBean;
 
-    @EJB
+    @Autowired
     ActionLogServiceBean actionLogServiceBean;
     
-    @EJB
+    @Autowired
     DatasetServiceBean datasetServiceBean;
     
-    @EJB
+    @Autowired
     DataFileServiceBean dataFileServiceBean;
 
-    @EJB
+    @Autowired
     PermissionServiceBean permissionServiceBean;
 
     @Inject

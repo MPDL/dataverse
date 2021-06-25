@@ -1,5 +1,26 @@
 package edu.harvard.iq.dataverse.authorization.providers.oauth2;
 
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import edu.harvard.iq.dataverse.DataverseSession;
 import edu.harvard.iq.dataverse.EMailValidator;
 import edu.harvard.iq.dataverse.UserNotification;
@@ -20,24 +41,6 @@ import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 import edu.harvard.iq.dataverse.validation.PasswordValidatorServiceBean;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
-import javax.faces.component.UIInput;
-import javax.faces.context.FacesContext;
-import javax.inject.Named;
-import javax.inject.Inject;
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * Backing bean for {@code oauth/welcome.xhtml}, the page that greets new users
@@ -51,22 +54,22 @@ public class OAuth2FirstLoginPage implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(OAuth2FirstLoginPage.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     AuthenticationServiceBean authenticationSvc;
 
-    @EJB
+    @Autowired
     BuiltinUserServiceBean builtinUserSvc;
 
-    @EJB
+    @Autowired
     UserNotificationServiceBean userNotificationService;
 
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
 
-    @EJB
+    @Autowired
     AuthTestDataServiceBean authTestDataSvc;
 
-    @EJB
+    @Autowired
     OAuth2TokenDataServiceBean oauth2Tokens;
     
     @Inject

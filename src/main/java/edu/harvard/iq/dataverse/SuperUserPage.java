@@ -6,8 +6,8 @@ import edu.harvard.iq.dataverse.search.IndexServiceBean;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+
+import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObjectBuilder;
@@ -21,9 +21,9 @@ public class SuperUserPage implements java.io.Serializable {
     @Inject
     PermissionsWrapper permissionsWrapper;
 
-    @EJB
+    @Inject
     IndexServiceBean indexService;
-    @EJB
+    @Inject
     IndexBatchServiceBean indexAllService;
 
     private String indexAllStatus = "No status available";

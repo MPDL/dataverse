@@ -1,17 +1,12 @@
 package edu.harvard.iq.dataverse.api;
 
-import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IpAddress;
-import edu.harvard.iq.dataverse.util.json.JsonParseException;
-import edu.harvard.iq.dataverse.util.json.JsonParser;
 import static edu.harvard.iq.dataverse.util.json.JsonPrinter.brief;
 import static edu.harvard.iq.dataverse.util.json.JsonPrinter.json;
 import static edu.harvard.iq.dataverse.util.json.JsonPrinter.toJsonArray;
-import edu.harvard.iq.dataverse.workflow.Workflow;
-import edu.harvard.iq.dataverse.workflow.WorkflowContext.TriggerType;
-import edu.harvard.iq.dataverse.workflow.WorkflowServiceBean;
+
 import java.util.Arrays;
 import java.util.Optional;
-import javax.ejb.EJB;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -24,6 +19,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IpAddress;
+import edu.harvard.iq.dataverse.util.json.JsonParseException;
+import edu.harvard.iq.dataverse.util.json.JsonParser;
+import edu.harvard.iq.dataverse.workflow.Workflow;
+import edu.harvard.iq.dataverse.workflow.WorkflowContext.TriggerType;
+import edu.harvard.iq.dataverse.workflow.WorkflowServiceBean;
+
 /**
  * API Endpoint for managing workflows.
  * @author michael
@@ -33,7 +37,7 @@ public class WorkflowsAdmin extends AbstractApiBean {
       
     public static final String IP_WHITELIST_KEY="WorkflowsAdmin#IP_WHITELIST_KEY";
     
-    @EJB
+    @Autowired
     WorkflowServiceBean workflows;
     
     @POST

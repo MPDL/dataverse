@@ -44,7 +44,7 @@ public class BuiltinUsers extends AbstractApiBean {
 
     private static final String API_KEY_IN_SETTINGS = "BuiltinUsers.KEY";
 
-    @EJB
+    @Autowired
     protected BuiltinUserServiceBean builtinUserSvc;
 
     @GET

@@ -1,19 +1,21 @@
 package edu.harvard.iq.dataverse.externaltools;
 
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.DataFileServiceBean;
-import edu.harvard.iq.dataverse.authorization.users.ApiToken;
-import edu.harvard.iq.dataverse.externaltools.ExternalTool.ReservedWord;
-import edu.harvard.iq.dataverse.externaltools.ExternalTool.Type;
-import edu.harvard.iq.dataverse.externaltools.ExternalTool.Scope;
+import static edu.harvard.iq.dataverse.externaltools.ExternalTool.CONTENT_TYPE;
+import static edu.harvard.iq.dataverse.externaltools.ExternalTool.DESCRIPTION;
+import static edu.harvard.iq.dataverse.externaltools.ExternalTool.DISPLAY_NAME;
+import static edu.harvard.iq.dataverse.externaltools.ExternalTool.LEGACY_SINGLE_TYPE;
+import static edu.harvard.iq.dataverse.externaltools.ExternalTool.SCOPE;
+import static edu.harvard.iq.dataverse.externaltools.ExternalTool.TOOL_NAME;
+import static edu.harvard.iq.dataverse.externaltools.ExternalTool.TOOL_PARAMETERS;
+import static edu.harvard.iq.dataverse.externaltools.ExternalTool.TOOL_URL;
+import static edu.harvard.iq.dataverse.externaltools.ExternalTool.TYPES;
 
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -25,12 +27,16 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import static edu.harvard.iq.dataverse.externaltools.ExternalTool.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import org.springframework.stereotype.Service;
 
-@Stateless
-@Named
+import edu.harvard.iq.dataverse.DataFile;
+import edu.harvard.iq.dataverse.DataFileServiceBean;
+import edu.harvard.iq.dataverse.authorization.users.ApiToken;
+import edu.harvard.iq.dataverse.externaltools.ExternalTool.ReservedWord;
+import edu.harvard.iq.dataverse.externaltools.ExternalTool.Scope;
+import edu.harvard.iq.dataverse.externaltools.ExternalTool.Type;
+
+@Service
 public class ExternalToolServiceBean {
 
     private static final Logger logger = Logger.getLogger(ExternalToolServiceBean.class.getCanonicalName());

@@ -1,18 +1,19 @@
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
-import edu.harvard.iq.dataverse.authorization.users.ApiToken;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.api.Util;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import edu.harvard.iq.dataverse.api.Util;
+import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
+import edu.harvard.iq.dataverse.authorization.users.ApiToken;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.util.BundleUtil;
 
 /**
  * @todo Rename this to ApiTokenFragment? The separate page is being taken out
@@ -26,7 +27,7 @@ public class ApiTokenPage implements java.io.Serializable {
 
     @Inject
     DataverseSession session;
-    @EJB
+    @Inject
     AuthenticationServiceBean authSvc;
 
     ApiToken apiToken;

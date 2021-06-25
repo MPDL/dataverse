@@ -6,32 +6,33 @@
 
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.UserNotification.Type;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Named;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import edu.harvard.iq.dataverse.UserNotification.Type;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+
 /**
  *
  * @author xyang
  */
-@Stateless
-@Named
+@Service
 public class UserNotificationServiceBean {
 
     private static final Logger logger = Logger.getLogger(UserNotificationServiceBean.class.getCanonicalName());
 
-    @EJB
+    @Autowired
     MailServiceBean mailService;
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     private EntityManager em;
@@ -85,7 +86,7 @@ public class UserNotificationServiceBean {
         em.remove(em.merge(userNotification));
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void sendNotificationInNewTransaction(AuthenticatedUser dataverseUser, Timestamp sendDate, Type type, Long objectId) {
         sendNotification(dataverseUser, sendDate, type, objectId, "");
     }

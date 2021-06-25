@@ -5,14 +5,9 @@
  */
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseCommand;
-import static edu.harvard.iq.dataverse.util.JsfHelper.JH;
-
-import edu.harvard.iq.dataverse.util.BundleUtil;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -20,6 +15,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+
+import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseCommand;
+import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.SystemConfig;
 
 /**
  *
@@ -30,16 +29,16 @@ import javax.servlet.http.HttpServletResponse;
 public class GuestbookResponsesPage implements java.io.Serializable {
     private static final Logger logger = Logger.getLogger(GuestbookResponsesPage.class.getCanonicalName());
 
-    @EJB
+    @Inject
     GuestbookServiceBean guestbookService;
 
-    @EJB
+    @Inject
     GuestbookResponseServiceBean guestbookResponseService;
     
-    @EJB
+    @Inject
     DataverseServiceBean dvService;
     
-    @EJB
+    @Inject
     SystemConfig systemConfig;
     
     @Inject

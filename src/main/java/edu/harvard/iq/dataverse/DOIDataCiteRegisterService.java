@@ -5,8 +5,6 @@
  */
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.branding.BrandingUtil;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,22 +16,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.branding.BrandingUtil;
 
 /**
  *
  * @author luopc
  */
-@Stateless
+@Service
 public class DOIDataCiteRegisterService {
 
     private static final Logger logger = Logger.getLogger(DOIDataCiteRegisterService.class.getCanonicalName());
@@ -41,10 +43,10 @@ public class DOIDataCiteRegisterService {
     @PersistenceContext(unitName = "VDCNet-ejbPU")
     private EntityManager em;
 
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
 
-    @EJB
+    @Autowired
     DOIDataCiteServiceBean doiDataCiteServiceBean;
     
         

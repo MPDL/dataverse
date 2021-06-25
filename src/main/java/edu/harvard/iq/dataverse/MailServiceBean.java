@@ -5,7 +5,34 @@
  */
 package edu.harvard.iq.dataverse;
 
+import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import javax.annotation.Resource;
+import javax.mail.Address;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.sun.mail.smtp.SMTPSendFailedException;
+
 import edu.harvard.iq.dataverse.authorization.groups.Group;
 import edu.harvard.iq.dataverse.authorization.groups.GroupServiceBean;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
@@ -16,55 +43,32 @@ import edu.harvard.iq.dataverse.settings.SettingsServiceBean.Key;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.MailUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
-import java.io.UnsupportedEncodingException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Logger;
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import org.apache.commons.lang.StringUtils;
 
 /**
  *
  * original author: roberttreacy
  */
-@Stateless
+@Service
 public class MailServiceBean implements java.io.Serializable {
-    @EJB
+    @Autowired
     UserNotificationServiceBean userNotificationService;
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     DataFileServiceBean dataFileService;
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
-    @EJB
+    @Autowired
     DatasetVersionServiceBean versionService; 
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
-    @EJB
+    @Autowired
     PermissionServiceBean permissionService;
-    @EJB
+    @Autowired
     GroupServiceBean groupService;
-    @EJB
+    @Autowired
     ConfirmEmailServiceBean confirmEmailService;
 
     private static final Logger logger = Logger.getLogger(MailServiceBean.class.getCanonicalName());

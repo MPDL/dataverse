@@ -1,20 +1,8 @@
 package edu.harvard.iq.dataverse.api;
 
-import edu.harvard.iq.dataverse.api.imports.ImportServiceBean;
-import edu.harvard.iq.dataverse.DatasetFieldServiceBean;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.DataverseServiceBean;
-import edu.harvard.iq.dataverse.MetadataBlockServiceBean;
-
-import edu.harvard.iq.dataverse.api.imports.ImportException;
-import edu.harvard.iq.dataverse.api.imports.ImportUtil.ImportType;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -22,23 +10,36 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-@Stateless
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.harvard.iq.dataverse.DatasetFieldServiceBean;
+import edu.harvard.iq.dataverse.DatasetServiceBean;
+import edu.harvard.iq.dataverse.Dataverse;
+import edu.harvard.iq.dataverse.DataverseServiceBean;
+import edu.harvard.iq.dataverse.MetadataBlockServiceBean;
+import edu.harvard.iq.dataverse.api.imports.ImportException;
+import edu.harvard.iq.dataverse.api.imports.ImportServiceBean;
+import edu.harvard.iq.dataverse.api.imports.ImportUtil.ImportType;
+import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+
+
 @Path("batch")
 public class BatchImport extends AbstractApiBean {
 
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     DatasetFieldServiceBean datasetfieldService;
-    @EJB
+    @Autowired
     MetadataBlockServiceBean metadataBlockService;
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
-    @EJB
+    @Autowired
     ImportServiceBean importService;
-    @EJB
+    @Autowired
     BatchServiceBean batchService;
 
     @GET

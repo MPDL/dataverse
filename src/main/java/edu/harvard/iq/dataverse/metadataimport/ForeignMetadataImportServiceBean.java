@@ -42,7 +42,7 @@ public class ForeignMetadataImportServiceBean {
 
     private static final Logger logger = Logger.getLogger(ForeignMetadataImportServiceBean.class.getCanonicalName());
     
-    @EJB
+    @Autowired
     DatasetFieldServiceBean datasetfieldService;
 
     @PersistenceContext(unitName = "VDCNet-ejbPU")

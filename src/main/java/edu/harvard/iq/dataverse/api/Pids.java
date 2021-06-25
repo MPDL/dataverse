@@ -1,13 +1,7 @@
 package edu.harvard.iq.dataverse.api;
 
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.authorization.users.User;
-import edu.harvard.iq.dataverse.engine.command.impl.DeletePidCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.ReservePidCommand;
-import edu.harvard.iq.dataverse.pidproviders.PidUtil;
-import edu.harvard.iq.dataverse.util.BundleUtil;
 import java.util.Arrays;
-import javax.ejb.Stateless;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -24,6 +18,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import edu.harvard.iq.dataverse.Dataset;
+import edu.harvard.iq.dataverse.authorization.users.User;
+import edu.harvard.iq.dataverse.engine.command.impl.DeletePidCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.ReservePidCommand;
+import edu.harvard.iq.dataverse.pidproviders.PidUtil;
+import edu.harvard.iq.dataverse.util.BundleUtil;
+
 /**
  * PIDs are Persistent IDentifiers such as DOIs or Handles.
  *
@@ -31,7 +32,7 @@ import javax.ws.rs.core.Response;
  * demand for PIDs at the dataverse level too. That's why this dedicated "pids"
  * endpoint exists, to be somewhat future proof.
  */
-@Stateless
+
 @Path("pids")
 public class Pids extends AbstractApiBean {
 

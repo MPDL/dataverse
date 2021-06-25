@@ -34,17 +34,17 @@ import javax.persistence.PersistenceContext;
 @Stateless
 @Named
 public class HarvestingClientServiceBean implements java.io.Serializable {
-    @EJB
+    @Autowired
     DataverseServiceBean dataverseService;
-    @EJB
+    @Autowired
     EjbDataverseEngine engineService;
-    @EJB
+    @Autowired
     DataFileServiceBean dataFileService;
     @Inject
     DataverseRequestServiceBean dvRequestService;
-    @EJB
+    @Autowired
     IndexServiceBean indexService;
-    @EJB
+    @Autowired
     DataverseTimerServiceBean dataverseTimerService;
     
     @PersistenceContext(unitName = "VDCNet-ejbPU")

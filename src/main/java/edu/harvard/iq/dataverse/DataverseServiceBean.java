@@ -5,6 +5,30 @@
  */
 package edu.harvard.iq.dataverse;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+import org.apache.solr.client.solrj.SolrServerException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.DataverseRole;
 import edu.harvard.iq.dataverse.authorization.Permission;
@@ -20,67 +44,43 @@ import edu.harvard.iq.dataverse.search.SolrIndexServiceBean;
 import edu.harvard.iq.dataverse.search.SolrSearchResult;
 import edu.harvard.iq.dataverse.util.StringUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
-import java.io.File;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-import java.util.Properties;
-import java.util.concurrent.Future;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import org.apache.solr.client.solrj.SolrServerException;
 
 /**
  *
  * @author gdurand
  */
-@Stateless
-@Named
+@Service
 public class DataverseServiceBean implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(DataverseServiceBean.class.getCanonicalName());
-    @EJB
+    @Autowired
     IndexServiceBean indexService;
     
-    @EJB
+    @Autowired
     SolrIndexServiceBean solrIndexService; 
 
-    @EJB
+    @Autowired
     AuthenticationServiceBean authService;
     
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
     
-    @EJB
+    @Autowired
     DataverseLinkingServiceBean dataverseLinkingService;
 
-    @EJB
+    @Autowired
     DatasetLinkingServiceBean datasetLinkingService;
     
-    @EJB
+    @Autowired
     GroupServiceBean groupService;
     
-    @EJB
+    @Autowired
     DataverseRoleServiceBean rolesService;
     
-    @EJB
+    @Autowired
     PermissionServiceBean permissionService;
     
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
 
     @Inject

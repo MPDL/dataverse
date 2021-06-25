@@ -1,15 +1,19 @@
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.api.DataTagsAPI;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.json.JsonObject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.harvard.iq.dataverse.api.DataTagsAPI;
 
 /**
  *
@@ -22,7 +26,7 @@ public class DataTagsAPITestingBean implements Serializable {
     private String datasetName;
     
 
-    @EJB
+    @Inject
     DataTagsAPI dt;
     
     

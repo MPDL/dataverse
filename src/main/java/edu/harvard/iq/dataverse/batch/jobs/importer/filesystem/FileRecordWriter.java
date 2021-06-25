@@ -78,19 +78,19 @@ public class FileRecordWriter extends AbstractItemWriter {
     @BatchProperty
     String checksumManifest;
 
-    @EJB
+    @Autowired
     DatasetServiceBean datasetServiceBean;
 
-    @EJB
+    @Autowired
     AuthenticationServiceBean authenticationServiceBean;
     
-    @EJB
+    @Autowired
     SettingsServiceBean settingsService;
     
-    @EJB
+    @Autowired
     DataFileServiceBean dataFileServiceBean;
 
-    @EJB
+    @Autowired
     EjbDataverseEngine commandEngine;
 
     Dataset dataset;
