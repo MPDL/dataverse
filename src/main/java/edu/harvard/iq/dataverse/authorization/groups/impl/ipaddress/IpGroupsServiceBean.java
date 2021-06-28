@@ -29,7 +29,7 @@ public class IpGroupsServiceBean {
     
     private static final Logger logger = Logger.getLogger(IpGroupsServiceBean.class.getName());
     
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
 	protected EntityManager em;
     
     @Autowired

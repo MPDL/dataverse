@@ -1,36 +1,37 @@
 package edu.harvard.iq.dataverse.search;
 
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.DataverseServiceBean;
-import edu.harvard.iq.dataverse.DvObjectServiceBean;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.AsyncResult;
-import javax.ejb.Asynchronous;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.apache.solr.client.solrj.SolrServerException;
 
-@Named
-@Stateless
+import org.apache.solr.client.solrj.SolrServerException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.DatasetServiceBean;
+import edu.harvard.iq.dataverse.Dataverse;
+import edu.harvard.iq.dataverse.DataverseServiceBean;
+import edu.harvard.iq.dataverse.DvObjectServiceBean;
+import edu.harvard.iq.dataverse.util.SystemConfig;
+
+@Service
 public class IndexBatchServiceBean {
 
     private static final Logger logger = Logger.getLogger(IndexBatchServiceBean.class.getCanonicalName());
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
 
     @Autowired
@@ -46,7 +47,7 @@ public class IndexBatchServiceBean {
     @Autowired
     SystemConfig systemConfig;
     
-    @Asynchronous
+    @Async
     public Future<JsonObjectBuilder> indexStatus() {
         JsonObjectBuilder response = Json.createObjectBuilder();
         logger.info("Beginning indexStatus()");
@@ -79,7 +80,7 @@ public class IndexBatchServiceBean {
       
         return new AsyncResult<>(data);
     }
-    @Asynchronous
+    @Async
     public Future<JsonObjectBuilder> clearOrphans() {
         JsonObjectBuilder response = Json.createObjectBuilder();
         List<String> solrIds = new ArrayList<>();
@@ -106,7 +107,7 @@ public class IndexBatchServiceBean {
     }
 
     
-    @Asynchronous
+    @Async
     public Future<JsonObjectBuilder> indexAllOrSubset(long numPartitions, long partitionId, boolean skipIndexed, boolean previewOnly) {
         JsonObjectBuilder response = Json.createObjectBuilder();
         indexAllOrSubset(numPartitions, partitionId, skipIndexed);
@@ -226,7 +227,7 @@ public class IndexBatchServiceBean {
         return new AsyncResult<>(status);
     }
         
-    @Asynchronous
+    @Async
     public void indexDataverseRecursively(Dataverse dataverse) {
         long start = System.currentTimeMillis();
         int datasetIndexCount = 0, datasetFailureCount = 0, dataverseIndexCount = 0, dataverseFailureCount = 0;

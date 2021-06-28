@@ -21,15 +21,7 @@ package edu.harvard.iq.dataverse.batch.jobs.importer.filesystem;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.harvard.iq.dataverse.DataFileServiceBean;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetLock;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.FileMetadata;
-import edu.harvard.iq.dataverse.PermissionServiceBean;
-import edu.harvard.iq.dataverse.UserNotification;
-import edu.harvard.iq.dataverse.UserNotificationServiceBean;
+import edu.harvard.iq.dataverse.*;
 import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.Permission;
@@ -39,44 +31,38 @@ import edu.harvard.iq.dataverse.batch.jobs.importer.ImportMode;
 import edu.harvard.iq.dataverse.batch.util.LoggingUtil;
 import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetVersionCommand;
+import org.apache.commons.io.IOUtils;
+import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import javax.batch.api.BatchProperty;
 import javax.batch.api.chunk.listener.ItemReadListener;
 import javax.batch.api.listener.JobListener;
 import javax.batch.api.listener.StepListener;
 import javax.batch.operations.JobOperator;
+import javax.batch.operations.JobSecurityException;
+import javax.batch.operations.NoSuchJobExecutionException;
 import javax.batch.runtime.BatchRuntime;
 import javax.batch.runtime.BatchStatus;
 import javax.batch.runtime.JobExecution;
 import javax.batch.runtime.StepExecution;
 import javax.batch.runtime.context.JobContext;
 import javax.batch.runtime.context.StepContext;
-import javax.ejb.EJB;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.io.IOUtils;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.Date;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Scanner;
+import java.util.*;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.batch.operations.JobSecurityException;
-import javax.batch.operations.NoSuchJobExecutionException;
 
-@Named
-@Dependent
+@Component
+@JobScope
+//@Dependent
 public class FileRecordJobListener implements ItemReadListener, StepListener, JobListener {
     
     public static final String SEP = System.getProperty("file.separator");

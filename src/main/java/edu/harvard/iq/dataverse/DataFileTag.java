@@ -46,7 +46,7 @@ public class DataFileTag implements Serializable {
      * DataFile to which this tag belongs.
      */
      @ManyToOne
-     @JoinColumn(nullable=false)
+     @JoinColumn(name="datafile_id",nullable=false)
      private DataFile dataFile;
      
      

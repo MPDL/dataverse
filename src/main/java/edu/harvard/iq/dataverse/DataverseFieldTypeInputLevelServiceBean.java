@@ -26,7 +26,7 @@ public class DataverseFieldTypeInputLevelServiceBean {
 //    private static final Logger logger = Logger.getLogger(DataverseFieldTypeInputLevelServiceBean.class.getCanonicalName());
     public static final LruCache<Long, List<DataverseFieldTypeInputLevel>> cache = new LruCache<>();
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
 
     public List<DataverseFieldTypeInputLevel> findByDataverseId(Long dataverseId) {

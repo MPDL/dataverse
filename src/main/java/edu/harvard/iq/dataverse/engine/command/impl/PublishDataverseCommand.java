@@ -11,11 +11,10 @@ import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import edu.harvard.iq.dataverse.engine.command.RequiredPermissions;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
-import edu.harvard.iq.dataverse.search.IndexResponse;
+
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Future;
 
 @RequiredPermissions(Permission.PublishDataverse)
 public class PublishDataverseCommand extends AbstractCommand<Dataverse> {

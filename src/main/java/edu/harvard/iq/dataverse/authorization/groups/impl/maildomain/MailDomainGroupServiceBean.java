@@ -37,7 +37,7 @@ public class MailDomainGroupServiceBean {
     
     private static final Logger logger = Logger.getLogger(edu.harvard.iq.dataverse.authorization.groups.impl.explicit.ExplicitGroupServiceBean.class.getName());
     
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     protected EntityManager em;
     
     @Inject

@@ -41,7 +41,7 @@ import edu.harvard.iq.dataverse.privateurl.PrivateUrlUtil;
 public class RoleAssigneeServiceBean {
 
     private static final Logger logger = Logger.getLogger(RoleAssigneeServiceBean.class.getName());
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
 
     @Autowired

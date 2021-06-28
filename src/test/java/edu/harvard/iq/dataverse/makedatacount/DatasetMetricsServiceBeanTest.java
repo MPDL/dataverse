@@ -1,14 +1,13 @@
 package edu.harvard.iq.dataverse.makedatacount;
 
 import edu.harvard.iq.dataverse.Dataset;
+import edu.harvard.iq.dataverse.util.EJBException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Matchers;
 
-import javax.ejb.EJBException;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 

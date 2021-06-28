@@ -25,6 +25,7 @@ import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseGuestbookCommand;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.util.JsfHelper;
 
 /**
@@ -301,7 +302,21 @@ public class GuestbookPage implements java.io.Serializable {
                 cmd = new UpdateDataverseGuestbookCommand(dataverse, guestbook, dvRequestService.getDataverseRequest());
                 commandEngine.submit(cmd);
             }
-
+        } catch (EJBException ex) {
+            StringBuilder error = new StringBuilder();
+            error.append(ex).append(" ");
+            error.append(ex.getMessage()).append(" ");
+            Throwable cause = ex;
+            while (cause.getCause() != null) {
+                cause = cause.getCause();
+                error.append(cause).append(" ");
+                error.append(cause.getMessage()).append(" ");
+            }
+            //
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, BundleUtil.getStringFromBundle("guestbook.save.fail"), " - " + error.toString()));
+            logger.info("Guestbook Page EJB Exception. Dataverse: " + dataverse.getName());
+            logger.info(error.toString());
+            return null;
         } catch (CommandException ex) {
             logger.info("Guestbook Page Command Exception. Dataverse: " + dataverse.getName());
             logger.info(ex.toString());

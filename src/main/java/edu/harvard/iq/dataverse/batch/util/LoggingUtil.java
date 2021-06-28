@@ -21,7 +21,6 @@ package edu.harvard.iq.dataverse.batch.util;
 
 import edu.harvard.iq.dataverse.DvObject;
 import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
-import static edu.harvard.iq.dataverse.batch.jobs.importer.filesystem.FileRecordJobListener.SEP;
 import edu.harvard.iq.dataverse.engine.command.Command;
 import org.apache.commons.io.FileUtils;
 
@@ -30,11 +29,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.FileHandler;
-import java.util.logging.Formatter;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
+import java.util.logging.*;
+
+import static edu.harvard.iq.dataverse.batch.jobs.importer.filesystem.FileRecordJobListener.SEP;
 
 
 public class LoggingUtil {

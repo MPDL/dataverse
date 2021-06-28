@@ -25,7 +25,7 @@ import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 public class BannerMessageServiceBean implements java.io.Serializable {
     private static final Logger logger = Logger.getLogger(BannerMessageServiceBean.class.getCanonicalName());
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     public List<BannerMessage> findBannerMessages() {

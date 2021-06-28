@@ -1,13 +1,10 @@
 package edu.harvard.iq.dataverse.metrics;
 
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.Metric;
-import edu.harvard.iq.dataverse.makedatacount.DatasetMetrics;
-import edu.harvard.iq.dataverse.makedatacount.MakeDataCountUtil.MetricType;
+import static edu.harvard.iq.dataverse.metrics.MetricsUtil.DATA_LOCATION_ALL;
+import static edu.harvard.iq.dataverse.metrics.MetricsUtil.DATA_LOCATION_LOCAL;
+import static edu.harvard.iq.dataverse.metrics.MetricsUtil.DATA_LOCATION_REMOTE;
+import static edu.harvard.iq.dataverse.metrics.MetricsUtil.YEAR_AND_MONTH_PATTERN;
 
-import static edu.harvard.iq.dataverse.metrics.MetricsUtil.*;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -23,8 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -37,14 +33,23 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.core.UriInfo;
 
-@Stateless
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.DatasetVersion;
+import edu.harvard.iq.dataverse.Dataverse;
+import edu.harvard.iq.dataverse.Metric;
+import edu.harvard.iq.dataverse.makedatacount.MakeDataCountUtil.MetricType;
+import edu.harvard.iq.dataverse.util.SystemConfig;
+
+@Service
 public class MetricsServiceBean implements Serializable {
 
     private static final Logger logger = Logger.getLogger(MetricsServiceBean.class.getCanonicalName());
 
     private static final SimpleDateFormat yyyymmFormat = new SimpleDateFormat(MetricsUtil.YEAR_AND_MONTH_PATTERN);
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     @Autowired
     SystemConfig systemConfig;

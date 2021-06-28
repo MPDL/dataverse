@@ -1,29 +1,29 @@
 package edu.harvard.iq.dataverse.harvest.client;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Logger;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import edu.harvard.iq.dataverse.DataFile;
 import edu.harvard.iq.dataverse.DataFileServiceBean;
 import edu.harvard.iq.dataverse.DataverseRequestServiceBean;
 import edu.harvard.iq.dataverse.DataverseServiceBean;
 import edu.harvard.iq.dataverse.EjbDataverseEngine;
-import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
-import edu.harvard.iq.dataverse.engine.command.impl.DeleteHarvestingClientCommand;
 import edu.harvard.iq.dataverse.search.IndexServiceBean;
 import edu.harvard.iq.dataverse.timer.DataverseTimerServiceBean;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Logger;
-import javax.ejb.Asynchronous;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -31,8 +31,7 @@ import javax.persistence.PersistenceContext;
  * 
  * Dedicated service for managing Harvesting Client Configurations
  */
-@Stateless
-@Named
+@Service
 public class HarvestingClientServiceBean implements java.io.Serializable {
     @Autowired
     DataverseServiceBean dataverseService;
@@ -47,7 +46,7 @@ public class HarvestingClientServiceBean implements java.io.Serializable {
     @Autowired
     DataverseTimerServiceBean dataverseTimerService;
     
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     private static final Logger logger = Logger.getLogger("edu.harvard.iq.dataverse.harvest.client.HarvestingClinetServiceBean");
@@ -76,7 +75,7 @@ public class HarvestingClientServiceBean implements java.io.Serializable {
         return null; 
     }
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void resetHarvestInProgress(Long hcId) {
         HarvestingClient harvestingClient = em.find(HarvestingClient.class, hcId);
         if (harvestingClient == null) {
@@ -94,7 +93,7 @@ public class HarvestingClientServiceBean implements java.io.Serializable {
        
     }
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void setHarvestInProgress(Long hcId, Date startTime) {
         HarvestingClient harvestingClient = em.find(HarvestingClient.class, hcId);
         if (harvestingClient == null) {
@@ -112,7 +111,7 @@ public class HarvestingClientServiceBean implements java.io.Serializable {
         harvestingClient.getRunHistory().add(currentRun);
     }
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void setDeleteInProgress(Long hcId) {
         HarvestingClient harvestingClient = em.find(HarvestingClient.class, hcId);
         if (harvestingClient == null) {
@@ -127,7 +126,7 @@ public class HarvestingClientServiceBean implements java.io.Serializable {
     // TOFIGUREOUT:
     // for whatever reason I cannot call the DeleteHarvestingClientCommand from
     // inside this method; something to do with it being asynchronous?
-    @Asynchronous
+    @Async
     public void deleteClient(Long clientId) {
         String errorMessage = null;
         HarvestingClient victim = find(clientId);
@@ -141,7 +140,7 @@ public class HarvestingClientServiceBean implements java.io.Serializable {
             HarvestingClient merged = em.merge(victim);
 
             // if this was a scheduled harvester, make sure the timer is deleted:
-            dataverseTimerService.removeHarvestTimer(victim);
+            //dataverseTimerService.removeHarvestTimer(victim);
                 
             // purge indexed objects:
             indexService.deleteHarvestedDocuments(victim);
@@ -165,7 +164,7 @@ public class HarvestingClientServiceBean implements java.io.Serializable {
         }
     }
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void setHarvestSuccess(Long hcId, Date currentTime, int harvestedCount, int failedCount, int deletedCount) {
         HarvestingClient harvestingClient = em.find(HarvestingClient.class, hcId);
         if (harvestingClient == null) {
@@ -187,7 +186,7 @@ public class HarvestingClientServiceBean implements java.io.Serializable {
         }
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void setHarvestFailure(Long hcId, Date currentTime) {
         HarvestingClient harvestingClient = em.find(HarvestingClient.class, hcId);
         if (harvestingClient == null) {

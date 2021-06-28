@@ -2,19 +2,21 @@ package edu.harvard.iq.dataverse.locality;
 
 import java.util.List;
 import java.util.logging.Logger;
-import javax.ejb.Stateless;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-@Stateless
+import org.springframework.stereotype.Service;
+
+@Service
 public class StorageSiteServiceBean {
 
     private static final Logger logger = Logger.getLogger(StorageSiteServiceBean.class.getCanonicalName());
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
 
     public StorageSite find(long id) {

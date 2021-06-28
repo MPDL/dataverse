@@ -13,10 +13,11 @@ import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.workflows.WorkflowComment;
+import org.apache.solr.client.solrj.SolrServerException;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Future;
-import org.apache.solr.client.solrj.SolrServerException;
 
 @RequiredPermissions(Permission.PublishDataset)
 public class ReturnDatasetToAuthorCommand extends AbstractDatasetCommand<Dataset> {

@@ -5,21 +5,27 @@
  */
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import java.io.IOException;
-import javax.ejb.EJB;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 
 /**
  *
  * @author skraffmi
  */
+@WebServlet(urlPatterns = "/Homepage")
 public class HomepageServlet extends HttpServlet {
-    @Autowired
+    
+	@Autowired
     SettingsServiceBean settingsService;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

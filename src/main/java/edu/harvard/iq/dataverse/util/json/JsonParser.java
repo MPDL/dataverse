@@ -1,23 +1,7 @@
 package edu.harvard.iq.dataverse.util.json;
 
 import com.google.gson.Gson;
-import edu.harvard.iq.dataverse.ControlledVocabularyValue;
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.DataFileCategory;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetField;
-import edu.harvard.iq.dataverse.DatasetFieldConstant;
-import edu.harvard.iq.dataverse.DatasetFieldCompoundValue;
-import edu.harvard.iq.dataverse.DatasetFieldServiceBean;
-import edu.harvard.iq.dataverse.DatasetFieldType;
-import edu.harvard.iq.dataverse.DatasetFieldValue;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.DataverseContact;
-import edu.harvard.iq.dataverse.DataverseTheme;
-import edu.harvard.iq.dataverse.FileMetadata;
-import edu.harvard.iq.dataverse.MetadataBlockServiceBean;
-import edu.harvard.iq.dataverse.TermsOfUseAndAccess;
+import edu.harvard.iq.dataverse.*;
 import edu.harvard.iq.dataverse.TermsOfUseAndAccess.License;
 import edu.harvard.iq.dataverse.api.Util;
 import edu.harvard.iq.dataverse.api.dto.FieldDTO;
@@ -32,14 +16,14 @@ import edu.harvard.iq.dataverse.workflow.Workflow;
 import edu.harvard.iq.dataverse.workflow.step.WorkflowStepData;
 import org.apache.commons.validator.routines.DomainValidator;
 
+import javax.json.*;
+import javax.json.JsonValue.ValueType;
 import java.io.StringReader;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.json.*;
-import javax.json.JsonValue.ValueType;
 
 /**
  * Parses JSON objects into domain objects.

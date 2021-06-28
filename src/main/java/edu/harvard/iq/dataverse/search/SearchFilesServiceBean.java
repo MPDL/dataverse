@@ -1,20 +1,21 @@
 package edu.harvard.iq.dataverse.search;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import edu.harvard.iq.dataverse.DatasetVersion;
 import edu.harvard.iq.dataverse.Dataverse;
 import edu.harvard.iq.dataverse.authorization.users.User;
 import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.faces.context.FacesContext;
-import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 
-@Named
-@Stateless
+@Service
 public class SearchFilesServiceBean {
 
     private static final Logger logger = Logger.getLogger(SearchFilesServiceBean.class.getCanonicalName());

@@ -27,7 +27,7 @@ public class CustomQuestion implements Serializable {
     }
 
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="guestbook_id", nullable=false)
     private Guestbook guestbook;
     
     @OneToMany(mappedBy="customQuestion",cascade={CascadeType.REMOVE, CascadeType.MERGE, CascadeType.PERSIST},orphanRemoval=true)

@@ -1,48 +1,26 @@
 package edu.harvard.iq.dataverse.api.datadeposit;
 
-import edu.harvard.iq.dataverse.DataFileServiceBean;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetField;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.DataverseServiceBean;
-import edu.harvard.iq.dataverse.EjbDataverseEngine;
-import edu.harvard.iq.dataverse.PermissionServiceBean;
+import edu.harvard.iq.dataverse.*;
+import edu.harvard.iq.dataverse.api.imports.ImportGenericServiceBean;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandExecutionException;
-import edu.harvard.iq.dataverse.engine.command.impl.DeleteDatasetCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.DeleteDatasetVersionCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.PublishDatasetCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.PublishDataverseCommand;
-import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetVersionCommand;
-import edu.harvard.iq.dataverse.api.imports.ImportGenericServiceBean;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.engine.command.impl.GetDraftDatasetVersionCommand;
+import edu.harvard.iq.dataverse.engine.command.impl.*;
 import edu.harvard.iq.dataverse.search.IndexServiceBean;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
+import edu.harvard.iq.dataverse.util.EJBException;
+import org.apache.abdera.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.swordapp.server.*;
+
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.abdera.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.swordapp.server.AuthCredentials;
-import org.swordapp.server.ContainerManager;
-import org.swordapp.server.Deposit;
-import org.swordapp.server.DepositReceipt;
-import org.swordapp.server.SwordAuthException;
-import org.swordapp.server.SwordConfiguration;
-import org.swordapp.server.SwordEntry;
-import org.swordapp.server.SwordError;
-import org.swordapp.server.SwordServerException;
-import org.swordapp.server.UriRegistry;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class ContainerManagerImpl implements ContainerManager {
 
@@ -56,7 +34,7 @@ public class ContainerManagerImpl implements ContainerManager {
     DatasetServiceBean datasetService;
     @Autowired
     IndexServiceBean indexService;
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     EntityManager em;
     @Autowired
     ImportGenericServiceBean importGenericService;
@@ -307,7 +285,7 @@ public class ContainerManagerImpl implements ContainerManager {
                     Dataset dataset = null;
                     try {
                         dataset = datasetService.findByGlobalId(globalId);
-                    } catch (Exception ex) {
+                    } catch (EJBException ex) {
                         throw new SwordError(UriRegistry.ERROR_BAD_REQUEST, "Could not find dataset based on global id (" + globalId + ") in URL: " + uri);
                     }
                     if (dataset != null) {

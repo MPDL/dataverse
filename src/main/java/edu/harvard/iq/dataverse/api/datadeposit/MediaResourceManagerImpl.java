@@ -1,25 +1,24 @@
 package edu.harvard.iq.dataverse.api.datadeposit;
 
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.DataFileServiceBean;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.EjbDataverseEngine;
-import edu.harvard.iq.dataverse.PermissionServiceBean;
+import edu.harvard.iq.dataverse.*;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.dataaccess.StorageIO;
-import edu.harvard.iq.dataverse.datacapturemodule.DataCaptureModuleUtil;
-import edu.harvard.iq.dataverse.datasetutility.FileExceedsMaxSizeException;
 import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.impl.UpdateDatasetVersionCommand;
 import edu.harvard.iq.dataverse.ingest.IngestServiceBean;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.swordapp.server.*;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,39 +27,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import org.swordapp.server.AuthCredentials;
-import org.swordapp.server.Deposit;
-import org.swordapp.server.DepositReceipt;
-import org.swordapp.server.MediaResource;
-import org.swordapp.server.MediaResourceManager;
-import org.swordapp.server.SwordAuthException;
-import org.swordapp.server.SwordConfiguration;
-import org.swordapp.server.SwordError;
-import org.swordapp.server.SwordServerException;
-import org.swordapp.server.UriRegistry;
 
+@Component
 public class MediaResourceManagerImpl implements MediaResourceManager {
 
     private static final Logger logger = Logger.getLogger(MediaResourceManagerImpl.class.getCanonicalName());
-    @EJB
+    @Autowired
     EjbDataverseEngine commandEngine;
-    @EJB
+    @Autowired
     DatasetServiceBean datasetService;
-    @EJB
+    @Autowired
     DataFileServiceBean dataFileService;
-    @EJB
+    @Autowired
     IngestServiceBean ingestService;
-    @EJB
+    @Autowired
     PermissionServiceBean permissionService;
-    @EJB
+    @Autowired
     SettingsServiceBean settingsSvc;
-    @EJB
+    @Autowired
     SystemConfig systemConfig;
     @Inject
     SwordAuth swordAuth;

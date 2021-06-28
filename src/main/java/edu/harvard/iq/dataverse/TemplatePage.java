@@ -16,6 +16,7 @@ import edu.harvard.iq.dataverse.engine.command.impl.CreateTemplateCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.UpdateDataverseTemplateCommand;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.util.JsfHelper;
 
 /**
@@ -191,7 +192,23 @@ public class TemplatePage implements java.io.Serializable {
                 cmd = new UpdateDataverseTemplateCommand(dataverse, template, dvRequestService.getDataverseRequest());
                 commandEngine.submit(cmd);
             }
-
+        } catch (EJBException ex) {
+            StringBuilder error = new StringBuilder();
+            error.append(ex).append(" ");
+            error.append(ex.getMessage()).append(" ");
+            Throwable cause = ex;
+            while (cause.getCause() != null) {
+                cause = cause.getCause();
+                error.append(cause).append(" ");
+                error.append(cause.getMessage()).append(" ");
+            }
+            //
+            //FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Template Save Failed", " - " + error.toString()));
+            System.out.print("dataverse " + dataverse.getName());
+            System.out.print("Ejb exception");
+            System.out.print(error.toString());
+            JH.addMessage(FacesMessage.SEVERITY_FATAL, BundleUtil.getStringFromBundle("template.save.fail"));
+            return null;
         
         } catch (CommandException ex) {
             System.out.print("command exception");

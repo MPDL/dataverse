@@ -19,29 +19,26 @@
 
 package edu.harvard.iq.dataverse.batch.jobs.importer.filesystem;
 
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.DataFileServiceBean;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.DatasetVersion;
+import edu.harvard.iq.dataverse.*;
+import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.batch.api.chunk.ItemProcessor;
 import javax.batch.operations.JobOperator;
 import javax.batch.runtime.BatchRuntime;
 import javax.batch.runtime.context.JobContext;
-import javax.ejb.EJB;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.File;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-@Named
-@Dependent
+@Component
+@JobScope
+//@Dependent
 public class FileRecordProcessor implements ItemProcessor {
     
     @Inject

@@ -46,11 +46,11 @@ public class DataverseLinkingDataverse implements Serializable {
     private Long id;
 
     @OneToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name="dataverse_id", nullable = false)
     private Dataverse dataverse;
     
     @OneToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name="linkingdataverse_id", nullable = false)
     private Dataverse linkingDataverse;
     
     @Temporal(value = TemporalType.TIMESTAMP)

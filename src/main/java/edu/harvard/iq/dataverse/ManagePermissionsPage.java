@@ -79,7 +79,7 @@ public class ManagePermissionsPage implements java.io.Serializable {
     PermissionsWrapper permissionsWrapper;
 
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     EntityManager em;
 
     @Inject

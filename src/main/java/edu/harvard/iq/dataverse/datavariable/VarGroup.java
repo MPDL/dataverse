@@ -1,14 +1,6 @@
 package edu.harvard.iq.dataverse.datavariable;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Index;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,9 +18,10 @@ public class VarGroup {
     private String label;
 
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="filemetadata_id", nullable=false)
     private FileMetadata fileMetadata;
 
+    @OneToMany
     private Set<DataVariable> varsInGroup;
 
 

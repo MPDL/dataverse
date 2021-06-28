@@ -1,24 +1,17 @@
 package edu.harvard.iq.dataverse.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipException;
-import java.util.HashMap;
-import java.util.*;
+import org.apache.commons.io.FileUtils;
 
+import java.io.*;
 import java.nio.file.Files;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipInputStream;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  *  Used to identify, "repackage", and extract data from Shapefiles in .zip format

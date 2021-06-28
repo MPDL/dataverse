@@ -6,22 +6,18 @@
 package edu.harvard.iq.dataverse;
 
 import edu.harvard.iq.dataverse.customization.CustomizationConstants;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-import javax.ejb.EJB;
-import org.apache.commons.io.IOUtils;
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *

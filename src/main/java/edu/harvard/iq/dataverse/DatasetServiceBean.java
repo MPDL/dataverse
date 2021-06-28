@@ -15,7 +15,6 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ejb.Asynchronous;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -26,6 +25,7 @@ import javax.persistence.TypedQuery;
 import org.apache.commons.lang.RandomStringUtils;
 import org.ocpsoft.common.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,7 +98,7 @@ public class DatasetServiceBean implements java.io.Serializable {
 
     private static final SimpleDateFormat logFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss");
     
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     protected EntityManager em;
 
     public Dataset find(Object pk) {
@@ -637,7 +637,7 @@ public class DatasetServiceBean implements java.io.Serializable {
     
     // reExportAll *forces* a reexport on all published datasets; whether they 
     // have the "last export" time stamp set or not. 
-    @Asynchronous 
+    @Async
     public void reExportAllAsync() {
         exportAllDatasets(true);
     }
@@ -650,7 +650,7 @@ public class DatasetServiceBean implements java.io.Serializable {
     // exportAll() will try to export the yet unexported datasets (it will honor
     // and trust the "last export" time stamp).
     
-    @Asynchronous
+    @Async
     public void exportAllAsync() {
         exportAllDatasets(false);
     }
@@ -830,7 +830,7 @@ public class DatasetServiceBean implements java.io.Serializable {
      * and we'll log it as a warning - which is the best we can do at this point.
      * Any failure notifications to users should be sent from inside the command.
      */
-    @Asynchronous
+    @Async
     @Transactional(propagation = Propagation.SUPPORTS)
     public void callFinalizePublishCommandAsynchronously(Long datasetId, CommandContext ctxt, DataverseRequest request, boolean isPidPrePublished) {
 
@@ -872,7 +872,7 @@ public class DatasetServiceBean implements java.io.Serializable {
      persistent identifiers for files and ingest - as one post-upload job, so that 
      they can be run in sequence). -- L.A. Mar. 2018
     */
-    @Asynchronous
+    @Async
     public void obtainPersistentIdentifiersForDatafiles(Dataset dataset) {
         GlobalIdServiceBean idServiceBean = GlobalIdServiceBean.getBean(dataset.getProtocol(), commandEngine.getContext());
 

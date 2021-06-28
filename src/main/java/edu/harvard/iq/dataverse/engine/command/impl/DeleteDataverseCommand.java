@@ -2,19 +2,16 @@ package edu.harvard.iq.dataverse.engine.command.impl;
 
 import edu.harvard.iq.dataverse.Dataverse;
 import edu.harvard.iq.dataverse.DataverseFieldTypeInputLevel;
-import edu.harvard.iq.dataverse.authorization.DataverseRole;
 import edu.harvard.iq.dataverse.RoleAssignment;
+import edu.harvard.iq.dataverse.authorization.DataverseRole;
 import edu.harvard.iq.dataverse.authorization.Permission;
 import edu.harvard.iq.dataverse.authorization.groups.impl.explicit.ExplicitGroup;
-import edu.harvard.iq.dataverse.engine.command.AbstractVoidCommand;
-import edu.harvard.iq.dataverse.engine.command.CommandContext;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.engine.command.RequiredPermissions;
-import edu.harvard.iq.dataverse.engine.command.RequiredPermissionsMap;
+import edu.harvard.iq.dataverse.engine.command.*;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
 import edu.harvard.iq.dataverse.search.DvObjectSolrDoc;
 import edu.harvard.iq.dataverse.search.IndexServiceBean;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,7 +90,7 @@ public class DeleteDataverseCommand extends AbstractVoidCommand {
         definitionPoints.forEach(dvObjectSolrDoc -> {
             boolean add = solrIdsToDelete.add(dvObjectSolrDoc.getSolrId() + IndexServiceBean.discoverabilityPermissionSuffix);
         });
-        var deleteMultipleSolrIds = ctxt.solrIndex().deleteMultipleSolrIds(solrIdsToDelete);
+        ctxt.solrIndex().deleteMultipleSolrIds(solrIdsToDelete);
         /**
         * @todo: this method currently always returns true because the 
         * underlying methods (already existing) handle exceptions and don't 

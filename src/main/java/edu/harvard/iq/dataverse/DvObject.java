@@ -48,7 +48,7 @@ import javax.persistence.*;
 		, @Index(columnList="owner_id")
 		, @Index(columnList="creator_id")
 		, @Index(columnList="releaseuser_id")},
-		uniqueConstraints = {@UniqueConstraint(columnNames = {"authority,protocol,identifier"}),@UniqueConstraint(columnNames = {"owner_id,storageidentifier"})})
+		uniqueConstraints = {@UniqueConstraint(columnNames = {"authority","protocol","identifier"}),@UniqueConstraint(columnNames = {"owner_id","storageidentifier"})})
 public abstract class DvObject extends DataverseEntity implements java.io.Serializable {
     
     public static final String DATAVERSE_DTYPE_STRING = "Dataverse";
@@ -96,12 +96,14 @@ public abstract class DvObject extends DataverseEntity implements java.io.Serial
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name="owner_id")
     private DvObject owner;
 
     private Timestamp publicationDate;
 
     /** The user that released this dataverse */
     @ManyToOne
+    @JoinColumn(name = "releaseuser_id")
     private AuthenticatedUser releaseUser;
     
     @Column( nullable = false )
@@ -194,6 +196,7 @@ public abstract class DvObject extends DataverseEntity implements java.io.Serial
     }
 
     @ManyToOne
+    @JoinColumn(name="creator_id")
     private AuthenticatedUser creator;
 
     public interface Visitor<T> {

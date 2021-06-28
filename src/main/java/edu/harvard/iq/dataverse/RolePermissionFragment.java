@@ -64,7 +64,7 @@ public class RolePermissionFragment implements java.io.Serializable {
     @Inject
     DataverseRequestServiceBean dvRequestService;
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     EntityManager em;
 
     @Inject

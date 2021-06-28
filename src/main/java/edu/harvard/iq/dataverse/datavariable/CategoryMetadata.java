@@ -17,11 +17,11 @@ public class CategoryMetadata {
     Long id;
 
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="category_id", nullable=false)
     VariableCategory category;
 
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="variablemetadata_id", nullable=false)
     private VariableMetadata variableMetadata;
 
     Double wfreq;

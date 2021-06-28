@@ -1,34 +1,6 @@
 package edu.harvard.iq.dataverse.api.datadeposit;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-
-import org.apache.abdera.parser.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.swordapp.server.AuthCredentials;
-import org.swordapp.server.CollectionDepositManager;
-import org.swordapp.server.Deposit;
-import org.swordapp.server.DepositReceipt;
-import org.swordapp.server.SwordAuthException;
-import org.swordapp.server.SwordConfiguration;
-import org.swordapp.server.SwordEntry;
-import org.swordapp.server.SwordError;
-import org.swordapp.server.SwordServerException;
-import org.swordapp.server.UriRegistry;
-
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetFieldServiceBean;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.DataverseServiceBean;
-import edu.harvard.iq.dataverse.EjbDataverseEngine;
-import edu.harvard.iq.dataverse.PermissionServiceBean;
+import edu.harvard.iq.dataverse.*;
 import edu.harvard.iq.dataverse.api.imports.ImportGenericServiceBean;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
@@ -36,6 +8,17 @@ import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.impl.AbstractCreateDatasetCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.CreateNewDatasetCommand;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+import edu.harvard.iq.dataverse.util.EJBException;
+import org.apache.abdera.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.swordapp.server.*;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CollectionDepositManagerImpl implements CollectionDepositManager {
 
@@ -129,7 +112,7 @@ public class CollectionDepositManagerImpl implements CollectionDepositManager {
                     Dataset createdDataset = null;
                     try {
                         createdDataset = engineSvc.submit(createDatasetCommand);
-                    } catch (CommandException ex) {
+                    } catch (EJBException | CommandException ex) {
                         Throwable cause = ex;
                         StringBuilder sb = new StringBuilder();
                         sb.append(ex.getLocalizedMessage());

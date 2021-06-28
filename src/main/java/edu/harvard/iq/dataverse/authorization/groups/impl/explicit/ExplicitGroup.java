@@ -112,6 +112,7 @@ public class ExplicitGroup implements Group, java.io.Serializable {
      * The DvObject under which this group is defined.
      */
     @ManyToOne
+    @JoinColumn(name="owner_id")
     DvObject owner;
     
     /** Given alias of the group, e.g by the user that created it. Unique in the owner. */

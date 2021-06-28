@@ -52,7 +52,7 @@ public class VariableCategory  implements Comparable, Serializable {
      * DataVariable for which this range is defined.
      */
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="datavariable_id", nullable=false)
     private DataVariable dataVariable;
     
     /*

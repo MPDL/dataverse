@@ -1,5 +1,54 @@
 package edu.harvard.iq.dataverse.search;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrQuery.SortClause;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.response.UpdateResponse;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.params.CursorMarkParams;
+import org.apache.tika.io.IOUtils;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.sax.BodyContentHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.xml.sax.ContentHandler;
+
 import edu.harvard.iq.dataverse.ControlledVocabularyValue;
 import edu.harvard.iq.dataverse.DataFile;
 import edu.harvard.iq.dataverse.DataFileTag;
@@ -28,65 +77,17 @@ import edu.harvard.iq.dataverse.datavariable.VariableMetadataUtil;
 import edu.harvard.iq.dataverse.datavariable.VariableServiceBean;
 import edu.harvard.iq.dataverse.harvest.client.HarvestingClient;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.StringUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Future;
-import java.util.function.Function;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.ejb.AsyncResult;
-import javax.ejb.Asynchronous;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import org.apache.commons.lang.StringUtils;
-import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrQuery.SortClause;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.client.solrj.response.UpdateResponse;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.params.CursorMarkParams;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.io.IOUtils;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.sax.BodyContentHandler;
-import org.xml.sax.ContentHandler;
 
-@Stateless
-@Named
+@Service
 public class IndexServiceBean {
 
     private static final Logger logger = Logger.getLogger(IndexServiceBean.class.getCanonicalName());
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
 
     @Autowired
@@ -138,8 +139,8 @@ public class IndexServiceBean {
     private static final String IN_REVIEW_STRING = "In Review";
     private static final String DEACCESSIONED_STRING = "Deaccessioned";
     public static final String HARVESTED = "Harvested";
-    private String rootDataverseName;
-    private Dataverse rootDataverseCached;
+    //private String rootDataverseName;
+    //private Dataverse rootDataverseCached;
     private SolrClient solrServer;
 
     private VariableMetadataUtil variableMetadataUtil;
@@ -149,7 +150,7 @@ public class IndexServiceBean {
         String urlString = "http://" + systemConfig.getSolrHostColonPort() + "/solr/collection1";
         solrServer = new HttpSolrClient.Builder(urlString).build();
 
-        rootDataverseName = findRootDataverseCached().getName();
+        //rootDataverseName = findRootDataverseCached().getName();
     }
 
     @PreDestroy
@@ -164,7 +165,7 @@ public class IndexServiceBean {
         }
     }
    
-    @TransactionAttribute(REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Future<String> indexDataverseInNewTransaction(Dataverse dataverse) throws SolrServerException, IOException{
         return indexDataverse(dataverse, false);
     }
@@ -315,7 +316,7 @@ public class IndexServiceBean {
 
     }
     
-    @TransactionAttribute(REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Future<String> indexDatasetInNewTransaction(Long datasetId) throws  SolrServerException, IOException{ //Dataset dataset) {
         boolean doNormalSolrDocCleanUp = false;
         Dataset dataset = em.find(Dataset.class, datasetId);
@@ -325,12 +326,12 @@ public class IndexServiceBean {
         return ret;
     }
 
-    @Asynchronous
+    @Async
     public Future<String> asyncIndexDataset(Dataset dataset, boolean doNormalSolrDocCleanUp) throws  SolrServerException, IOException {
         return indexDataset(dataset, doNormalSolrDocCleanUp);
     }
     
-    @Asynchronous
+    @Async
     public void asyncIndexDatasetList(List<Dataset> datasets, boolean doNormalSolrDocCleanUp) throws  SolrServerException, IOException {
         for(Dataset dataset : datasets) {
             indexDataset(dataset, true);
@@ -1603,6 +1604,7 @@ public class IndexServiceBean {
         return result.toString();
     }
 
+
     private Dataverse findRootDataverseCached() {
         if (true) {
             /**
@@ -1630,6 +1632,8 @@ public class IndexServiceBean {
         /**
          * @todo Why isn't this code working?
          */
+
+        /*
         if (rootDataverseCached != null) {
             return rootDataverseCached;
         } else {
@@ -1640,7 +1644,12 @@ public class IndexServiceBean {
                 throw new RuntimeException("unable to determine root dataverse");
             }
         }
+        */
+
+
+        return null;
     }
+
 
     private String getDesiredCardState(Map<DatasetVersion.VersionState, Boolean> desiredCards) {
         /**

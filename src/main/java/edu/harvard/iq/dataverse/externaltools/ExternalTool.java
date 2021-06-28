@@ -70,7 +70,7 @@ public class ExternalTool implements Serializable {
      * A tool can be multiple types, "explore", "configure", "preview", etc.
      */
     @OneToMany(mappedBy = "externalTool", cascade = CascadeType.ALL)
-    @JoinColumn(nullable = false)
+    //@JoinColumn(nullable = false)
     private List<ExternalToolType> externalToolTypes;
 
     /**

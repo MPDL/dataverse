@@ -1,22 +1,14 @@
 
 package edu.harvard.iq.dataverse.makedatacount;
 
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
 import java.io.StringReader;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-import java.util.concurrent.Future;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -26,17 +18,23 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.Dataset;
+import edu.harvard.iq.dataverse.DatasetServiceBean;
+import edu.harvard.iq.dataverse.util.EJBException;
+
 /**
  *
  * @author skraffmi
  */
-@Named
-@Stateless
+@Service
 public class DatasetMetricsServiceBean implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(DatasetMetricsServiceBean.class.getCanonicalName());
     
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     protected EntityManager em;
     
     @Autowired

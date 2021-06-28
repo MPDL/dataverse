@@ -11,9 +11,10 @@ import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import edu.harvard.iq.dataverse.engine.command.RequiredPermissions;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
+import org.apache.solr.client.solrj.SolrServerException;
+
 import java.io.IOException;
 import java.util.concurrent.Future;
-import org.apache.solr.client.solrj.SolrServerException;
 
 /**
  *

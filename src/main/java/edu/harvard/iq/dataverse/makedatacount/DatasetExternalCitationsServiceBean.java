@@ -5,15 +5,10 @@
  */
 package edu.harvard.iq.dataverse.makedatacount;
 
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
@@ -21,15 +16,21 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.Dataset;
+import edu.harvard.iq.dataverse.DatasetServiceBean;
+import edu.harvard.iq.dataverse.util.EJBException;
+
 /**
  *
  * @author skraffmi
  */
-@Named
-@Stateless
+@Service
 public class DatasetExternalCitationsServiceBean implements java.io.Serializable {
     
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     protected EntityManager em;
     
     @Autowired

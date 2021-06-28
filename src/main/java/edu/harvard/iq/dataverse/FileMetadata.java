@@ -93,11 +93,11 @@ public class FileMetadata implements Serializable {
     private boolean restricted;
 
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="datasetversion_id",nullable=false)
     private DatasetVersion datasetVersion;
     
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="datafile_id", nullable=false)
     private DataFile dataFile;
 
     /**
@@ -197,7 +197,10 @@ public class FileMetadata implements Serializable {
      */
     @SerializedName("categories") //Used for OptionalFileParams serialization
     @ManyToMany
-    @JoinTable(indexes = {@Index(columnList="filecategories_id"),@Index(columnList="filemetadatas_id")})
+    @JoinTable(joinColumns = @JoinColumn(name = "filemetadatas_id"),
+            inverseJoinColumns = @JoinColumn(name = "filecategories_id"),
+            indexes = {@Index(columnList="filecategories_id"),
+            @Index(columnList="filemetadatas_id")})
     @OrderBy("name")
     private List<DataFileCategory> fileCategories;
     

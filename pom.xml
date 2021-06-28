@@ -14,9 +14,12 @@
     <groupId>edu.harvard.iq</groupId>
     <artifactId>dataverse</artifactId>
     <version>5.5</version>
+    <!--  
     <packaging>war</packaging>
+    -->
     <name>dataverse</name>
     <properties>
+    	<start-class>edu.harvard.iq.dataverse.DataverseApplication</start-class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <additionalparam>-Xdoclint:none</additionalparam>
         <!-- Needed to avoid IDEA IDE compilation failures. See commits in GH #5059 -->
@@ -171,6 +174,23 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-batch</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+		<dependency>
+		    <groupId>org.glassfish.jersey.ext</groupId>
+		    <artifactId>jersey-spring4</artifactId>
+		    <version>2.26</version>
 		</dependency>
 		<!-- 
 		<dependency>
@@ -788,6 +808,14 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>false</fork>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3</version>
@@ -925,6 +953,8 @@
                 <release>11</release>
                 <!-- for use with `mvn -DcompilerArgument=-Xlint:unchecked compile` -->
                 <compilerArgument>${compilerArgument}</compilerArgument>
+                  <forceJavacCompilerUse>true</forceJavacCompilerUse>
+
               </configuration>
             </plugin>
           </plugins>

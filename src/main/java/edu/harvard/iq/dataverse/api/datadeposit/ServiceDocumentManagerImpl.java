@@ -1,29 +1,18 @@
 package edu.harvard.iq.dataverse.api.datadeposit;
 
-import java.util.List;
-import java.util.logging.Logger;
-
-import javax.inject.Inject;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.swordapp.server.AuthCredentials;
-import org.swordapp.server.ServiceDocument;
-import org.swordapp.server.ServiceDocumentManager;
-import org.swordapp.server.SwordAuthException;
-import org.swordapp.server.SwordCollection;
-import org.swordapp.server.SwordConfiguration;
-import org.swordapp.server.SwordError;
-import org.swordapp.server.SwordServerException;
-import org.swordapp.server.SwordWorkspace;
-import org.swordapp.server.UriRegistry;
-
 import edu.harvard.iq.dataverse.Dataverse;
 import edu.harvard.iq.dataverse.DataverseServiceBean;
 import edu.harvard.iq.dataverse.PermissionServiceBean;
 import edu.harvard.iq.dataverse.authorization.Permission;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.util.SystemConfig;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.swordapp.server.*;
+
+import javax.inject.Inject;
+import java.util.List;
+import java.util.logging.Logger;
 
 public class ServiceDocumentManagerImpl implements ServiceDocumentManager {
 

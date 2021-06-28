@@ -1,13 +1,16 @@
 package edu.harvard.iq.dataverse.privateurl;
 
-import edu.harvard.iq.dataverse.DataverseSession;
-import edu.harvard.iq.dataverse.authorization.users.PrivateUrlUser;
 import java.io.Serializable;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
+
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.harvard.iq.dataverse.DataverseSession;
+import edu.harvard.iq.dataverse.authorization.users.PrivateUrlUser;
 
 /**
  * Backing bean for JSF page. Sets session to {@link PrivateUrlUser}. 

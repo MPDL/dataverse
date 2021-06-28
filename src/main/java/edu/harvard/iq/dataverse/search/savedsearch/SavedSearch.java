@@ -5,16 +5,7 @@ import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(indexes = {@Index(columnList="definitionpoint_id")
@@ -22,7 +13,7 @@ import javax.persistence.Table;
 public class SavedSearch implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     /**
@@ -43,10 +34,12 @@ public class SavedSearch implements Serializable {
     /**
      * Saved searches are associated with a Dataverse, not a user.
      */
-    @JoinColumn(nullable = false)
+    @ManyToOne
+    @JoinColumn(name="definitionpoint_id", nullable = false)
     private Dataverse definitionPoint;
 
-    @JoinColumn(nullable = false)
+    @ManyToOne
+    @JoinColumn(name="creator_id", nullable = false)
     private AuthenticatedUser creator;
 
     public List<String> getFilterQueriesAsStrings() {

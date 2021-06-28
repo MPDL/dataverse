@@ -41,7 +41,7 @@ public class ManageTemplatesPage implements java.io.Serializable {
 	@Inject
     EjbDataverseEngine engineService;
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     EntityManager em;
 
     @Inject

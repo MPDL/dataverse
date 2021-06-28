@@ -1,5 +1,8 @@
 package edu.harvard.iq.dataverse.api;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonReader;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -7,9 +10,6 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonReader;
 
 public class Util {
 

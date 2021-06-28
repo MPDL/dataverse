@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FeaturedDataverseServiceBean {
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     @Autowired

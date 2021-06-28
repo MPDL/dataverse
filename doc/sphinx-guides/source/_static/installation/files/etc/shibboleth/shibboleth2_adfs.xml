@@ -4,7 +4,7 @@ example shibboleth2.xml for ADFS 3.0
 
 - attribute-map_adfs.xml
 -->
-<SPConfig xmlns="urn:mace:shibboleth:3.0:native:sp:config" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" clockSkew="1800">
+<SPConfig xmlns="urn:mace:shibboleth:3.0:native:sp:config" clockSkew="1800">
   <!-- adfs libraries for shibboleth and apache -->
   <OutOfProcess>
     <Extensions>

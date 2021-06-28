@@ -6,6 +6,7 @@
 package edu.harvard.iq.dataverse.util.json;
 
 import edu.harvard.iq.dataverse.DatasetFieldCompoundValue;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,20 +1,22 @@
 package edu.harvard.iq.dataverse.privateurl;
 
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.RoleAssignment;
-import edu.harvard.iq.dataverse.authorization.users.PrivateUrlUser;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.io.Serializable;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.Dataset;
+import edu.harvard.iq.dataverse.DatasetServiceBean;
+import edu.harvard.iq.dataverse.RoleAssignment;
+import edu.harvard.iq.dataverse.authorization.users.PrivateUrlUser;
+import edu.harvard.iq.dataverse.util.SystemConfig;
 
 /**
  *
@@ -23,13 +25,12 @@ import javax.persistence.TypedQuery;
  * runtime dependencies should be put in PrivateUrlUtil so it can be unit
  * tested.
  */
-@Stateless
-@Named
+@Service
 public class PrivateUrlServiceBean implements Serializable {
 
     private static final Logger logger = Logger.getLogger(PrivateUrlServiceBean.class.getCanonicalName());
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
 
     @Autowired

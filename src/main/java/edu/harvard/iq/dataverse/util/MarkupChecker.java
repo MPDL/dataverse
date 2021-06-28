@@ -7,8 +7,8 @@ package edu.harvard.iq.dataverse.util;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
 import org.jsoup.parser.Parser;
+import org.jsoup.safety.Whitelist;
 
 /**
  * Wrapper for Jsoup clean

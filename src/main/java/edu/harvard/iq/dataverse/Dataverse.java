@@ -165,7 +165,7 @@ public class Dataverse extends DvObjectContainer {
     private Set<DataverseRole> roles;
     
     @ManyToOne
-    @JoinColumn(nullable = true)
+    @JoinColumn(name="defaultcontributorrole_id", nullable = true)
     private DataverseRole defaultContributorRole;
 
     public DataverseRole getDefaultContributorRole() {
@@ -278,7 +278,7 @@ public class Dataverse extends DvObjectContainer {
     private List<DataverseFieldTypeInputLevel> dataverseFieldTypeInputLevels = new ArrayList<>();
     
     @ManyToOne
-    @JoinColumn(nullable = true)
+    @JoinColumn(name="defaulttemplate_id", nullable = true)
     private Template defaultTemplate;  
     
     @OneToMany(mappedBy = "definitionPoint", cascade={CascadeType.REMOVE, CascadeType.MERGE, CascadeType.PERSIST})

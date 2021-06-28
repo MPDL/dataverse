@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MetadataBlockServiceBean {
     
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     

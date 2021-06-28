@@ -1,11 +1,11 @@
 package edu.harvard.iq.dataverse.settings.source;
 
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 
 /**
  * This is a small helper bean for the MPCONFIG DbSettingConfigSource.
@@ -14,8 +14,7 @@ import javax.ejb.Startup;
  *
  * MPCONFIG requires it's sources to be POJOs. No direct dependency injection possible.
  */
-@Singleton
-@Startup
+@Component
 public class DbSettingConfigHelper {
     @Autowired
     SettingsServiceBean settingsSvc;

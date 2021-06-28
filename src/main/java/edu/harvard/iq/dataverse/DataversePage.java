@@ -51,6 +51,7 @@ import edu.harvard.iq.dataverse.search.savedsearch.SavedSearch;
 import edu.harvard.iq.dataverse.search.savedsearch.SavedSearchFilterQuery;
 import edu.harvard.iq.dataverse.search.savedsearch.SavedSearchServiceBean;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.util.JsfHelper;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 
@@ -320,7 +321,7 @@ public class DataversePage implements java.io.Serializable {
             } else {
                 try {
                     dataverse = dataverseService.findRootDataverse();
-                } catch (Exception e) {
+                } catch (EJBException e) {
                     // @todo handle case with no root dataverse (a fresh installation) with message about using API to create the root 
                     dataverse = null;
                 }

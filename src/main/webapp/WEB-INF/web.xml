@@ -92,19 +92,8 @@
         <servlet-name>OAIServlet</servlet-name>
         <servlet-class>edu.harvard.iq.dataverse.harvest.server.web.servlet.OAIServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>Citation Servlet</servlet-name>
-        <servlet-class>edu.harvard.iq.dataverse.CitationServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>HomepageServlet</servlet-name>
-        <servlet-class>edu.harvard.iq.dataverse.HomepageServlet</servlet-class>
-    </servlet>
 
-    <servlet-mapping>
-        <servlet-name>HomepageServlet</servlet-name>
-        <url-pattern>/Homepage</url-pattern>
-    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>
@@ -129,10 +118,7 @@
         <servlet-name>OAIServlet</servlet-name>
         <url-pattern>/oai</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Citation Servlet</servlet-name>
-        <url-pattern>/citation</url-pattern>
-    </servlet-mapping>
+
 
     <session-config>
         <!-- This is the DEFAULT HttpSession timeout, in minutes. -->

@@ -124,7 +124,7 @@ public class DatasetField implements Serializable {
     }
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name="datasetfieldtype_id", nullable = false)
     private DatasetFieldType datasetFieldType;
 
     public DatasetFieldType getDatasetFieldType() {
@@ -136,6 +136,7 @@ public class DatasetField implements Serializable {
     }
 
     @ManyToOne
+    @JoinColumn(name="datasetversion_id")
     private DatasetVersion datasetVersion;
 
     public DatasetVersion getDatasetVersion() {
@@ -147,6 +148,7 @@ public class DatasetField implements Serializable {
     }
     
     @ManyToOne
+    @JoinColumn(name="template_id")
     private Template template;
 
     public Template getTemplate() {
@@ -158,6 +160,7 @@ public class DatasetField implements Serializable {
     }
 
     @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name="parentdatasetfieldcompoundvalue_id")
     private DatasetFieldCompoundValue parentDatasetFieldCompoundValue;
 
     public DatasetFieldCompoundValue getParentDatasetFieldCompoundValue() {
@@ -193,7 +196,10 @@ public class DatasetField implements Serializable {
     }
 
     @ManyToMany(cascade = {CascadeType.MERGE})
-    @JoinTable(indexes = {@Index(columnList="datasetfield_id"),@Index(columnList="controlledvocabularyvalues_id")})
+    @JoinTable(
+            joinColumns = @JoinColumn(name = "datasetfield_id"),
+            inverseJoinColumns = @JoinColumn(name = "controlledVocabularyValues_id"),
+            indexes = {@Index(columnList="datasetfield_id"),@Index(columnList="controlledVocabularyValues_id")})
     private List<ControlledVocabularyValue> controlledVocabularyValues = new ArrayList<>();
 
     public List<ControlledVocabularyValue> getControlledVocabularyValues() {

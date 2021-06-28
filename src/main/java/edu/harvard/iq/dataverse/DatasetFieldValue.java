@@ -61,7 +61,7 @@ public class DatasetFieldValue implements Serializable {
     private int displayOrder;
     
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="datasetfield_id", nullable=false)
     private DatasetField datasetField;    
 
     public Long getId() {

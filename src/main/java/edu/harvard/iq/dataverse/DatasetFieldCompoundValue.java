@@ -15,16 +15,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -62,6 +54,7 @@ public class DatasetFieldCompoundValue implements Serializable {
     private int displayOrder;
 
     @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name="parentdatasetfield_id")
     private DatasetField parentDatasetField;
 
     @OneToMany(mappedBy = "parentDatasetFieldCompoundValue", orphanRemoval = true, cascade = {CascadeType.REMOVE, CascadeType.MERGE, CascadeType.PERSIST})

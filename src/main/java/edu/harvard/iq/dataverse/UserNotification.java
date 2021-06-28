@@ -40,7 +40,7 @@ public class UserNotification implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn( nullable = false )
+    @JoinColumn( name="user_id", nullable = false )
     private AuthenticatedUser user;
     @ManyToOne
     @JoinColumn( nullable = true )

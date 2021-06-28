@@ -20,23 +20,24 @@
 
 package edu.harvard.iq.dataverse.ingest;
 
-import edu.harvard.iq.dataverse.*;
-import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Iterator;
 import java.util.logging.Logger;
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.EJB;
-import javax.ejb.MessageDriven;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.ObjectMessage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.stereotype.Component;
+
+import edu.harvard.iq.dataverse.DataFile;
+import edu.harvard.iq.dataverse.DataFileServiceBean;
+import edu.harvard.iq.dataverse.Dataset;
+import edu.harvard.iq.dataverse.DatasetLock;
+import edu.harvard.iq.dataverse.DatasetServiceBean;
+import edu.harvard.iq.dataverse.UserNotification;
+import edu.harvard.iq.dataverse.UserNotificationServiceBean;
+import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 
 /**
  *
@@ -45,14 +46,8 @@ import javax.jms.ObjectMessage;
  * 
  * @author Leonid Andreev 
  */
-@MessageDriven(
-    mappedName = "java:app/jms/queue/ingest",
-    activationConfig =  {
-        @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge"),
-        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue")
-    }
-)
-public class IngestMessageBean implements MessageListener {
+@Component
+public class IngestMessageBean {
     private static final Logger logger = Logger.getLogger(IngestMessageBean.class.getCanonicalName());
     @Autowired DatasetServiceBean datasetService;
     @Autowired DataFileServiceBean datafileService;
@@ -64,16 +59,17 @@ public class IngestMessageBean implements MessageListener {
     public IngestMessageBean() {
     }
     
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void onMessage(Message message) {
-        IngestMessage ingestMessage = null;
+    //@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    @JmsListener(destination = "ingest", containerFactory = "myFactory")
+    public void onMessage(IngestMessage message) {
+        IngestMessage ingestMessage = message;
 
         Long datafile_id = null;
         AuthenticatedUser authenticatedUser = null;
         
         try {
-            ObjectMessage om = (ObjectMessage) message;
-            ingestMessage = (IngestMessage) om.getObject();
+            //ObjectMessage om = (ObjectMessage) message;
+            //ingestMessage = (IngestMessage) om.getObject();
 
             authenticatedUser = authenticationServiceBean.findByID(ingestMessage.getAuthenticatedUserId());
 
@@ -174,7 +170,7 @@ public class IngestMessageBean implements MessageListener {
             );
 
 
-        } catch (JMSException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace(); // error in getting object from message; can't send e-mail
 
         } finally {

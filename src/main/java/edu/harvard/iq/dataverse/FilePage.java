@@ -53,6 +53,7 @@ import edu.harvard.iq.dataverse.privateurl.PrivateUrl;
 import edu.harvard.iq.dataverse.privateurl.PrivateUrlServiceBean;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
 import edu.harvard.iq.dataverse.util.SystemConfig;
@@ -598,7 +599,20 @@ public class FilePage implements java.io.Serializable {
             commandEngine.submit(cmd);
             updateCommandSuccess = true;
 
-        
+        } catch (EJBException ex) {
+
+            StringBuilder error = new StringBuilder();
+            error.append(ex).append(" ");
+            error.append(ex.getMessage()).append(" ");
+
+
+            Throwable cause = ex;
+            while (cause.getCause()!= null) {
+                cause = cause.getCause();
+                error.append(cause).append(" ");
+                error.append(cause.getMessage()).append(" ");
+            }
+            return null;
         } catch (CommandException ex) {
             fileDeleteInProgress = false;
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, BundleUtil.getStringFromBundle("dataset.save.fail"), " - " + ex.toString()));

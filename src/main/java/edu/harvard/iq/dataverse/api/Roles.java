@@ -1,18 +1,5 @@
 package edu.harvard.iq.dataverse.api;
 
-import static edu.harvard.iq.dataverse.util.json.JsonPrinter.json;
-
-import java.util.Arrays;
-import java.util.List;
-
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
-
 import edu.harvard.iq.dataverse.api.dto.RoleDTO;
 import edu.harvard.iq.dataverse.authorization.DataverseRole;
 import edu.harvard.iq.dataverse.authorization.Permission;
@@ -20,6 +7,13 @@ import edu.harvard.iq.dataverse.authorization.users.User;
 import edu.harvard.iq.dataverse.engine.command.impl.CreateRoleCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.DeleteRoleCommand;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+import java.util.Arrays;
+import java.util.List;
+
+import static edu.harvard.iq.dataverse.util.json.JsonPrinter.json;
 
 /**
  * Util API for managing roles. Might not make it to the production version.

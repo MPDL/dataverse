@@ -39,15 +39,15 @@ public class GuestbookResponse implements Serializable {
     private Long id;
             
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="guestbook_id", nullable=false)
     private Guestbook guestbook;
     
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="datafile_id", nullable=false)
     private DataFile dataFile;
     
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="dataset_id",nullable=false)
     private Dataset dataset;
     
     @ManyToOne

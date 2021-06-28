@@ -33,7 +33,7 @@ public class ExternalToolType implements Serializable {
      * ExternalTool is not deleted from the database.
      */
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name="externaltool_id", nullable = false)
     private ExternalTool externalTool;
 
     public Long getId() {

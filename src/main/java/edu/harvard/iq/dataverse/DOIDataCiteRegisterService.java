@@ -40,7 +40,7 @@ public class DOIDataCiteRegisterService {
 
     private static final Logger logger = Logger.getLogger(DOIDataCiteRegisterService.class.getCanonicalName());
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
 
     @Autowired

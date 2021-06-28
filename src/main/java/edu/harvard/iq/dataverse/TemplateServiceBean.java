@@ -23,7 +23,7 @@ public class TemplateServiceBean {
     @Autowired
     IndexServiceBean indexService;
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
 
     public Template find(Object pk) {

@@ -37,7 +37,7 @@ public class BuiltinUserServiceBean {
     @Autowired
     PasswordResetServiceBean passwordResetService;
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     public String encryptPassword(String plainText) {

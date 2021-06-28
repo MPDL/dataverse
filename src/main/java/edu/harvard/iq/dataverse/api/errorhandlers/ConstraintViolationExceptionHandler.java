@@ -1,11 +1,8 @@
 package edu.harvard.iq.dataverse.api.errorhandlers;
 
-import edu.harvard.iq.dataverse.util.json.JsonPrinter;
-
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.MediaType;

@@ -3,7 +3,6 @@ package edu.harvard.iq.dataverse.search;
 import java.util.List;
 import javax.inject.Named;
 
-@Named
 public class Highlight {
 
     SolrField solrField;

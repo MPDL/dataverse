@@ -3,12 +3,14 @@ package edu.harvard.iq.dataverse.util;
 import edu.harvard.iq.dataverse.DatasetVersion;
 import edu.harvard.iq.dataverse.UserNotification;
 import edu.harvard.iq.dataverse.branding.BrandingUtil;
-import static edu.harvard.iq.dataverse.settings.SettingsServiceBean.Key.SystemEmail;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
+
+import static edu.harvard.iq.dataverse.settings.SettingsServiceBean.Key.SystemEmail;
 
 public class MailUtil {
 

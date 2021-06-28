@@ -7,8 +7,8 @@ import edu.harvard.iq.dataverse.ingest.tabulardata.TabularDataFileReader;
 import edu.harvard.iq.dataverse.ingest.tabulardata.TabularDataIngest;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.ejb.EJB;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class IngestFrequencyTest {
 
-    @EJB
+    @Autowired
     IngestServiceBean ingestService;
 
     @Test

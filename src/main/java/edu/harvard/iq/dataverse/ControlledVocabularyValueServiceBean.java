@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ControlledVocabularyValueServiceBean implements java.io.Serializable {
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     public List<ControlledVocabularyValue> findByDatasetFieldTypeId(Long dsftId) {

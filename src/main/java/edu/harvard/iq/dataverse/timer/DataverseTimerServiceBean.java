@@ -5,38 +5,19 @@
  */
 package edu.harvard.iq.dataverse.timer;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.ejb.Timeout;
-import javax.ejb.TimerConfig;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import edu.harvard.iq.dataverse.DatasetServiceBean;
 import edu.harvard.iq.dataverse.Dataverse;
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.harvest.client.HarvestTimerInfo;
 import edu.harvard.iq.dataverse.harvest.client.HarvesterServiceBean;
-import edu.harvard.iq.dataverse.harvest.client.HarvestingClient;
 import edu.harvard.iq.dataverse.harvest.client.HarvestingClientServiceBean;
 import edu.harvard.iq.dataverse.harvest.server.OAISetServiceBean;
 import edu.harvard.iq.dataverse.util.SystemConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import java.io.Serializable;
+import java.util.logging.Logger;
 
 
 /**
@@ -54,8 +35,7 @@ public class DataverseTimerServiceBean implements Serializable {
     
     private static final Logger logger = Logger.getLogger("edu.harvard.iq.dataverse.timer.DataverseTimerServiceBean");
     
-    @Resource
-    javax.ejb.TimerService timerService;
+   
     @Autowired
     HarvesterServiceBean harvesterService;
     @Autowired
@@ -73,6 +53,30 @@ public class DataverseTimerServiceBean implements Serializable {
     // The init method that wipes and recreates all the timers on startup
     //@PostConstruct
 
+    
+    
+    
+    
+    @Scheduled(cron = "0 0 2 * * *")
+    public void exportTimer()
+    {
+    	
+    	try {
+            //ExportTimerInfo info = (ExportTimerInfo) timer.getInfo();
+            logger.info("Timer Service: Running a scheduled export job.");
+           
+            // try to export all unexported datasets:
+            datasetService.exportAll();
+             // and update all oai sets:
+            oaiSetService.exportAllSets();
+        } catch (Throwable e) {
+            logException(e, logger);
+        }
+    }
+    
+    
+    /*
+    
     @PostConstruct
     public void init() {
         logger.info("PostConstruct timer check.");
@@ -100,6 +104,7 @@ public class DataverseTimerServiceBean implements Serializable {
         }
         timerService.createIntervalTimer(initialExpiration, intervalDuration, new TimerConfig(info, false));
     }
+    */
 
     /**
      * This method is called whenever an EJB Timer goes off.
@@ -107,6 +112,7 @@ public class DataverseTimerServiceBean implements Serializable {
      * Run the harvest for the given (scheduled) dataverse
      * @param timer
      */
+    /*
     @Timeout
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void handleTimeout(javax.ejb.Timer timer) {
@@ -310,6 +316,7 @@ public class DataverseTimerServiceBean implements Serializable {
         createTimer(initExpirationDate, intervalDuration, info);
     }
 
+*/
     public void createExportTimer(Dataverse dataverse) {
          /* Not yet implemented. The DVN 3 implementation can be used as a model */
 
@@ -318,6 +325,7 @@ public class DataverseTimerServiceBean implements Serializable {
      public void removeExportTimer() {
          /* Not yet implemented. The DVN 3 implementation can be used as a model */
     }
+     
 
     /* Utility methods: */ 
     private void logException(Throwable e, Logger logger) {

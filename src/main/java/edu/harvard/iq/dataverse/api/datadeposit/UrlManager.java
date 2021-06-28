@@ -1,15 +1,18 @@
 package edu.harvard.iq.dataverse.api.datadeposit;
 
 import edu.harvard.iq.dataverse.util.SystemConfig;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Component;
+import org.swordapp.server.SwordError;
+import org.swordapp.server.UriRegistry;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
-import org.apache.commons.lang.StringUtils;
-import org.swordapp.server.SwordError;
-import org.swordapp.server.UriRegistry;
 
+@Component
 public class UrlManager {
 
     private static final Logger logger = Logger.getLogger(UrlManager.class.getCanonicalName());

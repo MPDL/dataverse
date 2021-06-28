@@ -1,13 +1,12 @@
 package edu.harvard.iq.dataverse.api;
 
+import edu.harvard.iq.dataverse.MailServiceBean;
+import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import edu.harvard.iq.dataverse.MailServiceBean;
-import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
 
 /**
  *

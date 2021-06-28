@@ -25,7 +25,7 @@ public class CustomQuestionResponse implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name="guestbookresponse_id",nullable = false)
     private GuestbookResponse guestbookResponse;
 
     @ManyToOne

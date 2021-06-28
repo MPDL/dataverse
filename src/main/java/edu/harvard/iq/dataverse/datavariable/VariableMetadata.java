@@ -34,14 +34,14 @@ public class VariableMetadata implements Serializable  {
      * dataVariable: DataVariable to which this metadata belongs.
      */
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="datavariable_id", nullable=false)
     private DataVariable dataVariable;
 
     /**
      * fileMetadta: FileMetadata to which this metadata belongs.
      */
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="filemetadata_id", nullable=false)
     private FileMetadata fileMetadata;
 
     /**
@@ -92,7 +92,7 @@ public class VariableMetadata implements Serializable  {
     /**
      * categoriesMetadata: variable metadata for categories that includes weighted frequencies
      */
-    @OneToMany (mappedBy="VariableMetadata", cascade={ CascadeType.REMOVE, CascadeType.MERGE,CascadeType.PERSIST})
+    @OneToMany (mappedBy="variableMetadata", cascade={ CascadeType.REMOVE, CascadeType.MERGE,CascadeType.PERSIST})
     private Collection<CategoryMetadata> categoriesMetadata;
 
     /**

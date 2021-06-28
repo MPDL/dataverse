@@ -2,10 +2,12 @@ package edu.harvard.iq.dataverse.api.datadeposit;
 
 import edu.harvard.iq.dataverse.api.AbstractApiBean;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import java.util.logging.Logger;
+import org.springframework.stereotype.Component;
 import org.swordapp.server.AuthCredentials;
 import org.swordapp.server.SwordAuthException;
 import org.swordapp.server.SwordServerException;
+
+import java.util.logging.Logger;
 
 /**
  * In early version of Dataverse 4 this class was responsible for both
@@ -13,6 +15,7 @@ import org.swordapp.server.SwordServerException;
  * permission enforcement is done inside each of the methods in the "*Impl.java"
  * files for SWORD.
  */
+@Component
 public class SwordAuth extends AbstractApiBean {
 
     private static final Logger logger = Logger.getLogger(SwordAuth.class.getCanonicalName());

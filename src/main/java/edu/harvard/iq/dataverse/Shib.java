@@ -31,6 +31,7 @@ import edu.harvard.iq.dataverse.authorization.providers.shib.ShibUtil;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.util.JsfHelper;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 
@@ -307,7 +308,7 @@ public class Shib implements java.io.Serializable {
         try {
             au = authSvc.createAuthenticatedUser(
                     new UserRecordIdentifier(shibAuthProvider.getId(), lookupStringPerAuthProvider), internalUserIdentifer, displayInfo, true);
-        } catch (Exception ex) {
+        } catch (EJBException ex) {
             /**
              * @todo Show the ConstraintViolationException, if any.
              */

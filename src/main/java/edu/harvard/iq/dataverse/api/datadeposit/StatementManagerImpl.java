@@ -1,42 +1,21 @@
 package edu.harvard.iq.dataverse.api.datadeposit;
 
-import static java.util.stream.Collectors.joining;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.logging.Logger;
-
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-
+import edu.harvard.iq.dataverse.*;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
+import edu.harvard.iq.dataverse.engine.command.impl.GetDraftDatasetVersionCommand;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.i18n.iri.IRISyntaxException;
 import org.apache.abdera.model.AtomDate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.swordapp.server.AtomStatement;
-import org.swordapp.server.AuthCredentials;
-import org.swordapp.server.ResourcePart;
-import org.swordapp.server.Statement;
-import org.swordapp.server.StatementManager;
-import org.swordapp.server.SwordAuthException;
-import org.swordapp.server.SwordConfiguration;
-import org.swordapp.server.SwordError;
-import org.swordapp.server.SwordServerException;
-import org.swordapp.server.UriRegistry;
+import org.swordapp.server.*;
 
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetLock;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.FileMetadata;
-import edu.harvard.iq.dataverse.PermissionServiceBean;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.engine.command.impl.GetDraftDatasetVersionCommand;
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+import java.util.logging.Logger;
+
+import static java.util.stream.Collectors.joining;
 
 public class StatementManagerImpl implements StatementManager {
 

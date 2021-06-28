@@ -8,9 +8,8 @@ and tweaked for Dataverse.  See also:
 https://wiki.shibboleth.net/confluence/display/SHIB2/NativeSPConfiguration
 -->
 
-<SPConfig xmlns="urn:mace:shibboleth:3.0:native:sp:config" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
-    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
-    clockSkew="1800">
+<SPConfig xmlns="urn:mace:shibboleth:3.0:native:sp:config"
+          clockSkew="1800">
 
     <!-- FIXME: change the entityID to your hostname. -->
     <ApplicationDefaults entityID="https://dataverse.example.edu/sp"

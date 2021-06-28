@@ -34,7 +34,7 @@ public class UserNotificationServiceBean {
 
     @Autowired
     MailServiceBean mailService;
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     public List<UserNotification> findByUser(Long userId) {

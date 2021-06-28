@@ -53,7 +53,7 @@ public class DatasetFieldDefaultValue implements Serializable {
     } 
     
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="datasetfield_id", nullable=false)
     private DatasetFieldType datasetField;
     public DatasetFieldType getDatasetField() {
         return datasetField;
@@ -63,7 +63,7 @@ public class DatasetFieldDefaultValue implements Serializable {
     }
     
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="defaultvalueset_id", nullable=false)
     private DefaultValueSet defaultValueSet;
     public DefaultValueSet getDefaultValueSet() {
         return defaultValueSet;
@@ -84,6 +84,7 @@ public class DatasetFieldDefaultValue implements Serializable {
     }
     
     @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "parentdatasetfielddefaultvalue_id")
     private DatasetFieldDefaultValue parentDatasetFieldDefaultValue;
     public DatasetFieldDefaultValue getParentDatasetFieldDefaultValue() {
         return parentDatasetFieldDefaultValue;

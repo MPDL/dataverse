@@ -161,7 +161,7 @@ public class Template implements Serializable {
     }
 
     @ManyToOne
-    @JoinColumn(nullable=true)
+    @JoinColumn(name="dataverse_id",nullable=true)
     private Dataverse dataverse;
 
     public Dataverse getDataverse() {

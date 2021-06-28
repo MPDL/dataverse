@@ -460,10 +460,13 @@ public class HarvestingClientsPage implements java.io.Serializable {
             harvestingClient = engineService.submit( new UpdateHarvestingClientCommand(dvRequestService.getDataverseRequest(), harvestingClient));
             
             configuredHarvestingClients = harvestingClientService.getAllHarvestingClients();
-            
+
+            /*
             if (!harvestingClient.isScheduled()) {
                 dataverseTimerService.removeHarvestTimer(harvestingClient);
             }
+
+             */
             JsfHelper.addSuccessMessage(BundleUtil.getStringFromBundle("harvest.update.success") + harvestingClient.getName());
 
         } catch (CommandException ex) {

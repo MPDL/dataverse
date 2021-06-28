@@ -31,7 +31,7 @@ public class ShibGroupServiceBean {
 
     private static final Logger logger = Logger.getLogger(ShibGroupServiceBean.class.getCanonicalName());
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
 
     @Autowired

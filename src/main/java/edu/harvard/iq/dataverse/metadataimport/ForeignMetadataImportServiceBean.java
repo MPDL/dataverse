@@ -2,32 +2,33 @@
 package edu.harvard.iq.dataverse.metadataimport;
 
 
-import edu.harvard.iq.dataverse.ControlledVocabularyValue;
-import edu.harvard.iq.dataverse.DatasetVersion;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.logging.Logger;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import edu.harvard.iq.dataverse.DatasetField;
 import edu.harvard.iq.dataverse.DatasetFieldCompoundValue;
 import edu.harvard.iq.dataverse.DatasetFieldServiceBean;
 import edu.harvard.iq.dataverse.DatasetFieldType;
 import edu.harvard.iq.dataverse.DatasetFieldValue;
+import edu.harvard.iq.dataverse.DatasetVersion;
 import edu.harvard.iq.dataverse.ForeignMetadataFieldMapping;
 import edu.harvard.iq.dataverse.ForeignMetadataFormatMapping;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.logging.Logger;
-import java.io.StringReader;
-import javax.ejb.Stateless;
-import javax.inject.Named;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLInputFactory;
+import edu.harvard.iq.dataverse.util.EJBException;
 
 /**
  *
@@ -36,8 +37,7 @@ import javax.xml.stream.XMLInputFactory;
  * Draft/prototype XML import service for DVN 4.0
  *
  */
-@Stateless
-@Named
+@Service
 public class ForeignMetadataImportServiceBean {
 
     private static final Logger logger = Logger.getLogger(ForeignMetadataImportServiceBean.class.getCanonicalName());
@@ -45,7 +45,7 @@ public class ForeignMetadataImportServiceBean {
     @Autowired
     DatasetFieldServiceBean datasetfieldService;
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     ForeignMetadataFormatMapping findFormatMappingByName (String name) {

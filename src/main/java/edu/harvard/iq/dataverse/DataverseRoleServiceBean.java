@@ -36,7 +36,7 @@ public class DataverseRoleServiceBean implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(DataverseRoleServiceBean.class.getCanonicalName());
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
 
     @Autowired

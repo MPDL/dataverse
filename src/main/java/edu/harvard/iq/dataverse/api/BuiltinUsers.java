@@ -11,25 +11,19 @@ import edu.harvard.iq.dataverse.authorization.providers.builtin.PasswordEncrypti
 import edu.harvard.iq.dataverse.authorization.users.ApiToken;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
+import edu.harvard.iq.dataverse.util.EJBException;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import java.sql.Timestamp;
 import java.util.Date;
-import static edu.harvard.iq.dataverse.util.json.JsonPrinter.json;
-import static edu.harvard.iq.dataverse.util.json.JsonPrinter.json;
-import static edu.harvard.iq.dataverse.util.json.JsonPrinter.json;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static edu.harvard.iq.dataverse.util.json.JsonPrinter.json;
 
 /**

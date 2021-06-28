@@ -5,6 +5,24 @@
  */
 package edu.harvard.iq.dataverse.harvest.server;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TemporalType;
+import javax.persistence.TypedQuery;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import edu.harvard.iq.dataverse.Dataset;
 import edu.harvard.iq.dataverse.DatasetServiceBean;
 import edu.harvard.iq.dataverse.DatasetVersion;
@@ -12,27 +30,6 @@ import edu.harvard.iq.dataverse.export.ExportException;
 import edu.harvard.iq.dataverse.export.ExportService;
 import edu.harvard.iq.dataverse.search.IndexServiceBean;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
-import java.io.File;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
-import javax.inject.Named;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.TemporalType;
 
 /**
  *
@@ -41,8 +38,7 @@ import javax.persistence.TemporalType;
  * DVN 3*, by Gustavo Durand. 
  */
 
-@Stateless
-@Named
+@Service
 public class OAIRecordServiceBean implements java.io.Serializable {
     @Autowired 
     OAISetServiceBean oaiSetService;    
@@ -55,7 +51,7 @@ public class OAIRecordServiceBean implements java.io.Serializable {
     //@Autowired
     //ExportService exportService;
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     EntityManager em;   
     
     private static final Logger logger = Logger.getLogger("edu.harvard.iq.dataverse.harvest.server.OAIRecordServiceBean");
@@ -137,7 +133,7 @@ public class OAIRecordServiceBean implements java.io.Serializable {
     // record at a time. It does so inside its own transaction, to ensure that 
     // the changes take place immediately. (except the method is called from 
     // right here, in this EJB - so the attribute does not do anything! (TODO:!)
-    @TransactionAttribute(REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateOaiRecordForDataset(Dataset dataset, String setName, Map<String, OAIRecord> recordMap, Logger setUpdateLogger) {
         // TODO: review .isReleased() logic
         // Answer: no, we can't trust isReleased()! It's a dvobject method that
@@ -176,7 +172,7 @@ public class OAIRecordServiceBean implements java.io.Serializable {
     // been attempted on the dataset. (Meaning that if getLastExportTime is null, 
     // we'll just assume that the exports failed and the OAI records must be marked
     // as "deleted". 
-    @TransactionAttribute(REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateOaiRecordsForDataset(Dataset dataset) {
         // create Map of OaiRecords
 
@@ -237,7 +233,7 @@ public class OAIRecordServiceBean implements java.io.Serializable {
         catch (Exception e) {logger.fine("Caught unknown exception while trying to export (ignoring)");}
     }
     
-    @TransactionAttribute(REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void exportAllFormatsInNewTransaction(Dataset dataset) throws ExportException {
         try {
             ExportService exportServiceInstance = ExportService.getInstance();

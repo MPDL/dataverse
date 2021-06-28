@@ -1,25 +1,6 @@
 package edu.harvard.iq.dataverse.util;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.time.Year;
-import java.util.Arrays;
-import java.util.List;
-import java.util.MissingResourceException;
-import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.logging.Logger;
-
-import org.apache.commons.io.IOUtils;
-import org.passay.CharacterRule;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.ocpsoft.pretty.PrettyContext;
-
 import edu.harvard.iq.dataverse.DataFile;
 import edu.harvard.iq.dataverse.DataverseServiceBean;
 import edu.harvard.iq.dataverse.DvObjectContainer;
@@ -28,6 +9,19 @@ import edu.harvard.iq.dataverse.authorization.providers.builtin.BuiltinAuthentic
 import edu.harvard.iq.dataverse.authorization.providers.oauth2.AbstractOAuth2AuthenticationProvider;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.validation.PasswordValidatorUtil;
+import org.apache.commons.io.IOUtils;
+import org.passay.CharacterRule;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.time.Year;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * System-wide configuration

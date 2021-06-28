@@ -5,10 +5,10 @@
  */
 package edu.harvard.iq.dataverse.api.imports;
 
+import org.springframework.stereotype.Service;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.springframework.stereotype.Service;
 
 /**
  *
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class CustomFieldServiceBean {
 
    
-     @PersistenceContext(unitName = "VDCNet-ejbPU")
+     @PersistenceContext
     private EntityManager em;
      
     public CustomFieldMap findByTemplateField(String template, String field) {

@@ -1,11 +1,10 @@
 package edu.harvard.iq.dataverse.util.json;
 
-import javax.annotation.PostConstruct;
-
+import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
+import javax.annotation.PostConstruct;
 
 /**
  * This is a small helper bean 

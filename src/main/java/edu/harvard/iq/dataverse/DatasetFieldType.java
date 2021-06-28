@@ -289,6 +289,7 @@ public class DatasetFieldType implements Serializable, Comparable<DatasetFieldTy
      * The {@code MetadataBlock} this field type belongs to.
      */
     @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name="metadatablock_id")
     private MetadataBlock metadataBlock;
 
     public MetadataBlock getMetadataBlock() {
@@ -360,6 +361,7 @@ public class DatasetFieldType implements Serializable, Comparable<DatasetFieldTy
     }
 
     @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name="parentdatasetfieldtype_id")
     private DatasetFieldType parentDatasetFieldType;
 
     public DatasetFieldType getParentDatasetFieldType() {

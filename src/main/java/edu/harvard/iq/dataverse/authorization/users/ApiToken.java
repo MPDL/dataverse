@@ -32,7 +32,7 @@ public class ApiToken implements Serializable {
     private String tokenString;
 
     @NotNull
-    @JoinColumn(nullable = false)
+    @JoinColumn(name="authenticateduser_id", nullable = false)
     @ManyToOne
     private AuthenticatedUser authenticatedUser;
 

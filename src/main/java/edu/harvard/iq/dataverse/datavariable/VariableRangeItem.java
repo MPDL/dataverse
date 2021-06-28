@@ -55,7 +55,7 @@ public class VariableRangeItem implements Serializable {
      * DataVariable for which this range item is defined.
      */
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="datavariable_id",nullable=false)
     private DataVariable dataVariable;
 
     

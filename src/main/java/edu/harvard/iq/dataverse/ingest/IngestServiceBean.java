@@ -20,99 +20,50 @@
 
 package edu.harvard.iq.dataverse.ingest;
 
-import edu.harvard.iq.dataverse.ControlledVocabularyValue;
+import edu.harvard.iq.dataverse.*;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.dataaccess.*;
+import edu.harvard.iq.dataverse.datavariable.DataVariable;
+import edu.harvard.iq.dataverse.datavariable.SummaryStatistic;
 import edu.harvard.iq.dataverse.datavariable.VariableCategory;
 import edu.harvard.iq.dataverse.datavariable.VariableServiceBean;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.DataFileCategory;
-import edu.harvard.iq.dataverse.DataFileServiceBean;
-import edu.harvard.iq.dataverse.DataTable;
-import edu.harvard.iq.dataverse.DatasetField;
-import edu.harvard.iq.dataverse.DatasetFieldServiceBean;
-import edu.harvard.iq.dataverse.DatasetFieldType;
-import edu.harvard.iq.dataverse.DatasetFieldValue;
-import edu.harvard.iq.dataverse.DatasetFieldCompoundValue;
-import edu.harvard.iq.dataverse.DatasetLock;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.DvObject;
-import edu.harvard.iq.dataverse.FileMetadata;
-import edu.harvard.iq.dataverse.MetadataBlock;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.dataaccess.DataAccess;
-import edu.harvard.iq.dataverse.dataaccess.DataAccessOption;
-import edu.harvard.iq.dataverse.dataaccess.StorageIO;
-import edu.harvard.iq.dataverse.dataaccess.ImageThumbConverter;
-import edu.harvard.iq.dataverse.dataaccess.S3AccessIO;
-import edu.harvard.iq.dataverse.dataaccess.TabularSubsetGenerator;
-import edu.harvard.iq.dataverse.datavariable.SummaryStatistic;
-import edu.harvard.iq.dataverse.datavariable.DataVariable;
 import edu.harvard.iq.dataverse.ingest.metadataextraction.FileMetadataExtractor;
 import edu.harvard.iq.dataverse.ingest.metadataextraction.FileMetadataIngest;
 import edu.harvard.iq.dataverse.ingest.metadataextraction.impl.plugins.fits.FITSFileMetadataExtractor;
 import edu.harvard.iq.dataverse.ingest.tabulardata.TabularDataFileReader;
 import edu.harvard.iq.dataverse.ingest.tabulardata.TabularDataIngest;
-import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.dta.DTAFileReader;
-import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.dta.NewDTAFileReader;
-import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.dta.DTAFileReaderSpi;
-import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.rdata.RDATAFileReader;
-import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.rdata.RDATAFileReaderSpi;
 import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.csv.CSVFileReader;
 import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.csv.CSVFileReaderSpi;
-import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.xlsx.XLSXFileReader;
-import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.xlsx.XLSXFileReaderSpi;
-import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.sav.SAVFileReader;
-import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.sav.SAVFileReaderSpi;
+import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.dta.DTAFileReader;
+import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.dta.DTAFileReaderSpi;
+import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.dta.NewDTAFileReader;
 import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.por.PORFileReader;
 import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.por.PORFileReaderSpi;
+import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.rdata.RDATAFileReader;
+import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.rdata.RDATAFileReaderSpi;
+import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.sav.SAVFileReader;
+import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.sav.SAVFileReaderSpi;
+import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.xlsx.XLSXFileReader;
+import edu.harvard.iq.dataverse.ingest.tabulardata.impl.plugins.xlsx.XLSXFileReaderSpi;
 import edu.harvard.iq.dataverse.util.*;
-
 import org.apache.commons.io.IOUtils;
-//import edu.harvard.iq.dvn.unf.*;
-import org.dataverse.unf.*;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import org.dataverse.unf.UNFUtil;
+import org.dataverse.unf.UnfException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import javax.faces.application.FacesMessage;
+import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.ListIterator;
+import java.util.*;
 import java.util.logging.Logger;
-import java.util.Hashtable;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Named;
-import javax.jms.Queue;
-import javax.jms.QueueConnectionFactory;
-import javax.annotation.Resource;
-import javax.ejb.Asynchronous;
-import javax.jms.JMSException;
-import javax.jms.QueueConnection;
-import javax.jms.QueueSender;
-import javax.jms.QueueSession;
-import javax.jms.Message;
-import javax.faces.application.FacesMessage;
 
 /**
  *
@@ -121,8 +72,7 @@ import javax.faces.application.FacesMessage;
  * New service for handling ingest tasks
  * 
  */
-@Stateless
-@Named
+@Service
 public class IngestServiceBean {
     private static final Logger logger = Logger.getLogger(IngestServiceBean.class.getCanonicalName());
     @Autowired
@@ -136,11 +86,16 @@ public class IngestServiceBean {
     @Autowired
     SystemConfig systemConfig;
 
+    @Autowired
+    JmsTemplate jmsTemplate;
+
+    
+    /*
     @Resource(lookup = "java:app/jms/queue/ingest")
     Queue queue;
     @Resource(lookup = "java:app/jms/factory/ingest")
     QueueConnectionFactory factory;
-    
+    */
 
     private static String timeFormat_hmsS = "HH:mm:ss.SSS";
     private static String dateTimeFormat_ymdhmsS = "yyyy-MM-dd HH:mm:ss.SSS";
@@ -524,26 +479,31 @@ public class IngestServiceBean {
                 ingestMessage.addFileId(scheduledFilesArray[i].getId());
             }
 
+            /*
             QueueConnection conn = null;
             QueueSession session = null;
             QueueSender sender = null;
-
+             */
             try {
-                conn = factory.createQueueConnection();
+                jmsTemplate.convertAndSend("ingest", ingestMessage);
+                /*
+            	conn = factory.createQueueConnection();
                 session = conn.createQueueSession(false, 0);
                 sender = session.createSender(queue);
 
                 Message queueMessage = session.createObjectMessage(ingestMessage);
 
                 sender.send(queueMessage);
+                */
 
-            } catch (JMSException ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
                 logger.warning("Caught exception trying to close connections after starting a (re)ingest job in the JMS queue! Stack trace below.");
                 sb.append("Failed to queue the (re)ingest job for DataFile (JMS Exception)" + (ex.getMessage() != null ? ex.getMessage() : ""));
             } finally {
                 try {
 
+                	/*
                     if (sender != null) {
                         sender.close();
                     }
@@ -553,6 +513,7 @@ public class IngestServiceBean {
                     if (conn != null) {
                         conn.close();
                     }
+                    */
                 } catch (Exception ex) {
                     logger.warning("Caught exception trying to close connections after starting a (re)ingest job in the JMS queue! Stack trace below.");
                     ex.printStackTrace();
@@ -1732,7 +1693,7 @@ public class IngestServiceBean {
     // Note the @Asynchronous attribute - this allows us to just kick off and run this 
     // (potentially large) job in the background. 
     // The method is called by the "fixmissingoriginaltypes" /admin api call. 
-    @Asynchronous
+    @Async
     public void fixMissingOriginalTypes(List<Long> datafileIds) {
         for (Long fileId : datafileIds) {
             fixMissingOriginalType(fileId);
@@ -1745,7 +1706,7 @@ public class IngestServiceBean {
     // Note the @Asynchronous attribute - this allows us to just kick off and run this 
     // (potentially large) job in the background. 
     // The method is called by the "fixmissingoriginalsizes" /admin api call. 
-    @Asynchronous
+    @Async
     public void fixMissingOriginalSizes(List<Long> datafileIds) {
         for (Long fileId : datafileIds) {
             fixMissingOriginalSize(fileId);

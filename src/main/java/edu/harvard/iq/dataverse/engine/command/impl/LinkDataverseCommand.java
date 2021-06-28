@@ -18,14 +18,13 @@ import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
 import edu.harvard.iq.dataverse.engine.command.exception.PermissionException;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import org.apache.solr.client.solrj.SolrServerException;
+
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.concurrent.Future;
-import javax.ws.rs.core.Response;
-import org.apache.solr.client.solrj.SolrServerException;
 
 /**
  *

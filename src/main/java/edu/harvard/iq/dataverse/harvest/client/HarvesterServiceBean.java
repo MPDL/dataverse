@@ -5,13 +5,10 @@
  */
 package edu.harvard.iq.dataverse.harvest.client;
 
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.DataverseServiceBean;
-import edu.harvard.iq.dataverse.timer.DataverseTimerServiceBean;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,48 +18,53 @@ import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.annotation.Resource;
-import javax.ejb.Asynchronous;
-import javax.ejb.EJB;
-import javax.ejb.EJBException;
-import javax.ejb.Stateless;
-import javax.ejb.Timer;
-import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 //import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+
 import org.apache.commons.lang.mutable.MutableBoolean;
 import org.apache.commons.lang.mutable.MutableLong;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
 import com.lyncode.xoai.model.oaipmh.Header;
+
+import edu.harvard.iq.dataverse.Dataset;
+import edu.harvard.iq.dataverse.DatasetServiceBean;
+import edu.harvard.iq.dataverse.Dataverse;
+import edu.harvard.iq.dataverse.DataverseServiceBean;
 import edu.harvard.iq.dataverse.EjbDataverseEngine;
 import edu.harvard.iq.dataverse.api.imports.ImportServiceBean;
 import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import edu.harvard.iq.dataverse.harvest.client.oai.OaiHandler;
 import edu.harvard.iq.dataverse.harvest.client.oai.OaiHandlerException;
 import edu.harvard.iq.dataverse.search.IndexServiceBean;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import edu.harvard.iq.dataverse.timer.DataverseTimerServiceBean;
+import edu.harvard.iq.dataverse.util.EJBException;
 
 /**
  *
  * @author Leonid Andreev
  */
-@Stateless(name = "harvesterService")
-@Named
+@Service("harvesterService")
 public class HarvesterServiceBean {
-    @PersistenceContext(unitName="VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     @Autowired
     DataverseServiceBean dataverseService;
     @Autowired
     DatasetServiceBean datasetService;
+    /*
     @Resource
     javax.ejb.TimerService timerService;
+    */
     @Autowired
     DataverseTimerServiceBean dataverseTimerService;
     @Autowired
@@ -90,7 +92,7 @@ public class HarvesterServiceBean {
     /**
      * Called to run an "On Demand" harvest.  
      */
-    @Asynchronous
+    @Async
     public void doAsyncHarvest(DataverseRequest dataverseRequest, HarvestingClient harvestingClient) {
         
         try {
@@ -99,6 +101,8 @@ public class HarvesterServiceBean {
             logger.info("Caught exception running an asynchronous harvest (dataverse \""+harvestingClient.getName()+"\")");
         }
     }
+    
+    /*
 
     public void createScheduledHarvestTimers() {
         logger.log(Level.INFO, "HarvesterService: going to (re)create Scheduled harvest timers.");
@@ -125,6 +129,7 @@ public class HarvesterServiceBean {
         }    
         return timers;
     }
+    */
 
     /**
      * Run a harvest for an individual harvesting Dataverse

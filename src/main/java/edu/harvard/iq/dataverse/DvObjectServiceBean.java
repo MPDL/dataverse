@@ -33,7 +33,7 @@ import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 @Service
 public class DvObjectServiceBean implements java.io.Serializable {
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     private static final Logger logger = Logger.getLogger(DvObjectServiceBean.class.getCanonicalName());

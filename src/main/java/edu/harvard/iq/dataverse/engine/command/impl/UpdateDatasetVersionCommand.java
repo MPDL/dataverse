@@ -10,17 +10,15 @@ import edu.harvard.iq.dataverse.engine.command.RequiredPermissions;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
 import edu.harvard.iq.dataverse.util.FileMetadataUtil;
+import org.apache.solr.client.solrj.SolrServerException;
 
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.validation.ConstraintViolationException;
-
-import org.apache.solr.client.solrj.SolrServerException;
 
 /**
  *

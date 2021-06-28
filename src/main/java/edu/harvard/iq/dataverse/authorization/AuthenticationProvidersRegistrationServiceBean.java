@@ -84,7 +84,7 @@ public class AuthenticationProvidersRegistrationServiceBean {
      */
     final Map<String, AbstractOAuth2AuthenticationProvider> oAuth2authenticationProviders = new HashMap<>();
         
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     // does this method also need an explicit @Lock(WRITE)? 

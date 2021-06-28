@@ -46,7 +46,7 @@ public class ConfirmEmailServiceBean {
 
     @Inject DataverseServiceBean dataverseService;
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     /**

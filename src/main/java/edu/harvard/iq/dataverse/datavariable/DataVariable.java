@@ -51,7 +51,7 @@ public class DataVariable implements Serializable {
      * dataTable: DataTable to which this variable belongs.
      */
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="datatable_id", nullable=false)
     private DataTable dataTable;
 
     /*

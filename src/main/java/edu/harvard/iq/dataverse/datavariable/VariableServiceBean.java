@@ -27,7 +27,7 @@ public class VariableServiceBean {
     
     //private static final Logger logger = Logger.getLogger(VariableServiceBean.class.getCanonicalName());
     
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
 
     public DataVariable save(DataVariable variable) {

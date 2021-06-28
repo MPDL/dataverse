@@ -94,11 +94,11 @@ public class DatasetLock implements Serializable {
     private Date startTime;    
 
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="dataset_id",nullable=false)
     private Dataset dataset;
 
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="user_id", nullable=false)
     private AuthenticatedUser user;
     
     @Enumerated(EnumType.STRING)

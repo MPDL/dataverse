@@ -57,7 +57,7 @@ import org.apache.commons.lang.StringUtils;
  */
 @Entity
 @Table(indexes = {@Index(columnList="dataset_id")},
-        uniqueConstraints = @UniqueConstraint(columnNames = {"dataset_id,versionnumber,minorversionnumber"}))
+        uniqueConstraints = @UniqueConstraint(columnNames = {"dataset_id","versionnumber","minorversionnumber"}))
 @ValidateVersionNote(versionNote = "versionNote", versionState = "versionState")
 public class DatasetVersion implements Serializable {
 
@@ -119,6 +119,7 @@ public class DatasetVersion implements Serializable {
     private VersionState versionState;
 
     @ManyToOne
+    @JoinColumn(name="dataset_id")
     private Dataset dataset;
 
     @OneToMany(mappedBy = "datasetVersion", cascade = {CascadeType.REMOVE, CascadeType.MERGE, CascadeType.PERSIST})

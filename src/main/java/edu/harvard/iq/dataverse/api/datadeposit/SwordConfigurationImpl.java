@@ -1,14 +1,13 @@
 package edu.harvard.iq.dataverse.api.datadeposit;
 
+import edu.harvard.iq.dataverse.util.SystemConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.swordapp.server.SwordConfiguration;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.swordapp.server.SwordConfiguration;
-
-import edu.harvard.iq.dataverse.util.SystemConfig;
 
 public class SwordConfigurationImpl implements SwordConfiguration {
 

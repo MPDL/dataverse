@@ -31,7 +31,7 @@ import edu.harvard.iq.dataverse.util.SystemConfig;
 public class AuxiliaryFileServiceBean implements java.io.Serializable {
    private static final Logger logger = Logger.getLogger(AuxiliaryFileServiceBean.class.getCanonicalName());
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     protected EntityManager em;
     
     @Autowired

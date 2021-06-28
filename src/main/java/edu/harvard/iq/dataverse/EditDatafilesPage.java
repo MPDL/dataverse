@@ -75,6 +75,8 @@ import edu.harvard.iq.dataverse.provenance.ProvPopupFragmentBean;
 import edu.harvard.iq.dataverse.search.IndexServiceBean;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.EJBException;
+import edu.harvard.iq.dataverse.util.EjbUtil;
 import edu.harvard.iq.dataverse.util.FileMetadataUtil;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
@@ -1085,7 +1087,19 @@ public class EditDatafilesPage implements java.io.Serializable {
             ((UpdateDatasetVersionCommand) cmd).setValidateLenient(true);
             dataset = commandEngine.submit(cmd);
 
-        
+        } catch (EJBException ex) {
+            StringBuilder error = new StringBuilder();
+            error.append(ex).append(" ");
+            error.append(ex.getMessage()).append(" ");
+            Throwable cause = ex;
+            while (cause.getCause() != null) {
+                cause = cause.getCause();
+                error.append(cause).append(" ");
+                error.append(cause.getMessage()).append(" ");
+            }
+            logger.log(Level.INFO, "Couldn''t save dataset: {0}", error.toString());
+            populateDatasetUpdateFailureMessage();
+            return null;
         } catch (CommandException ex) {
             // FacesContext.getCurrentInstance().addMessage(null, new
             // FacesMessage(FacesMessage.SEVERITY_ERROR, "Dataset Save Failed", " - " +
@@ -1513,6 +1527,8 @@ public class EditDatafilesPage implements java.io.Serializable {
                 } else {
                     setHasRsyncScript(false);
                 }
+            } catch (EJBException ex) {
+                logger.warning("Problem getting rsync script (EJBException): " + EjbUtil.ejbExceptionToString(ex));
             } catch (RuntimeException ex) {
                 logger.warning("Problem getting rsync script (RuntimeException): " + ex.getLocalizedMessage());
             } catch (CommandException cex) {

@@ -24,7 +24,7 @@ public class SavedSearchFilterQuery implements Serializable {
     private String filterQuery;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(nullable = false)
+    @JoinColumn(name="savedsearch_id", nullable = false)
     private SavedSearch savedSearch;
 
     /**

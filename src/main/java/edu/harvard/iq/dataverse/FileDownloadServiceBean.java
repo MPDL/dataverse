@@ -51,7 +51,7 @@ import edu.harvard.iq.dataverse.util.StringUtil;
 @Service
 public class FileDownloadServiceBean implements java.io.Serializable {
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     @Inject

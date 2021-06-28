@@ -1,8 +1,19 @@
 package edu.harvard.iq.dataverse.authorization.providers.oauth2;
 
-import static edu.harvard.iq.dataverse.util.StringUtil.toOption;
-import static java.util.stream.Collectors.toList;
+import edu.harvard.iq.dataverse.DataverseSession;
+import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
+import edu.harvard.iq.dataverse.authorization.UserRecordIdentifier;
+import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import edu.harvard.iq.dataverse.util.StringUtil;
+import edu.harvard.iq.dataverse.util.SystemConfig;
+import org.omnifaces.util.Faces;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Serializable;
@@ -15,22 +26,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
-
-import org.omnifaces.util.Faces;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import edu.harvard.iq.dataverse.DataverseSession;
-import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
-import edu.harvard.iq.dataverse.authorization.UserRecordIdentifier;
-import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
-import edu.harvard.iq.dataverse.util.ClockUtil;
-import edu.harvard.iq.dataverse.util.StringUtil;
-import edu.harvard.iq.dataverse.util.SystemConfig;
+import static edu.harvard.iq.dataverse.util.StringUtil.toOption;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Backing bean of the oauth2 login process. Used from the login and the
@@ -67,10 +64,13 @@ public class OAuth2LoginBackingBean implements Serializable {
 
     @Inject
     OAuth2FirstLoginPage newAccountPage;
-    
+    /*
     @Inject
     @ClockUtil.LocalTime
-    Clock clock;
+
+     */
+    Clock clock = Clock.systemDefaultZone();
+
     
     /**
      * Generate the OAuth2 Provider URL to be used in the login page link for the provider.

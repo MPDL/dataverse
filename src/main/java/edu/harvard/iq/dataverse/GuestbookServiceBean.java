@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class GuestbookServiceBean implements java.io.Serializable {
     
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     

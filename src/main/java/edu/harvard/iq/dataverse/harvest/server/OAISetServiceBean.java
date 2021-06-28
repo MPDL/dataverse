@@ -1,12 +1,5 @@
 package edu.harvard.iq.dataverse.harvest.server;
 
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.search.IndexServiceBean;
-import edu.harvard.iq.dataverse.search.SearchConstants;
-import edu.harvard.iq.dataverse.search.SearchFields;
-import edu.harvard.iq.dataverse.search.SearchUtil;
-import edu.harvard.iq.dataverse.search.SolrClientService;
-import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -17,22 +10,29 @@ import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.Asynchronous;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.inject.Named;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.apache.solr.client.solrj.SolrClient;
+
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.impl.HttpSolrClient.RemoteSolrException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import edu.harvard.iq.dataverse.DatasetServiceBean;
+import edu.harvard.iq.dataverse.search.IndexServiceBean;
+import edu.harvard.iq.dataverse.search.SearchConstants;
+import edu.harvard.iq.dataverse.search.SearchFields;
+import edu.harvard.iq.dataverse.search.SearchUtil;
+import edu.harvard.iq.dataverse.search.SolrClientService;
+import edu.harvard.iq.dataverse.util.SystemConfig;
 
 /**
  *
@@ -41,10 +41,9 @@ import org.apache.solr.common.SolrDocumentList;
  * for the Harvesting server.
  */
 
-@Stateless
-@Named
+@Service
 public class OAISetServiceBean implements java.io.Serializable {
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     @Autowired
@@ -123,7 +122,7 @@ public class OAISetServiceBean implements java.io.Serializable {
         }
     }
     
-    @Asynchronous
+    @Async
     public void remove(Long setId) {
         OAISet oaiSet = find(setId);
         if (oaiSet == null) {
@@ -138,7 +137,7 @@ public class OAISetServiceBean implements java.io.Serializable {
        return em.find(OAISet.class,id);
     }   
     
-    @Asynchronous
+    @Async
     public void exportOaiSetAsync(OAISet oaiSet) {
         exportOaiSet(oaiSet);
     }
@@ -302,7 +301,7 @@ public class OAISetServiceBean implements java.io.Serializable {
         
     }
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void setUpdateInProgress(Long setId) {
         OAISet oaiSet = find(setId);
         if (oaiSet == null) {
@@ -312,7 +311,7 @@ public class OAISetServiceBean implements java.io.Serializable {
         oaiSet.setUpdateInProgress(true);
     }
     
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void setDeleteInProgress(Long setId) {
         OAISet oaiSet = find(setId);
         

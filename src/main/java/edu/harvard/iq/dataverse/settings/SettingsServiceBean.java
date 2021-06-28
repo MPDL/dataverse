@@ -1,32 +1,30 @@
 package edu.harvard.iq.dataverse.settings;
 
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
-import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
-import edu.harvard.iq.dataverse.api.ApiBlockingFilter;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
-import edu.harvard.iq.dataverse.util.StringUtil;
-
 import java.io.StringReader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.inject.Named;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
+import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
+import edu.harvard.iq.dataverse.api.ApiBlockingFilter;
+import edu.harvard.iq.dataverse.util.StringUtil;
+
 /**
  * Service bean accessing a persistent hash map, used as settings in the application.
  * @author michael
  */
-@Stateless
-@Named
+@Service
 public class SettingsServiceBean {
     
     private static final Logger logger = Logger.getLogger(SettingsServiceBean.class.getCanonicalName());

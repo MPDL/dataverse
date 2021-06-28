@@ -5,19 +5,21 @@
  */
 package edu.harvard.iq.dataverse;
 
-import edu.harvard.iq.dataverse.util.StringUtil;
 import java.io.IOException;
-import java.io.PrintWriter;
-import javax.ejb.EJB;
+
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author gdurand
  */
+@WebServlet(urlPatterns = "/citation")
 public class CitationServlet extends HttpServlet {
 
     @Autowired

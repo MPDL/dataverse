@@ -2,6 +2,7 @@ package edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip;
 
 import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.IpGroup;
 import java.util.Objects;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
@@ -45,6 +46,7 @@ public abstract class IpAddressRange {
     public abstract IpAddress getBottom();
     
     @ManyToOne
+    @JoinColumn(name="owner_id")
     private IpGroup owner;
     
     @Override

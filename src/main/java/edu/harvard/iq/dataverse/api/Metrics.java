@@ -7,27 +7,16 @@ import edu.harvard.iq.dataverse.makedatacount.MakeDataCountUtil;
 import edu.harvard.iq.dataverse.metrics.MetricsUtil;
 import edu.harvard.iq.dataverse.util.FileUtil;
 
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.json.JsonArray;
-import javax.json.JsonObject;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Variant;
 
 /**
  * API endpoints for various metrics.

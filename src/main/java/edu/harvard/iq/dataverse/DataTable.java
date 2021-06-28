@@ -80,7 +80,7 @@ public class DataTable implements Serializable {
       * DataFile that stores the data for this DataTable
       */
      @ManyToOne
-     @JoinColumn(nullable=false)
+     @JoinColumn(name="datafile_id", nullable=false)
      private DataFile dataFile;
 
      /*

@@ -57,7 +57,7 @@ public class PasswordResetData implements Serializable {
      * can only have one token at a time?
      */
     @OneToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name="builtinuser_id", nullable = false)
     private BuiltinUser builtinUser;
 
     @Column(nullable = false)

@@ -48,7 +48,7 @@ public class DataFileCategory implements Serializable {
      * Dataset to which this file category belongs:
      */
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name="dataset_id", nullable = false)
     private Dataset dataset;
 
     public Dataset getDataset() {

@@ -36,6 +36,7 @@ import edu.harvard.iq.dataverse.search.IndexServiceBean;
 import edu.harvard.iq.dataverse.search.SolrSearchResult;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.util.MarkupChecker;
 import edu.harvard.iq.dataverse.util.SystemConfig;
     
@@ -68,7 +69,7 @@ public class DatasetVersionServiceBean implements java.io.Serializable {
     @Autowired
     IndexServiceBean indexService;
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
 
     /**
@@ -440,7 +441,7 @@ public class DatasetVersionServiceBean implements java.io.Serializable {
             msg("DatasetVersion not found: " + queryString);
             logger.log(Level.FINE, "DatasetVersion not found: {0}", queryString);
             return null;
-         } catch (Exception e) {
+         } catch (EJBException e) {
              logger.log(Level.WARNING, "Exception exception: {0}", e.getMessage());
              return null;
          }

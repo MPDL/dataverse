@@ -48,7 +48,7 @@ public class ControlledVocabAlternate implements Serializable {
     }
     
     @ManyToOne
-    @JoinColumn( nullable = false )
+    @JoinColumn( name="datasetfieldtype_id", nullable = false )
     private DatasetFieldType datasetFieldType;
     
     public DatasetFieldType getDatasetFieldType() {
@@ -59,7 +59,7 @@ public class ControlledVocabAlternate implements Serializable {
     }
     
     @ManyToOne
-    @JoinColumn( nullable = false )
+    @JoinColumn(name="controlledvocabularyvalue_id", nullable = false )
     private ControlledVocabularyValue controlledVocabularyValue;
 
     public ControlledVocabularyValue getControlledVocabularyValue() {

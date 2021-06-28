@@ -116,7 +116,7 @@ public class DataverseRole implements Serializable  {
 	private long permissionBits;
 	
 	@ManyToOne
-    @JoinColumn(nullable=true)     
+    @JoinColumn(name="owner_id", nullable=true)
     private DvObject owner;
 	
 	public Long getId() {

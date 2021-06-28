@@ -2,14 +2,11 @@ package edu.harvard.iq.dataverse.util.json;
 
 import edu.harvard.iq.dataverse.DatasetField;
 import edu.harvard.iq.dataverse.api.Util;
+
+import javax.json.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
 
 /**
  * A JSON builder that drops any null values. If we didn't drop'em,

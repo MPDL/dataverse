@@ -45,6 +45,7 @@ import edu.harvard.iq.dataverse.search.SolrIndexServiceBean;
 import edu.harvard.iq.dataverse.search.savedsearch.SavedSearchServiceBean;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 import edu.harvard.iq.dataverse.workflow.WorkflowServiceBean;
 
@@ -162,7 +163,7 @@ public class EjbDataverseEngine {
     @Autowired
     DataCaptureModuleServiceBean dataCaptureModule;
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     @Autowired
@@ -275,7 +276,7 @@ public class EjbDataverseEngine {
                 this.completeCommand(aCommand, r, getContext().getCommandsCalled());
                 return r;
                 
-            } catch ( Exception ejbe ) {
+            } catch ( EJBException ejbe ) {
                 throw new CommandException("Command " + aCommand.toString() + " failed: " + ejbe.getMessage(), ejbe, aCommand);
             } 
         } catch (CommandException cmdEx) {

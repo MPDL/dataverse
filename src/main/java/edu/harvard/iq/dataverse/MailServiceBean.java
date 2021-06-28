@@ -29,6 +29,8 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.sun.mail.smtp.SMTPSendFailedException;
@@ -112,8 +114,11 @@ public class MailServiceBean implements java.io.Serializable {
         }
     }
 
-    @Resource(name = "mail/notifyMailSession")
-    private Session session;
+    //@Resource
+    //private Session session;
+
+    @Autowired
+    private JavaMailSender emailSender;
 
     public boolean sendSystemEmail(String to, String subject, String messageText) {
         return sendSystemEmail(to, subject, messageText, false);
@@ -130,7 +135,8 @@ public class MailServiceBean implements java.io.Serializable {
 
         logger.fine("Sending email to " + to + ". Subject: <<<" + subject + ">>>. Body: " + body);
         try {
-            MimeMessage msg = new MimeMessage(session);
+
+            MimeMessage msg = emailSender.createMimeMessage();
             if (systemAddress != null) {
                 msg.setFrom(systemAddress);
                 msg.setSentDate(new Date());
@@ -152,9 +158,10 @@ public class MailServiceBean implements java.io.Serializable {
                 }
 
                 try {
-                    Transport.send(msg, recipients);
+                    emailSender.send(msg);
+                    //Transport.send(msg, recipients);
                     sent = true;
-                } catch (SMTPSendFailedException ssfe) {
+                } catch (Exception ssfe) {
                     logger.warning("Failed to send mail to: " + to);
                     logger.warning("SMTPSendFailedException Message: " + ssfe);
                 }
@@ -183,7 +190,7 @@ public class MailServiceBean implements java.io.Serializable {
 
     public void sendMail(String reply, String to, String subject, String messageText, Map<Object, Object> extraHeaders) {
         try {
-            MimeMessage msg = new MimeMessage(session);
+            MimeMessage msg = emailSender.createMimeMessage();
             // Always send from system address to avoid email being blocked
             InternetAddress fromAddress = getSystemAddress();
             try {
@@ -214,7 +221,8 @@ public class MailServiceBean implements java.io.Serializable {
                 }
             }
 
-            Transport.send(msg);
+            emailSender.send(msg);
+            //Transport.send(msg);
         } catch (AddressException ae) {
             ae.printStackTrace(System.out);
         } catch (MessagingException me) {

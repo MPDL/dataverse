@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -26,12 +27,13 @@ import edu.harvard.iq.dataverse.util.MarkupChecker;
  *
  * @author skraffmiller
  */
+@Named
 @ViewScoped
 public class DatasetVersionUI implements Serializable {
 
 	@Inject
     DataverseServiceBean dataverseService;
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;   
     
     public DatasetVersionUI() {

@@ -1,9 +1,9 @@
 package edu.harvard.iq.dataverse.api;
 
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
+import edu.harvard.iq.dataverse.DataTagsContainer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.json.JsonObject;
 import javax.ws.rs.POST;
@@ -14,16 +14,15 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import edu.harvard.iq.dataverse.DataTagsContainer;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Naomi
  */
-
+@Component
 @Path("datatags")
 public class DataTagsAPI extends AbstractApiBean { 
     

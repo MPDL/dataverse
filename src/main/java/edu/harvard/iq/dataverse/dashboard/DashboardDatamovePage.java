@@ -51,7 +51,7 @@ public class DashboardDatamovePage implements java.io.Serializable {
     @Inject
     SettingsWrapper settingsWrapper;
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     private static final Logger logger = Logger.getLogger(DashboardDatamovePage.class.getCanonicalName());

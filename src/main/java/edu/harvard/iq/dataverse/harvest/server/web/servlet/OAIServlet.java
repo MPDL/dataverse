@@ -5,26 +5,46 @@
  */
 package edu.harvard.iq.dataverse.harvest.server.web.servlet;
 
+import static com.lyncode.xoai.model.oaipmh.OAIPMH.NAMESPACE_URI;
+import static com.lyncode.xoai.model.oaipmh.OAIPMH.SCHEMA_LOCATION;
+import static com.lyncode.xoai.xml.XmlWriter.defaultContext;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.logging.Logger;
+
+import javax.mail.internet.InternetAddress;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.stream.XMLStreamException;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.lyncode.xml.exceptions.XmlWriteException;
 import com.lyncode.xoai.dataprovider.builder.OAIRequestParametersBuilder;
 import com.lyncode.xoai.dataprovider.exceptions.OAIException;
-import com.lyncode.xoai.dataprovider.repository.Repository;
-import com.lyncode.xoai.dataprovider.repository.RepositoryConfiguration;
 import com.lyncode.xoai.dataprovider.model.Context;
 import com.lyncode.xoai.dataprovider.model.MetadataFormat;
-import com.lyncode.xoai.services.impl.SimpleResumptionTokenFormat;
 import com.lyncode.xoai.dataprovider.repository.ItemRepository;
+import com.lyncode.xoai.dataprovider.repository.Repository;
+import com.lyncode.xoai.dataprovider.repository.RepositoryConfiguration;
 import com.lyncode.xoai.dataprovider.repository.SetRepository;
 import com.lyncode.xoai.model.oaipmh.DeletedRecord;
 import com.lyncode.xoai.model.oaipmh.Granularity;
 import com.lyncode.xoai.model.oaipmh.OAIPMH;
-import static com.lyncode.xoai.model.oaipmh.OAIPMH.NAMESPACE_URI;
-import static com.lyncode.xoai.model.oaipmh.OAIPMH.SCHEMA_LOCATION;
 import com.lyncode.xoai.model.oaipmh.Verb;
+import com.lyncode.xoai.services.impl.SimpleResumptionTokenFormat;
 import com.lyncode.xoai.xml.XSISchema;
-
 import com.lyncode.xoai.xml.XmlWriter;
-import static com.lyncode.xoai.xml.XmlWriter.defaultContext;
+
 import edu.harvard.iq.dataverse.DatasetServiceBean;
 import edu.harvard.iq.dataverse.DataverseServiceBean;
 import edu.harvard.iq.dataverse.export.ExportException;
@@ -35,32 +55,11 @@ import edu.harvard.iq.dataverse.harvest.server.OAISetServiceBean;
 import edu.harvard.iq.dataverse.harvest.server.xoai.XdataProvider;
 import edu.harvard.iq.dataverse.harvest.server.xoai.XgetRecord;
 import edu.harvard.iq.dataverse.harvest.server.xoai.XitemRepository;
-import edu.harvard.iq.dataverse.harvest.server.xoai.XsetRepository;
 import edu.harvard.iq.dataverse.harvest.server.xoai.XlistRecords;
+import edu.harvard.iq.dataverse.harvest.server.xoai.XsetRepository;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.MailUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
-import org.apache.commons.lang.StringUtils;
-
-import java.io.ByteArrayOutputStream;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.logging.Logger;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.GZIPOutputStream;
-import javax.ejb.EJB;
-import javax.mail.internet.InternetAddress;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.stream.XMLStreamException;
 
 /**
  *
@@ -69,6 +68,7 @@ import javax.xml.stream.XMLStreamException;
  * Uses lyncode XOAI data provider implementation for serving content. 
  * The servlet itself is somewhat influenced by the older OCLC OAIcat implementation.
  */
+@WebServlet(urlPatterns = "/oai")
 public class OAIServlet extends HttpServlet {
     @Autowired 
     OAISetServiceBean setService;

@@ -1,16 +1,17 @@
 package edu.harvard.iq.dataverse.pidproviders;
 
-import edu.harvard.iq.dataverse.AbstractGlobalIdServiceBean;
-import edu.harvard.iq.dataverse.DvObject;
-import edu.harvard.iq.dataverse.GlobalId;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.ejb.Stateless;
 
-@Stateless
+import org.springframework.stereotype.Service;
+
+import edu.harvard.iq.dataverse.AbstractGlobalIdServiceBean;
+import edu.harvard.iq.dataverse.DvObject;
+import edu.harvard.iq.dataverse.GlobalId;
+
+@Service
 public class FakePidProviderServiceBean extends AbstractGlobalIdServiceBean {
 
     @Override

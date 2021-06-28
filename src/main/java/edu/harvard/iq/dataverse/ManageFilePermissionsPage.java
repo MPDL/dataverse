@@ -75,7 +75,7 @@ public class ManageFilePermissionsPage implements java.io.Serializable {
     @Inject
     PermissionsWrapper permissionsWrapper;
     
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     EntityManager em;
 
     @Inject

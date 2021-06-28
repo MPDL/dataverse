@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 public class DataverseLinkingServiceBean implements java.io.Serializable {
     private static final Logger logger = Logger.getLogger(DataverseLinkingServiceBean.class.getCanonicalName());
 
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     @Autowired

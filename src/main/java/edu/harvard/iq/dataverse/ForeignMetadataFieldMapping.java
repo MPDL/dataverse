@@ -15,7 +15,7 @@ import java.util.TreeMap;
  *
  * @author Leonid Andreev
  */
-@Table( uniqueConstraints = @UniqueConstraint(columnNames={"foreignMetadataFormatMapping_id","foreignFieldXpath"}) 
+@Table( uniqueConstraints = @UniqueConstraint(columnNames={"foreignmetadataformatmapping_id","foreignfieldxpath"})
       , indexes = {@Index(columnList="foreignmetadataformatmapping_id")
 		, @Index(columnList="foreignfieldxpath")
 		, @Index(columnList="parentfieldmapping_id")})
@@ -39,6 +39,7 @@ public class ForeignMetadataFieldMapping implements Serializable {
     }
     
     @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name="foreignmetadataformatmapping_id")
     private ForeignMetadataFormatMapping foreignMetadataFormatMapping;
 
     @Column(name = "foreignFieldXPath", columnDefinition = "TEXT")
@@ -51,6 +52,7 @@ public class ForeignMetadataFieldMapping implements Serializable {
     private Collection<ForeignMetadataFieldMapping> childFieldMappings;
         
     @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name="parentFieldMapping_id")
     private ForeignMetadataFieldMapping parentFieldMapping;
     
     private boolean isAttribute;

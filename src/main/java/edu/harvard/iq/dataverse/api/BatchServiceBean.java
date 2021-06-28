@@ -1,5 +1,18 @@
 package edu.harvard.iq.dataverse.api;
 
+import edu.harvard.iq.dataverse.Dataverse;
+import edu.harvard.iq.dataverse.DataverseServiceBean;
+import edu.harvard.iq.dataverse.api.imports.ImportException;
+import edu.harvard.iq.dataverse.api.imports.ImportServiceBean;
+import edu.harvard.iq.dataverse.api.imports.ImportUtil;
+import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,21 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.DataverseServiceBean;
-import edu.harvard.iq.dataverse.api.imports.ImportException;
-import edu.harvard.iq.dataverse.api.imports.ImportServiceBean;
-import edu.harvard.iq.dataverse.api.imports.ImportUtil;
-import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 
 /**
  * EJB for kicking off big batch jobs asynchronously from the REST API  (BatchImport.java)

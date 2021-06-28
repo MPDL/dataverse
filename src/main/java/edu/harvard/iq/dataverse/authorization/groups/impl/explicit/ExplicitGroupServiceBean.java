@@ -37,7 +37,7 @@ public class ExplicitGroupServiceBean {
     @Autowired
     private RoleAssigneeServiceBean roleAssigneeSvc;
     
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     protected EntityManager em;
 	
     ExplicitGroupProvider provider;

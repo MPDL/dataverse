@@ -83,7 +83,7 @@ public class GuestbookResponseServiceBean {
     
     private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/d/yyyy");
     
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
 
     public List<GuestbookResponse> findAll() {

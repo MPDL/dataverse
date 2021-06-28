@@ -43,7 +43,7 @@ public class ConfirmEmailData implements Serializable {
     private String token;
 
     @OneToOne
-    @JoinColumn(nullable = false, unique = true)
+    @JoinColumn(name="authenticateduser_id", nullable = false, unique = true)
     private AuthenticatedUser authenticatedUser;
 
     @Column(nullable = false)

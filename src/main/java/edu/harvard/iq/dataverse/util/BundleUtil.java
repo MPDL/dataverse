@@ -1,18 +1,13 @@
 package edu.harvard.iq.dataverse.util;
 
+import javax.faces.context.FacesContext;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Map;
-import java.util.HashMap;
-import javax.faces.context.FacesContext;
 
 public class BundleUtil {
 

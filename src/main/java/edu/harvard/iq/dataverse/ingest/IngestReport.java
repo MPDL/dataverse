@@ -49,7 +49,7 @@ public class IngestReport implements Serializable {
     public static int INGEST_STATUS_FAILURE = 3;
 
     @ManyToOne
-    @JoinColumn(nullable=false)
+    @JoinColumn(name="datafile_id", nullable=false)
     private DataFile dataFile;
 
     @Lob

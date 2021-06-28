@@ -1,18 +1,16 @@
 package edu.harvard.iq.dataverse.api.util;
 
 import edu.harvard.iq.dataverse.api.ApiBlockingFilter;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.json.Json;
-import javax.json.JsonValue;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;

@@ -65,7 +65,7 @@ public class DataFileServiceBean implements java.io.Serializable {
     @Autowired 
     IngestServiceBean ingestService;
     
-    @PersistenceContext(unitName = "VDCNet-ejbPU")
+    @PersistenceContext
     private EntityManager em;
     
     // Assorted useful mime types:
