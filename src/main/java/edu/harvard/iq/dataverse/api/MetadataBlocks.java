@@ -1,6 +1,7 @@
 package edu.harvard.iq.dataverse.api;
 
 import edu.harvard.iq.dataverse.MetadataBlock;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -14,6 +15,7 @@ import static edu.harvard.iq.dataverse.util.json.JsonPrinter.*;
  * Api bean for managing metadata blocks.
  * @author michael
  */
+@Component
 @Path("metadatablocks")
 @Produces("application/json")
 public class MetadataBlocks extends AbstractApiBean {

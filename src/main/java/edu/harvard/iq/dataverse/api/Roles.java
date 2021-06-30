@@ -7,6 +7,8 @@ import edu.harvard.iq.dataverse.authorization.users.User;
 import edu.harvard.iq.dataverse.engine.command.impl.CreateRoleCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.DeleteRoleCommand;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -20,7 +22,7 @@ import static edu.harvard.iq.dataverse.util.json.JsonPrinter.json;
  * @author michael
  */
 
-
+@Component
 @Path("roles")
 public class Roles extends AbstractApiBean {
 	

@@ -6,6 +6,8 @@ import edu.harvard.iq.dataverse.api.AbstractApiBean;
 import edu.harvard.iq.dataverse.batch.jobs.importer.ImportMode;
 import edu.harvard.iq.dataverse.engine.command.impl.ImportFromFileSystemCommand;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -14,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.logging.Logger;
 
-
+@Component
 @Path("batch/jobs")
 @Produces(MediaType.APPLICATION_JSON)
 public class FileRecordJobResource extends AbstractApiBean {

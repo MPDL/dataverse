@@ -12,6 +12,8 @@ import edu.harvard.iq.dataverse.search.IndexServiceBean;
 import edu.harvard.iq.dataverse.util.EJBException;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -34,7 +36,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+@Component
 @Path("edit")
 public class EditDDI  extends AbstractApiBean {
     private static final Logger logger = Logger.getLogger(Access.class.getCanonicalName());

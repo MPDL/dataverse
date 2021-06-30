@@ -44,6 +44,7 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.json.*;
@@ -68,6 +69,7 @@ import static edu.harvard.iq.dataverse.util.json.JsonPrinter.*;
 import static edu.harvard.iq.dataverse.util.json.NullSafeJsonBuilder.jsonObjectBuilder;
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
+@Component
 @Path("datasets")
 public class Datasets extends AbstractApiBean {
 

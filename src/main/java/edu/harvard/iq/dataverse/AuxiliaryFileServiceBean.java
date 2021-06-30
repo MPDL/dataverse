@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import edu.harvard.iq.dataverse.dataaccess.StorageIO;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -28,6 +29,7 @@ import edu.harvard.iq.dataverse.util.SystemConfig;
  *  Methods related to the AuxiliaryFile Entity.
  */
 @Service
+@Transactional
 public class AuxiliaryFileServiceBean implements java.io.Serializable {
    private static final Logger logger = Logger.getLogger(AuxiliaryFileServiceBean.class.getCanonicalName());
 
@@ -42,6 +44,7 @@ public class AuxiliaryFileServiceBean implements java.io.Serializable {
         return em.find(AuxiliaryFile.class, pk);
     }
 
+    @Transactional
     public AuxiliaryFile save(AuxiliaryFile auxiliaryFile) {
         AuxiliaryFile savedFile = em.merge(auxiliaryFile);
         return savedFile;

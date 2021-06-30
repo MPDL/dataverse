@@ -2,6 +2,7 @@ package edu.harvard.iq.dataverse.api.errorhandlers;
 
 import edu.harvard.iq.dataverse.api.util.JsonResponseBuilder;
 
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;

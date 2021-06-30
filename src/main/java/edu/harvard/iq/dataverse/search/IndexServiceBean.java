@@ -83,6 +83,7 @@ import edu.harvard.iq.dataverse.util.StringUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 
 @Service
+@Transactional
 public class IndexServiceBean {
 
     private static final Logger logger = Logger.getLogger(IndexServiceBean.class.getCanonicalName());

@@ -13,6 +13,7 @@ import edu.harvard.iq.dataverse.ingest.tabulardata.TabularDataIngest;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -46,6 +47,7 @@ import java.util.logging.Logger;
  *      -- L.A. Aug. 2014 
  */
 
+@Component
 @Path("ingest")
 public class TestIngest {
     private static final Logger logger = Logger.getLogger(TestIngest.class.getCanonicalName());

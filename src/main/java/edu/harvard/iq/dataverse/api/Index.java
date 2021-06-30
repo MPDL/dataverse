@@ -11,6 +11,7 @@ import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.util.json.NullSafeJsonBuilder;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -31,7 +32,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 import static edu.harvard.iq.dataverse.util.json.NullSafeJsonBuilder.jsonObjectBuilder;
-
+@Component
 @Path("admin/index")
 public class Index extends AbstractApiBean {
 

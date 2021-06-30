@@ -6,6 +6,7 @@ import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.authorization.users.User;
 import edu.harvard.iq.dataverse.util.json.NullSafeJsonBuilder;
 import edu.harvard.iq.dataverse.workflows.WorkflowUtil;
+import org.springframework.stereotype.Component;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -16,7 +17,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static edu.harvard.iq.dataverse.util.json.NullSafeJsonBuilder.jsonObjectBuilder;
-
+@Component
 @Path("notifications")
 public class Notifications extends AbstractApiBean {
 

@@ -31,6 +31,7 @@ import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
  * @author michael
  */
 @Service
+@Transactional
 public class DvObjectServiceBean implements java.io.Serializable {
 
     @PersistenceContext

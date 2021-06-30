@@ -23,6 +23,7 @@ import edu.harvard.iq.dataverse.DvObject;
 import edu.harvard.iq.dataverse.RoleAssigneeServiceBean;
 import edu.harvard.iq.dataverse.authorization.RoleAssignee;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * A bean providing the {@link ExplicitGroupProvider}s with container services,
@@ -31,6 +32,7 @@ import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
  * @author michael
  */
 @Service
+@Transactional
 public class ExplicitGroupServiceBean {
     
     private static final Logger logger = Logger.getLogger(ExplicitGroupServiceBean.class.getName());

@@ -2,6 +2,7 @@ package edu.harvard.iq.dataverse.api;
 
 import edu.harvard.iq.dataverse.locality.StorageSite;
 import edu.harvard.iq.dataverse.locality.StorageSiteUtil;
+import org.springframework.stereotype.Component;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -10,6 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+@Component
 @Path("admin/storageSites")
 public class StorageSites extends AbstractApiBean {
 

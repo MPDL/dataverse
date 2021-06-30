@@ -7,6 +7,7 @@ import edu.harvard.iq.dataverse.workflow.Workflow;
 import edu.harvard.iq.dataverse.workflow.WorkflowContext.TriggerType;
 import edu.harvard.iq.dataverse.workflow.WorkflowServiceBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -23,6 +24,8 @@ import static edu.harvard.iq.dataverse.util.json.JsonPrinter.*;
  * API Endpoint for managing workflows.
  * @author michael
  */
+
+@Component
 @Path("admin/workflows")
 public class WorkflowsAdmin extends AbstractApiBean {
       

@@ -6,6 +6,7 @@ import edu.harvard.iq.dataverse.engine.command.impl.*;
 import edu.harvard.iq.dataverse.provenance.ProvEntityFileData;
 import edu.harvard.iq.dataverse.provenance.ProvInvestigator;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import org.springframework.stereotype.Component;
 
 import javax.json.Json;
 import javax.json.JsonException;
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
+@Component
 @Path("files")
 public class Prov extends AbstractApiBean {
 

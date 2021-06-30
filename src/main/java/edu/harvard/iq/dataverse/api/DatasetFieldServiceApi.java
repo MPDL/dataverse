@@ -8,6 +8,8 @@ import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.util.json.NullSafeJsonBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -32,6 +34,8 @@ import java.util.zip.ZipFile;
 
 import static edu.harvard.iq.dataverse.util.json.JsonPrinter.asJsonArray;
 
+@Component
+@Transactional
 @Path("admin/datasetfield")
 public class DatasetFieldServiceApi extends AbstractApiBean {
 
@@ -369,6 +373,7 @@ public class DatasetFieldServiceApi extends AbstractApiBean {
         return columns;
     }
 
+    @Transactional
     private String parseMetadataBlock(String[] values) {
         //Test to see if it exists by name
         MetadataBlock mdb = metadataBlockService.findByName(values[1]);
@@ -388,6 +393,7 @@ public class DatasetFieldServiceApi extends AbstractApiBean {
         return mdb.getName();
     }
 
+    @Transactional
     private String parseDatasetField(String[] values) {
         
         //First see if it exists
@@ -423,6 +429,7 @@ public class DatasetFieldServiceApi extends AbstractApiBean {
         return dsf.getName();
     }
 
+    @Transactional
     private String parseControlledVocabulary(String[] values) {
         
         DatasetFieldType dsv = datasetFieldService.findByName(values[1]);

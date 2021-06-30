@@ -8,6 +8,7 @@ import edu.harvard.iq.dataverse.makedatacount.DatasetMetrics;
 import edu.harvard.iq.dataverse.makedatacount.DatasetMetricsServiceBean;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.json.*;
 import javax.ws.rs.POST;
@@ -29,6 +30,8 @@ import java.util.logging.Logger;
 /**
  * Note that there are makeDataCount endpoints in Datasets.java as well.
  */
+
+@Component
 @Path("admin/makeDataCount")
 public class MakeDataCountApi extends AbstractApiBean {
 

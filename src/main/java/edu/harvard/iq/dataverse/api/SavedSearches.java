@@ -9,6 +9,7 @@ import edu.harvard.iq.dataverse.search.savedsearch.SavedSearch;
 import edu.harvard.iq.dataverse.search.savedsearch.SavedSearchFilterQuery;
 import edu.harvard.iq.dataverse.search.savedsearch.SavedSearchServiceBean;
 import edu.harvard.iq.dataverse.util.EJBException;
+import org.springframework.stereotype.Component;
 
 import javax.json.*;
 import javax.ws.rs.*;
@@ -19,6 +20,7 @@ import java.util.logging.Logger;
 
 import static javax.ws.rs.core.Response.Status.*;
 
+@Component
 @Path("admin/savedsearches")
 public class SavedSearches extends AbstractApiBean {
 

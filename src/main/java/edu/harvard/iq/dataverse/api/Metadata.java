@@ -9,6 +9,7 @@ import edu.harvard.iq.dataverse.DatasetServiceBean;
 import edu.harvard.iq.dataverse.harvest.server.OAISet;
 import edu.harvard.iq.dataverse.harvest.server.OAISetServiceBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
  * 
  */
 
+@Component
 @Path("admin/metadata")
 public class Metadata extends AbstractApiBean {
     private static final Logger logger = Logger.getLogger(Metadata.class.getName());

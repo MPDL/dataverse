@@ -12,6 +12,8 @@ import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.json.JsonParseException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.*;
 import javax.ws.rs.*;
@@ -28,7 +30,7 @@ import static edu.harvard.iq.dataverse.util.json.NullSafeJsonBuilder.jsonObjectB
  *
  * @author Leonid Andreev
  */
-
+@Component
 @Path("harvest/server/oaisets")
 public class HarvestingServer extends AbstractApiBean {
     @Autowired

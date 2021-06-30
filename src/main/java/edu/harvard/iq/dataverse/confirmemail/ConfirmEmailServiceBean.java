@@ -25,12 +25,14 @@ import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.MailUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author bsilverstein
  */
 @Service
+@Transactional
 public class ConfirmEmailServiceBean {
 
     private static final Logger logger = Logger.getLogger(ConfirmEmailServiceBean.class.getCanonicalName());

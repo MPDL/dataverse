@@ -12,6 +12,8 @@ import edu.harvard.iq.dataverse.engine.command.impl.ChangeUserIdentifierCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.GetUserTracesCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.MergeInAccountCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.RevokeAllRolesCommand;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.*;
@@ -25,6 +27,7 @@ import static edu.harvard.iq.dataverse.util.json.JsonPrinter.json;
  * @author madunlap
  */
 
+@Component
 @Path("users")
 public class Users extends AbstractApiBean {
     

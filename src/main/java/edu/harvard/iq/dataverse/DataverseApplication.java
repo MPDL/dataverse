@@ -1,11 +1,13 @@
 package edu.harvard.iq.dataverse;
 
+import com.sun.faces.config.ConfigureListener;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
@@ -14,12 +16,11 @@ import org.springframework.jms.support.converter.MappingJackson2MessageConverter
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.jms.ConnectionFactory;
 
 @SpringBootApplication
-@EntityScan
-@ServletComponentScan
 @EnableScheduling
 @EnableBatchProcessing
 @EnableJms
@@ -48,6 +49,17 @@ public class DataverseApplication {
 		converter.setTypeIdPropertyName("_type");
 		return converter;
 	}
+
+
+
+
+	@Bean
+	public ServletListenerRegistrationBean<ConfigureListener> jsfConfigureListener() {
+		return new ServletListenerRegistrationBean<>(
+				new ConfigureListener());
+	}
+
+
 
 
 }

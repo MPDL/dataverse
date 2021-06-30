@@ -6,6 +6,7 @@ import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IpAddress
 import edu.harvard.iq.dataverse.workflow.PendingWorkflowInvocation;
 import edu.harvard.iq.dataverse.workflow.WorkflowServiceBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -22,6 +23,8 @@ import java.util.logging.Logger;
  * 
  * @author michael
  */
+
+@Component
 @Path("workflows")
 public class Workflows extends AbstractApiBean {
     

@@ -19,12 +19,14 @@ import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
 import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
 import edu.harvard.iq.dataverse.api.ApiBlockingFilter;
 import edu.harvard.iq.dataverse.util.StringUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service bean accessing a persistent hash map, used as settings in the application.
  * @author michael
  */
 @Service
+@Transactional
 public class SettingsServiceBean {
     
     private static final Logger logger = Logger.getLogger(SettingsServiceBean.class.getCanonicalName());

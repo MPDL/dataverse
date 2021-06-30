@@ -60,6 +60,7 @@ import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.validation.PasswordValidatorServiceBean;
 import edu.harvard.iq.dataverse.workflow.PendingWorkflowInvocation;
 import edu.harvard.iq.dataverse.workflows.WorkflowComment;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * AuthenticationService is for general authentication-related operations.
@@ -70,6 +71,7 @@ import edu.harvard.iq.dataverse.workflows.WorkflowComment;
  * 
  */
 @Service
+@Transactional
 public class AuthenticationServiceBean {
     private static final Logger logger = Logger.getLogger(AuthenticationServiceBean.class.getName());
     

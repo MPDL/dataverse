@@ -21,6 +21,8 @@ import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.util.StringUtil;
 import edu.harvard.iq.dataverse.util.json.JsonParseException;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.json.*;
@@ -48,6 +50,7 @@ import static edu.harvard.iq.dataverse.util.json.JsonPrinter.*;
  * @author michael
  */
 
+@Component
 @Path("dataverses")
 public class Dataverses extends AbstractApiBean {
 

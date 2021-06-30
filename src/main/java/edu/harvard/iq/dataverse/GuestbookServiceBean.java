@@ -10,12 +10,14 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author skraffmiller
  */
 @Service
+@Transactional
 public class GuestbookServiceBean implements java.io.Serializable {
     
     @PersistenceContext

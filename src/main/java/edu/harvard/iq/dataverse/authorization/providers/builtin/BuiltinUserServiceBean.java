@@ -21,12 +21,14 @@ import edu.harvard.iq.dataverse.passwordreset.PasswordResetException;
 import edu.harvard.iq.dataverse.passwordreset.PasswordResetInitResponse;
 import edu.harvard.iq.dataverse.passwordreset.PasswordResetServiceBean;
 import edu.harvard.iq.dataverse.search.IndexServiceBean;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author xyang
  */
 @Service
+@Transactional
 public class BuiltinUserServiceBean {
 
     private static final Logger logger = Logger.getLogger(BuiltinUserServiceBean.class.getCanonicalName());

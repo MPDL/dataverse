@@ -5,6 +5,7 @@ import edu.harvard.iq.dataverse.Dataset;
 import edu.harvard.iq.dataverse.authorization.users.ApiToken;
 import edu.harvard.iq.dataverse.externaltools.ExternalTool;
 import edu.harvard.iq.dataverse.externaltools.ExternalToolHandler;
+import org.springframework.stereotype.Component;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
+@Component
 @Path("admin/test")
 public class TestApi extends AbstractApiBean {
 

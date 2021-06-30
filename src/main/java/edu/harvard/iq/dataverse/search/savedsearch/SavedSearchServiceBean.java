@@ -40,8 +40,10 @@ import edu.harvard.iq.dataverse.search.SolrQueryResponse;
 import edu.harvard.iq.dataverse.search.SolrSearchResult;
 import edu.harvard.iq.dataverse.search.SortBy;
 import edu.harvard.iq.dataverse.util.SystemConfig;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class SavedSearchServiceBean {
 
     private static final Logger logger = Logger.getLogger(SavedSearchServiceBean.class.getCanonicalName());

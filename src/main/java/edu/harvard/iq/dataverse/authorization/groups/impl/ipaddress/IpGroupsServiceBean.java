@@ -18,6 +18,7 @@ import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
 import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IPv4Address;
 import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IPv6Address;
 import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IpAddress;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Provides CRUD tools to efficiently manage IP groups in a Java EE container.
@@ -25,6 +26,7 @@ import edu.harvard.iq.dataverse.authorization.groups.impl.ipaddress.ip.IpAddress
  * @author michael
  */
 @Service
+@Transactional
 public class IpGroupsServiceBean {
     
     private static final Logger logger = Logger.getLogger(IpGroupsServiceBean.class.getName());

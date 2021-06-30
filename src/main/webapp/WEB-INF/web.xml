@@ -24,9 +24,10 @@
     </context-param>
     <!-- UI warnings that can be enabled setting to Develop or another level. 
             See https://docs.oracle.com/javaee/6/tutorial/doc/bnaxj.html#giqxl -->
+
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
-<!--        <param-value>Development</param-value>-->
+        <!--        <param-value>Development</param-value>-->
         <param-value>Production</param-value>
     </context-param>
     <context-param>
@@ -38,6 +39,7 @@
     <!-- param-name>primefaces.PUSH_SERVER_URL</param-name -->
     <!-- param-value>http://${dataverse.fqdn}:8081</param-value -->
     <!-- /context-param -->
+
     <context-param>
         <param-name>
             javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL
@@ -57,6 +59,7 @@
         <param-value>-1</param-value>
     </context-param>
     <!-- JSF mapping -->
+    <!--
     <filter>
         <filter-name>Router</filter-name>
         <filter-class>edu.harvard.iq.dataverse.api.ApiRouter</filter-class>
@@ -87,13 +90,26 @@
         <servlet-class>org.primefaces.push.PushServlet</servlet-class>
         <async-supported>true</async-supported>
     </servlet>
+    -->
     <!-- Map these files with JSF -->
+    <!--
     <servlet>
         <servlet-name>OAIServlet</servlet-name>
         <servlet-class>edu.harvard.iq.dataverse.harvest.server.web.servlet.OAIServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Citation Servlet</servlet-name>
+        <servlet-class>edu.harvard.iq.dataverse.CitationServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>HomepageServlet</servlet-name>
+        <servlet-class>edu.harvard.iq.dataverse.HomepageServlet</servlet-class>
+    </servlet>
 
-
+    <servlet-mapping>
+        <servlet-name>HomepageServlet</servlet-name>
+        <url-pattern>/Homepage</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>
@@ -118,8 +134,11 @@
         <servlet-name>OAIServlet</servlet-name>
         <url-pattern>/oai</url-pattern>
     </servlet-mapping>
-
-
+    <servlet-mapping>
+        <servlet-name>Citation Servlet</servlet-name>
+        <url-pattern>/citation</url-pattern>
+    </servlet-mapping>
+    -->
     <session-config>
         <!-- This is the DEFAULT HttpSession timeout, in minutes. -->
         <!-- In practice, it will only apply to ANONYMOUS user sessions -->
@@ -127,12 +146,12 @@
         <!-- in the application code, to the value that is configurable -->
         <!-- (LoginSessionTimeout in the settings table), with the -->
         <!-- default value of 8 hours. -->
-        
+
         <session-timeout>
             10
         </session-timeout>
         <!-- Uncomment the line below to disble `;jsessionid=` in URLs -->
-	<!-- tracking-mode>COOKIE</tracking-mode -->
+        <!-- tracking-mode>COOKIE</tracking-mode -->
     </session-config>
     <!-- web fonts, bootstrap css map, favicon -->
     <mime-mapping>
@@ -169,6 +188,7 @@
     </mime-mapping>
     <!-- BEGIN Data Deposit API (SWORD v2) -->
     <!-- See also SwordConfigurationImpl for how deprecation warnings are configured -->
+    <!--
     <context-param>
         <param-name>config-impl</param-name>
         <param-value>edu.harvard.iq.dataverse.api.datadeposit.SwordConfigurationImpl</param-value>
@@ -253,5 +273,6 @@
         <servlet-name>edu.harvard.iq.dataverse.api.datadeposit.SWORDv2ContainerServlet</servlet-name>
         <url-pattern>/dvn/api/data-deposit/v1.1/swordv2/edit/*</url-pattern>
     </servlet-mapping>
+    -->
     <!-- END Data Deposit API (SWORD v2) -->
 </web-app>

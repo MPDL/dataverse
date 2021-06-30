@@ -28,6 +28,7 @@ import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.json.Json;
@@ -45,6 +46,7 @@ import java.util.logging.Logger;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
+@Component
 @Path("files")
 public class Files extends AbstractApiBean {
     

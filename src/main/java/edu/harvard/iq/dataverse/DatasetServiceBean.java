@@ -60,6 +60,7 @@ import edu.harvard.iq.dataverse.workflows.WorkflowComment;
 
 
 @Service
+@Transactional
 public class DatasetServiceBean implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(DatasetServiceBean.class.getCanonicalName());

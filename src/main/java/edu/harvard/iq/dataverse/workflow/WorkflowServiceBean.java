@@ -50,6 +50,7 @@ import edu.harvard.iq.dataverse.workflows.WorkflowComment;
  * @author michael
  */
 @Service
+@Transactional
 public class WorkflowServiceBean {
 
     private static final Logger logger = Logger.getLogger(WorkflowServiceBean.class.getName());

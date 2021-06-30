@@ -15,12 +15,14 @@ import javax.persistence.Query;
 import org.springframework.stereotype.Service;
 
 import edu.harvard.iq.dataverse.util.LruCache;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author skraffmiller
  */
 @Service
+@Transactional
 public class DataverseFieldTypeInputLevelServiceBean {
 
 //    private static final Logger logger = Logger.getLogger(DataverseFieldTypeInputLevelServiceBean.class.getCanonicalName());

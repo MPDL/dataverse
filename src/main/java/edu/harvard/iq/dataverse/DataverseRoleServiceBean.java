@@ -25,6 +25,7 @@ import edu.harvard.iq.dataverse.search.IndexAsync;
 import edu.harvard.iq.dataverse.search.IndexResponse;
 import edu.harvard.iq.dataverse.search.IndexServiceBean;
 import edu.harvard.iq.dataverse.search.SolrIndexServiceBean;
+import org.springframework.transaction.annotation.Transactional;
 //import javax.validation.constraints.NotNull;
 
 /**
@@ -32,6 +33,7 @@ import edu.harvard.iq.dataverse.search.SolrIndexServiceBean;
  * @author michael
  */
 @Service
+@Transactional
 public class DataverseRoleServiceBean implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(DataverseRoleServiceBean.class.getCanonicalName());

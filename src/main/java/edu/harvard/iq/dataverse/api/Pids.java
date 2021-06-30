@@ -6,6 +6,8 @@ import edu.harvard.iq.dataverse.engine.command.impl.DeletePidCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.ReservePidCommand;
 import edu.harvard.iq.dataverse.pidproviders.PidUtil;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -24,6 +26,7 @@ import java.util.Arrays;
  * endpoint exists, to be somewhat future proof.
  */
 
+@Component
 @Path("pids")
 public class Pids extends AbstractApiBean {
 

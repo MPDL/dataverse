@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * CRUD for {@link OAuth2TokenData}.
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
  * @author michael
  */
 @Service
+@Transactional
 public class OAuth2TokenDataServiceBean {
     
     @PersistenceContext

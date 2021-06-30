@@ -22,7 +22,7 @@ import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
  *
  * @author skraffmi
  */
-@WebServlet(urlPatterns = "/Homepage")
+
 public class HomepageServlet extends HttpServlet {
     
 	@Autowired

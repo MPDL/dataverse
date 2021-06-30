@@ -15,12 +15,14 @@ import javax.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author skraffmiller
  */
 @Service
+@Transactional
 public class DataverseLinkingServiceBean implements java.io.Serializable {
     private static final Logger logger = Logger.getLogger(DataverseLinkingServiceBean.class.getCanonicalName());
 

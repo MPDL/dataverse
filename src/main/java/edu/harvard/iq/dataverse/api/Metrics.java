@@ -6,6 +6,7 @@ import edu.harvard.iq.dataverse.Metric;
 import edu.harvard.iq.dataverse.makedatacount.MakeDataCountUtil;
 import edu.harvard.iq.dataverse.metrics.MetricsUtil;
 import edu.harvard.iq.dataverse.util.FileUtil;
+import org.springframework.stereotype.Component;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
@@ -28,6 +29,7 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
  *
  * @author pdurbin, madunlap
  */
+@Component
 @Path("info/metrics")
 public class Metrics extends AbstractApiBean {
     private static final Logger logger = Logger.getLogger(Metrics.class.getName());

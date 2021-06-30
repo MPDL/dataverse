@@ -15,6 +15,7 @@ import net.handle.hdllib.HandleException;
 import net.handle.hdllib.HandleResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -39,6 +40,7 @@ import java.util.logging.Logger;
  * @author Bob Treacy
 */
 @Service
+@Transactional
 public class ImportGenericServiceBean {
     private static final Logger logger = Logger.getLogger(ImportGenericServiceBean.class.getCanonicalName());
     

@@ -118,7 +118,7 @@ public class ApiBlockingFilter implements javax.servlet.Filter {
     
     @Override
     public void init(FilterConfig fc) throws ServletException {
-        updateBlockedPoints();
+        //updateBlockedPoints();
         policies.put("allow", ALLOW);
         policies.put("drop", DROP);
         policies.put("localhost-only", LOCAL_HOST_ONLY);

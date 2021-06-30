@@ -3,6 +3,7 @@ package edu.harvard.iq.dataverse.api;
 import edu.harvard.iq.dataverse.MailServiceBean;
 import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -13,6 +14,8 @@ import javax.ws.rs.core.Response;
  * @author xyang
  * @author Leonid Andreev
  */
+
+@Component
 @Path("mail")
 public class Mail extends AbstractApiBean {
     

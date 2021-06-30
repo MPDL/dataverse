@@ -4,6 +4,7 @@ package edu.harvard.iq.dataverse.api;
 import edu.harvard.iq.dataverse.DataTagsContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.JsonObject;
 import javax.ws.rs.POST;

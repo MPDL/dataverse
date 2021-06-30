@@ -3,6 +3,8 @@ package edu.harvard.iq.dataverse.api.batchjob;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.harvard.iq.dataverse.api.AbstractApiBean;
 import edu.harvard.iq.dataverse.batch.entities.JobExecutionEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.batch.operations.JobOperator;
 import javax.batch.runtime.BatchRuntime;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-
+@Component
 @Path("admin/batch")
 public class BatchJobResource extends AbstractApiBean {
 

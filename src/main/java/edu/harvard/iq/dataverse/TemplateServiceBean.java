@@ -11,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.harvard.iq.dataverse.search.IndexServiceBean;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author skraffmiller
  */
 @Service
+@Transactional
 public class TemplateServiceBean {
 
     private static final Logger logger = Logger.getLogger(DatasetServiceBean.class.getCanonicalName());

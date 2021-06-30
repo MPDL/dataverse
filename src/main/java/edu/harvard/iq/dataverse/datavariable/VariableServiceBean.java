@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
+@Transactional
 public class VariableServiceBean {
     public static final String[] summaryStatisticTypes = {"mean", "medn", "mode", "vald", "invd", "min", "max", "stdev"};
     

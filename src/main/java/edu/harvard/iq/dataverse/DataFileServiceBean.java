@@ -50,6 +50,7 @@ import edu.harvard.iq.dataverse.util.SystemConfig;
  */
 
 @Service
+@Transactional
 public class DataFileServiceBean implements java.io.Serializable {
     
     private static final Logger logger = Logger.getLogger(DataFileServiceBean.class.getCanonicalName());

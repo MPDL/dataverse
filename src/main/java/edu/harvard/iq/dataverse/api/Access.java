@@ -30,6 +30,7 @@ import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.StringUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.json.Json;
@@ -69,6 +70,7 @@ import edu.harvard.iq.dataverse.api.exceptions.AuthorizationRequiredException;
  * data files and more.
  */
 
+@Component
 @Path("access")
 public class Access extends AbstractApiBean {
     private static final Logger logger = Logger.getLogger(Access.class.getCanonicalName());

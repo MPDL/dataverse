@@ -3,13 +3,14 @@ package edu.harvard.iq.dataverse.api;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.json.Json;
 import javax.json.JsonValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
-
+@Component
 @Path("info")
 public class Info extends AbstractApiBean {
 

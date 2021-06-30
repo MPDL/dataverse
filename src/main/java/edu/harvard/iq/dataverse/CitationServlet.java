@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author gdurand
  */
-@WebServlet(urlPatterns = "/citation")
+
 public class CitationServlet extends HttpServlet {
 
     @Autowired

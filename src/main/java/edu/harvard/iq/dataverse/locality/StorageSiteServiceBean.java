@@ -10,8 +10,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class StorageSiteServiceBean {
 
     private static final Logger logger = Logger.getLogger(StorageSiteServiceBean.class.getCanonicalName());

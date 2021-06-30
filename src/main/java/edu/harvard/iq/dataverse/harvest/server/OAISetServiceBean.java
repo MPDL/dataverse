@@ -42,6 +42,7 @@ import edu.harvard.iq.dataverse.util.SystemConfig;
  */
 
 @Service
+@Transactional
 public class OAISetServiceBean implements java.io.Serializable {
     @PersistenceContext
     private EntityManager em;

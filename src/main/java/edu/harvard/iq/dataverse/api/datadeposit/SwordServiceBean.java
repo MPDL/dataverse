@@ -6,6 +6,7 @@ import edu.harvard.iq.dataverse.authorization.users.User;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.swordapp.server.SwordEntry;
 import org.swordapp.server.SwordError;
 
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 @Service
+@Transactional
 public class SwordServiceBean {
 
     private static final Logger logger = Logger.getLogger(SwordServiceBean.class.getCanonicalName());

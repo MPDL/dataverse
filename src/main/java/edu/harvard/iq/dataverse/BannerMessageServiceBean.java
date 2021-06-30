@@ -16,12 +16,14 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Service;
 
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author skraffmi
  */
 @Service
+@Transactional
 public class BannerMessageServiceBean implements java.io.Serializable {
     private static final Logger logger = Logger.getLogger(BannerMessageServiceBean.class.getCanonicalName());
 
@@ -56,7 +58,8 @@ public class BannerMessageServiceBean implements java.io.Serializable {
             em.remove(message);
         }
     }
-            
+
+    @Transactional
     public void deactivateBannerMessage(Object pk) {
         BannerMessage message = em.find(BannerMessage.class, pk);
 
@@ -65,7 +68,8 @@ public class BannerMessageServiceBean implements java.io.Serializable {
             em.merge(message);
         }
     }
-    
+
+    @Transactional
     public void dismissMessageByUser(BannerMessage message, AuthenticatedUser user) {
 
         UserBannerMessage ubm = new UserBannerMessage();

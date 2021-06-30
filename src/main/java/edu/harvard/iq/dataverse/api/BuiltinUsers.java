@@ -13,6 +13,7 @@ import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import edu.harvard.iq.dataverse.util.EJBException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
@@ -31,6 +32,7 @@ import static edu.harvard.iq.dataverse.util.json.JsonPrinter.json;
  *
  * @author michael
  */
+@Component
 @Path("builtin-users")
 public class BuiltinUsers extends AbstractApiBean {
 

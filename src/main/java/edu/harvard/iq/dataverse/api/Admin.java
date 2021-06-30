@@ -38,6 +38,8 @@ import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.json.*;
@@ -65,8 +67,8 @@ import static edu.harvard.iq.dataverse.util.json.NullSafeJsonBuilder.jsonObjectB
  * 
  * @author michael
  */
-
-
+@Component
+@Transactional
 @Path("admin")
 public class Admin extends AbstractApiBean {
 
@@ -123,6 +125,7 @@ public class Admin extends AbstractApiBean {
 
 	@Path("settings/{name}")
 	@PUT
+	@Consumes("text/plain")
 	public Response putSetting(@PathParam("name") String name, String content) {
 		Setting s = settingsSvc.set(name, content);
 		return ok(jsonObjectBuilder().add(s.getName(), s.getContent()));
@@ -130,6 +133,7 @@ public class Admin extends AbstractApiBean {
 
 	@Path("settings/{name}/lang/{lang}")
 	@PUT
+	@Consumes("text/plain")
 	public Response putSetting(@PathParam("name") String name, @PathParam("lang") String lang, String content) {
 		Setting s = settingsSvc.set(name, lang, content);
 		return ok("Setting " + name + " - " + lang + " - added.");

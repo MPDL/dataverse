@@ -12,6 +12,7 @@ import edu.harvard.iq.dataverse.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -35,6 +36,7 @@ import static edu.harvard.iq.dataverse.export.ddi.DdiExportUtil.NOTE_TYPE_TERMS_
 // (it would need to be passed the fields service beans as arguments)
 // -- L.A. 4.5
 @Service
+@Transactional
 public class ImportDDIServiceBean {
     public static final String SOURCE_DVN_3_0 = "DVN_3_0";
     

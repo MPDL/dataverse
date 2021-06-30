@@ -111,6 +111,7 @@
          versions of dependencies used both directly and transitive are managed here. -->
     <dependencyManagement>
         <dependencies>
+<!--
             <dependency>
                 <groupId>fish.payara.api</groupId>
                 <artifactId>payara-bom</artifactId>
@@ -118,6 +119,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            -->
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-bom</artifactId>
@@ -175,6 +177,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jersey</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-batch</artifactId>
@@ -187,11 +193,20 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+        <!--
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        -->
+        <!--
 		<dependency>
 		    <groupId>org.glassfish.jersey.ext</groupId>
 		    <artifactId>jersey-spring4</artifactId>
 		    <version>2.26</version>
 		</dependency>
+		-->
 		<!-- 
 		<dependency>
             <groupId>xerces</groupId>
@@ -301,23 +316,24 @@
             <artifactId>commons-io</artifactId>
             <version>2.7</version>
         </dependency>
+
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.2.4</version>
-            <scope>compile</scope>
         </dependency>
         <!-- Should be refactored and moved to transitive section above once on Java EE 8 (makes WAR smaller) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
+            <version>2.11.4</version>
         </dependency>
         <!-- Should be refactored and moved to transitive section above once on Java EE 8 (makes WAR smaller) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <scope>provided</scope>
+            <scope>compile</scope>
+            <version>2.11.4</version>
         </dependency>
         <dependency>
             <!-- required by org.swordapp.server.sword2-server -->
@@ -360,10 +376,12 @@
             <version>29.0-jre</version>
             <type>jar</type>
         </dependency>
+
         <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>
             <artifactId>microprofile-config-api</artifactId>
-            <scope>provided</scope>
+            <version>1.4</version>
+            <scope>compile</scope>
         </dependency>
         <!--
         <dependency>
@@ -373,10 +391,27 @@
             <scope>provided</scope>
         </dependency>
         -->
+
+        <!--JSF -->
         <dependency>
             <groupId>org.glassfish</groupId>
-            <artifactId>javax.faces</artifactId>
-            <version>2.3.9</version>
+            <artifactId>jakarta.faces</artifactId>
+            <version>2.3.16</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld.servlet</groupId>
+            <artifactId>weld-servlet-shaded</artifactId>
+            <version>3.0.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.2</version>
         </dependency>
         <dependency>
             <groupId>org.primefaces</groupId>
@@ -391,8 +426,10 @@
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>3.8</version> <!-- Or 1.8-SNAPSHOT -->
+            <version>1.14.1</version> <!-- Or 1.8-SNAPSHOT -->
         </dependency>
+
+        <!--JSF END -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
@@ -622,17 +659,26 @@
             <type>jar</type>
         </dependency>
         <!-- For API File Upload: 1 of 2 -->
+        <!--
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
             <version>2.23.2</version>
         </dependency>
+        -->
         <!-- For API File Upload: 2 of 2 -->
+
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-multipart</artifactId>
-            <version>2.23.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-processing</artifactId>
+        </dependency>
+
+
         <dependency>
             <groupId>com.mashape.unirest</groupId>
             <artifactId>unirest-java</artifactId>
@@ -804,6 +850,9 @@
                     <include>**/*.properties</include>
                     <include>**/services/*</include>
                 </includes>
+            </resource>
+            <resource>
+                <directory>src/main/webapp</directory>
             </resource>
         </resources>
         <plugins>

@@ -55,6 +55,7 @@ import edu.harvard.iq.dataverse.workflow.WorkflowServiceBean;
  * @author michael
  */
 @Component
+@Transactional
 public class EjbDataverseEngine {
     private static final Logger logger = Logger.getLogger(EjbDataverseEngine.class.getCanonicalName());
     

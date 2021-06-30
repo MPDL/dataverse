@@ -68,7 +68,7 @@ import edu.harvard.iq.dataverse.util.SystemConfig;
  * Uses lyncode XOAI data provider implementation for serving content. 
  * The servlet itself is somewhat influenced by the older OCLC OAIcat implementation.
  */
-@WebServlet(urlPatterns = "/oai")
+
 public class OAIServlet extends HttpServlet {
     @Autowired 
     OAISetServiceBean setService;

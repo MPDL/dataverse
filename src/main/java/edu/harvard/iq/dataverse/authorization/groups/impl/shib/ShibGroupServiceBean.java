@@ -21,12 +21,14 @@ import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
 import edu.harvard.iq.dataverse.actionlogging.ActionLogServiceBean;
 import edu.harvard.iq.dataverse.authorization.groups.GroupServiceBean;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @todo Consider merging this bean into the newer and more generic
  * ShibServiceBean.
  */
 @Service
+@Transactional
 public class ShibGroupServiceBean {
 
     private static final Logger logger = Logger.getLogger(ShibGroupServiceBean.class.getCanonicalName());

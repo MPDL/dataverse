@@ -14,6 +14,7 @@ import edu.harvard.iq.dataverse.DatasetServiceBean;
 import edu.harvard.iq.dataverse.export.DDIExportServiceBean;
 import edu.harvard.iq.dataverse.search.SearchServiceBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -44,6 +45,7 @@ import edu.harvard.iq.dataverse.api.exceptions.AuthorizationRequiredException;
  * specific fragments of these sections. 
  */
 
+@Component
 @Deprecated
 @Path("meta")
 public class Meta {

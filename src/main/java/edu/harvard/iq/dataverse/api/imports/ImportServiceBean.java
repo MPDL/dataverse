@@ -49,6 +49,7 @@ import java.util.logging.Logger;
  * @author ellenk
  */
 @Service
+@Transactional
 public class ImportServiceBean {
     @PersistenceContext
     private EntityManager em;

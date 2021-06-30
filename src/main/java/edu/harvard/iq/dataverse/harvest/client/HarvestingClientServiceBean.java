@@ -32,6 +32,7 @@ import edu.harvard.iq.dataverse.timer.DataverseTimerServiceBean;
  * Dedicated service for managing Harvesting Client Configurations
  */
 @Service
+@Transactional
 public class HarvestingClientServiceBean implements java.io.Serializable {
     @Autowired
     DataverseServiceBean dataverseService;

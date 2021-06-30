@@ -8,6 +8,7 @@ package edu.harvard.iq.dataverse.api.errorhandlers;
 import edu.harvard.iq.dataverse.api.util.JsonResponseBuilder;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;

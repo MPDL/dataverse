@@ -44,12 +44,14 @@ import edu.harvard.iq.dataverse.search.SolrIndexServiceBean;
 import edu.harvard.iq.dataverse.search.SolrSearchResult;
 import edu.harvard.iq.dataverse.util.StringUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author gdurand
  */
 @Service
+@Transactional
 public class DataverseServiceBean implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(DataverseServiceBean.class.getCanonicalName());

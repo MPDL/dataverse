@@ -10,6 +10,7 @@ import edu.harvard.iq.dataverse.search.*;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -31,6 +32,8 @@ import java.util.logging.Logger;
  * User-facing documentation:
  * <a href="http://guides.dataverse.org/en/latest/api/search.html">http://guides.dataverse.org/en/latest/api/search.html</a>
  */
+
+@Component
 @Path("search")
 public class Search extends AbstractApiBean {
 

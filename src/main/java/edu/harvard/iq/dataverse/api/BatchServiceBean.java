@@ -9,6 +9,7 @@ import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -27,6 +28,7 @@ import java.util.logging.Logger;
  * @author ellenk
  */
 @Service
+@Transactional
 public class BatchServiceBean {
  private static final Logger logger = Logger.getLogger(BatchServiceBean.class.getCanonicalName());
 

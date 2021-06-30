@@ -39,12 +39,14 @@ import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.EJBException;
 import edu.harvard.iq.dataverse.util.MarkupChecker;
 import edu.harvard.iq.dataverse.util.SystemConfig;
-    
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  *
  * @author skraffmiller
  */
 @Service
+@Transactional
 public class DatasetVersionServiceBean implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(DatasetVersionServiceBean.class.getCanonicalName());

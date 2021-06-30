@@ -8,6 +8,8 @@ import edu.harvard.iq.dataverse.authorization.groups.impl.shib.ShibGroup;
 import edu.harvard.iq.dataverse.authorization.groups.impl.shib.ShibGroupProvider;
 import edu.harvard.iq.dataverse.util.json.JsonParseException;
 import edu.harvard.iq.dataverse.util.json.JsonParser;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.json.Json;
@@ -29,6 +31,7 @@ import static org.apache.commons.lang.StringUtils.isNumeric;
  *
  * @author michael
  */
+@Component
 @Path("admin/groups")
 public class Groups extends AbstractApiBean {
     private static final Logger logger = Logger.getLogger(Groups.class.getName());

@@ -24,12 +24,14 @@ import org.springframework.stereotype.Service;
 import edu.harvard.iq.dataverse.Dataset;
 import edu.harvard.iq.dataverse.DatasetServiceBean;
 import edu.harvard.iq.dataverse.util.EJBException;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author skraffmi
  */
 @Service
+@Transactional
 public class DatasetMetricsServiceBean implements java.io.Serializable {
 
     private static final Logger logger = Logger.getLogger(DatasetMetricsServiceBean.class.getCanonicalName());

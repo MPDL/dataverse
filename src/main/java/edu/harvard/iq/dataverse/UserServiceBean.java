@@ -25,6 +25,7 @@ import edu.harvard.iq.dataverse.search.IndexServiceBean;
 import edu.harvard.iq.dataverse.userdata.UserUtil;
 
 @Service
+@Transactional
 public class UserServiceBean {
 
     private static final Logger logger = Logger.getLogger(UserServiceBean.class.getCanonicalName());

@@ -51,16 +51,16 @@ echo "Setup the authentication providers"
 
 echo "Setting up the settings"
 echo  "- Allow internal signup"
-curl -X PUT -d yes "$SERVER/admin/settings/:AllowSignUp"
-curl -X PUT -d /dataverseuser.xhtml?editMode=CREATE "$SERVER/admin/settings/:SignUpUrl"
+curl -X PUT -H "Content-Type: text/plain" -d yes "$SERVER/admin/settings/:AllowSignUp"
+curl -X PUT -H "Content-Type: text/plain" -d /dataverseuser.xhtml?editMode=CREATE "$SERVER/admin/settings/:SignUpUrl"
 
-curl -X PUT -d doi "$SERVER/admin/settings/:Protocol"
-curl -X PUT -d 10.5072 "$SERVER/admin/settings/:Authority"
-curl -X PUT -d "FK2/" "$SERVER/admin/settings/:Shoulder"
-curl -X PUT -d DataCite "$SERVER/admin/settings/:DoiProvider"
-curl -X PUT -d burrito $SERVER/admin/settings/BuiltinUsers.KEY
-curl -X PUT -d localhost-only $SERVER/admin/settings/:BlockedApiPolicy
-curl -X PUT -d 'native/http' $SERVER/admin/settings/:UploadMethods
+curl -X PUT -H "Content-Type: text/plain" -d doi "$SERVER/admin/settings/:Protocol"
+curl -X PUT -H "Content-Type: text/plain" -d 10.5072 "$SERVER/admin/settings/:Authority"
+curl -X PUT -H "Content-Type: text/plain" -d "FK2/" "$SERVER/admin/settings/:Shoulder"
+curl -X PUT -H "Content-Type: text/plain" -d DataCite "$SERVER/admin/settings/:DoiProvider"
+curl -X PUT -H "Content-Type: text/plain" -d burrito $SERVER/admin/settings/BuiltinUsers.KEY
+curl -X PUT -H "Content-Type: text/plain" -d localhost-only $SERVER/admin/settings/:BlockedApiPolicy
+curl -X PUT -H "Content-Type: text/plain" -d 'native/http' $SERVER/admin/settings/:UploadMethods
 echo
 
 echo "Setting up the admin user (and as superuser)"
@@ -88,7 +88,7 @@ then
     # Revoke the "burrito" super-key; 
     # Block sensitive API endpoints;
     curl -X DELETE $SERVER/admin/settings/BuiltinUsers.KEY
-    curl -X PUT -d 'admin,builtin-users' $SERVER/admin/settings/:BlockedApiEndpoints
+    curl -X PUT -H "Content-Type: text/plain" -d 'admin,builtin-users' $SERVER/admin/settings/:BlockedApiEndpoints
     echo "Access to the /api/admin and /api/test is now disabled, except for connections from localhost."
 else 
     echo "IMPORTANT!!!"

@@ -7,6 +7,7 @@ import edu.harvard.iq.dataverse.branding.BrandingUtil;
 import edu.harvard.iq.dataverse.feedback.Feedback;
 import edu.harvard.iq.dataverse.feedback.FeedbackUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -19,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+@Component
 @Path("admin/feedback")
 public class FeedbackApi extends AbstractApiBean {
 

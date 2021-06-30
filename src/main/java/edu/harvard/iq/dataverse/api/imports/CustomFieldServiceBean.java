@@ -6,6 +6,7 @@
 package edu.harvard.iq.dataverse.api.imports;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,6 +16,7 @@ import javax.persistence.PersistenceContext;
  * @author ellenk
  */
 @Service
+@Transactional
 public class CustomFieldServiceBean {
 
    

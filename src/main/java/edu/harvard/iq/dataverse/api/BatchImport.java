@@ -7,6 +7,8 @@ import edu.harvard.iq.dataverse.api.imports.ImportUtil.ImportType;
 import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.GET;
@@ -17,7 +19,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-
+@Component
 @Path("batch")
 public class BatchImport extends AbstractApiBean {
 

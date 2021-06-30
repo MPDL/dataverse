@@ -3,6 +3,7 @@ package edu.harvard.iq.dataverse.api;
 import edu.harvard.iq.dataverse.actionlogging.ActionLogRecord;
 import edu.harvard.iq.dataverse.externaltools.ExternalTool;
 import edu.harvard.iq.dataverse.externaltools.ExternalToolServiceBean;
+import org.springframework.stereotype.Component;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
 
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
+@Component
 @Path("admin/externalTools")
 public class ExternalTools extends AbstractApiBean {
 

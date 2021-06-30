@@ -9,12 +9,14 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author xyang
  */
 @Service
+@Transactional
 public class DatasetFieldServiceBean implements java.io.Serializable {
 
     @PersistenceContext
@@ -181,18 +183,22 @@ public class DatasetFieldServiceBean implements java.io.Serializable {
         return typedQuery.getSingleResult();
     }
 
+
     public DatasetFieldType save(DatasetFieldType dsfType) {
         return em.merge(dsfType);
     }
+
 
     public MetadataBlock save(MetadataBlock mdb) {
         return em.merge(mdb);
     }
 
+
     public ControlledVocabularyValue save(ControlledVocabularyValue cvv) {
         return em.merge(cvv);
     }
-    
+
+
     public ControlledVocabAlternate save(ControlledVocabAlternate alt) {
         return em.merge(alt);
     } 

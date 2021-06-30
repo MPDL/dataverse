@@ -35,8 +35,10 @@ import edu.harvard.iq.dataverse.authorization.users.ApiToken;
 import edu.harvard.iq.dataverse.externaltools.ExternalTool.ReservedWord;
 import edu.harvard.iq.dataverse.externaltools.ExternalTool.Scope;
 import edu.harvard.iq.dataverse.externaltools.ExternalTool.Type;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ExternalToolServiceBean {
 
     private static final Logger logger = Logger.getLogger(ExternalToolServiceBean.class.getCanonicalName());

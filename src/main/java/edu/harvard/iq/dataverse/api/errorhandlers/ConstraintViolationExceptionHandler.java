@@ -1,5 +1,6 @@
 package edu.harvard.iq.dataverse.api.errorhandlers;
 
+import javax.inject.Singleton;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;

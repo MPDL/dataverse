@@ -28,6 +28,7 @@ import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
  * @author xyang
  */
 @Service
+@Transactional
 public class UserNotificationServiceBean {
 
     private static final Logger logger = Logger.getLogger(UserNotificationServiceBean.class.getCanonicalName());

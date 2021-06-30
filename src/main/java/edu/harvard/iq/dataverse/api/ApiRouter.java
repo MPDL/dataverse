@@ -1,5 +1,8 @@
 package edu.harvard.iq.dataverse.api;
 
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -10,6 +13,7 @@ import java.util.logging.Logger;
  * 
  * @author michael
  */
+
 public class ApiRouter implements javax.servlet.Filter {
     private static final Logger logger = Logger.getLogger(ApiRouter.class.getName());
     

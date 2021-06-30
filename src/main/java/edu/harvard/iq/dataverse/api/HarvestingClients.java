@@ -12,6 +12,8 @@ import edu.harvard.iq.dataverse.harvest.client.HarvestingClient;
 import edu.harvard.iq.dataverse.harvest.client.HarvestingClientServiceBean;
 import edu.harvard.iq.dataverse.util.json.JsonParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
@@ -27,7 +29,7 @@ import java.util.logging.Logger;
 
 import static edu.harvard.iq.dataverse.util.json.NullSafeJsonBuilder.jsonObjectBuilder;
 
-
+@Component
 @Path("harvest/clients")
 public class HarvestingClients extends AbstractApiBean {
 

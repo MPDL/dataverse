@@ -14,12 +14,14 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author skraffmiller
  */
 @Service
+@Transactional
 public class DatasetLinkingServiceBean implements java.io.Serializable {
     private static final Logger logger = Logger.getLogger(DatasetLinkingServiceBean.class.getCanonicalName());
 

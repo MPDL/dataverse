@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.harvard.iq.dataverse.util.LruCache;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -16,6 +17,7 @@ import edu.harvard.iq.dataverse.util.LruCache;
  * @author Michael Bar-Sinai
  */
 @Service
+@Transactional
 public class DataverseFacetServiceBean implements java.io.Serializable {
     
     public static final LruCache<Long,List<DataverseFacet>> cache = new LruCache<>();
