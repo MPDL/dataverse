@@ -12,6 +12,7 @@ import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -20,7 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
  * @author michael
  */
 @Service
-//@RequestScoped
+@RequestScope
 public class DataverseRequestServiceBean {
     
     @Inject

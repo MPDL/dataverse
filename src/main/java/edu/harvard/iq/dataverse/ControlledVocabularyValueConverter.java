@@ -5,6 +5,8 @@
  */
 package edu.harvard.iq.dataverse;
 
+import org.springframework.stereotype.Component;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -15,7 +17,7 @@ import javax.inject.Inject;
  *
  * @author xyang
  */
-@FacesConverter("controlledVocabularyValueConverter")
+@Component
 public class ControlledVocabularyValueConverter implements Converter {
 
     //@Autowired

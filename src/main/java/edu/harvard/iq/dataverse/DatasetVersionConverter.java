@@ -5,6 +5,9 @@
  */
 package edu.harvard.iq.dataverse;
 
+import org.apache.poi.ss.formula.eval.UnaryMinusEval;
+import org.springframework.stereotype.Component;
+
 import javax.faces.annotation.ManagedProperty;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -16,7 +19,8 @@ import javax.inject.Inject;
  *
  * @author skraffmi
  */
-@FacesConverter("datasetVersionConverter")
+
+@Component
 public class DatasetVersionConverter implements Converter {
     
     //@Autowired

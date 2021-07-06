@@ -11,6 +11,8 @@ import edu.harvard.iq.dataverse.RoleAssigneeServiceBean;
 import edu.harvard.iq.dataverse.authorization.DataverseRolePermissionHelper;
 import edu.harvard.iq.dataverse.authorization.groups.GroupServiceBean;
 import edu.harvard.iq.dataverse.search.SearchFields;
+
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -443,8 +445,8 @@ public class MyDataFinder {
         // Iterate through assigned objects, a single object may end up in
         // multiple "buckets"
         for (Object[] ra : results) {
-            Long dvId = (Long)ra[0];
-            Long roleId = (Long)ra[1];
+            Long dvId = ((BigInteger)ra[0]).longValue();
+            Long roleId = ((BigInteger)ra[1]).longValue();
 
 
 

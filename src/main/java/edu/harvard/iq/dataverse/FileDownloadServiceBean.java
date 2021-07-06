@@ -84,7 +84,7 @@ public class FileDownloadServiceBean implements java.io.Serializable {
     @Inject
     DataverseRequestServiceBean dvRequestService;
     
-    @Inject FileDownloadHelper fileDownloadHelper;
+    //@Inject FileDownloadHelper fileDownloadHelper;
     @Inject
     MakeDataCountLoggingServiceBean mdcLogService;
 

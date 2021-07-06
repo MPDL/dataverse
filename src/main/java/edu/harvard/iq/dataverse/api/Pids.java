@@ -6,6 +6,8 @@ import edu.harvard.iq.dataverse.engine.command.impl.DeletePidCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.ReservePidCommand;
 import edu.harvard.iq.dataverse.pidproviders.PidUtil;
 import edu.harvard.iq.dataverse.util.BundleUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,9 @@ import java.util.Arrays;
 @Path("pids")
 public class Pids extends AbstractApiBean {
 
+    @Autowired
+    Environment env;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPid(@QueryParam("persistentId") String persistentId) {
@@ -42,8 +47,8 @@ public class Pids extends AbstractApiBean {
             return error(Response.Status.FORBIDDEN, BundleUtil.getStringFromBundle("api.errors.invalidApiToken"));
         }
         String baseUrl = systemConfig.getDataCiteRestApiUrlString();
-        String username = System.getProperty("doi.username");
-        String password = System.getProperty("doi.password");
+        String username = env.getProperty("doi.username");
+        String password = env.getProperty("doi.password");
         try {
             JsonObjectBuilder result = PidUtil.queryDoi(persistentId, baseUrl, username, password);
             return ok(result);

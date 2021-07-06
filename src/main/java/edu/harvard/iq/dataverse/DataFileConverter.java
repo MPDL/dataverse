@@ -1,5 +1,7 @@
 package edu.harvard.iq.dataverse;
 
+import org.springframework.stereotype.Component;
+
 import java.util.logging.Logger;
 
 import javax.faces.component.UIComponent;
@@ -8,7 +10,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.inject.Inject;
 
-@FacesConverter("dataFileConverter")
+@Component
 public class DataFileConverter implements Converter {
 
     private static final Logger logger = Logger.getLogger(DataFileConverter.class.getCanonicalName());

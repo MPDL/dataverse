@@ -18,28 +18,30 @@
     <welcome-file-list>
         <welcome-file>Homepage</welcome-file>
     </welcome-file-list>
+    <!--
     <context-param>
         <param-name>org.jboss.weld.context.conversation.lazy</param-name>
         <param-value>false</param-value>
     </context-param>
+    -->
     <!-- UI warnings that can be enabled setting to Develop or another level. 
             See https://docs.oracle.com/javaee/6/tutorial/doc/bnaxj.html#giqxl -->
-
+    <!--
     <context-param>
         <param-name>javax.faces.PROJECT_STAGE</param-name>
-        <!--        <param-value>Development</param-value>-->
         <param-value>Production</param-value>
     </context-param>
     <context-param>
         <param-name>primefaces.THEME</param-name>
         <param-value>bootstrap</param-value>
     </context-param>
+    -->
     <!-- example of a hard-coded PrimePush configuration: -->
     <!-- context-param -->
     <!-- param-name>primefaces.PUSH_SERVER_URL</param-name -->
     <!-- param-value>http://${dataverse.fqdn}:8081</param-value -->
     <!-- /context-param -->
-
+    <!--
     <context-param>
         <param-name>
             javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL
@@ -58,6 +60,7 @@
         <param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
         <param-value>-1</param-value>
     </context-param>
+    -->
     <!-- JSF mapping -->
     <!--
     <filter>

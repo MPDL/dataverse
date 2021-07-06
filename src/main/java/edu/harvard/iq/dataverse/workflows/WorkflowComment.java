@@ -5,14 +5,7 @@ import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 
 @Entity
 public class WorkflowComment implements Serializable {
@@ -41,6 +34,7 @@ public class WorkflowComment implements Serializable {
      * TODO: In the future, make this nullable=true for when entities other than
      * DatasetVersion are being discussed, such as DataFile or Dataset.
      */
+    @ManyToOne
     @JoinColumn(nullable = false)
     private DatasetVersion datasetVersion;
 
@@ -57,6 +51,7 @@ public class WorkflowComment implements Serializable {
     private String message;
 
     // This is nullable so the user can be deleted if necessary.
+    @ManyToOne
     @JoinColumn(nullable = true)
     private AuthenticatedUser authenticatedUser;
 

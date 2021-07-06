@@ -12,6 +12,7 @@ import edu.harvard.iq.dataverse.validation.PasswordValidatorUtil;
 import org.apache.commons.io.IOUtils;
 import org.passay.CharacterRule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
@@ -39,6 +40,9 @@ public class SystemConfig {
 
     @Autowired
     AuthenticationServiceBean authenticationService;
+
+    @Autowired
+    Environment env;
     
    public static final String DATAVERSE_PATH = "/dataverse/";
 
@@ -1054,7 +1058,7 @@ public class SystemConfig {
 	
 	public String getDataCiteRestApiUrlString() {
 		//As of 5.0 the 'doi.dataciterestapiurlstring' is the documented jvm option. Prior versions used 'doi.mdcbaseurlstring' or were hardcoded to api.datacite.org, so the defaults are for backward compatibility.
-        return System.getProperty("doi.dataciterestapiurlstring", System.getProperty("doi.mdcbaseurlstring", "https://api.datacite.org"));
+        return env.getProperty("doi.dataciterestapiurlstring", env.getProperty("doi.mdcbaseurlstring", "https://api.datacite.org"));
 	}
 
 }

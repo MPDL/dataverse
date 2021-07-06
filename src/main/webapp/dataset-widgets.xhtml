@@ -161,7 +161,7 @@
                         <div class="form-group">
                             <p class="help-block">#{bundle['dataset.thumbnailsAndWidget.availableThumbnails.tip']}</p>
                             <p:outputPanel id="customPanel">
-                                <p:selectOneRadio id="selectDatasetThumbnail" value="#{DatasetWidgetsPage.datasetFileThumbnailToSwitchTo}" layout="custom" converter="dataFileConverter">
+                                <p:selectOneRadio id="selectDatasetThumbnail" value="#{DatasetWidgetsPage.datasetFileThumbnailToSwitchTo}" layout="custom" converter="#{dataFileConverter}">
                                     <f:selectItems value="#{DatasetWidgetsPage.datasetThumbnails}" var="thumb" itemLabel="#{thumb}" itemValue="#{thumb.dataFile}"/>
                                 </p:selectOneRadio>
                                 <c:forEach items="#{DatasetWidgetsPage.datasetThumbnails}" var="thumbnail" varStatus="loop">

@@ -74,6 +74,7 @@ public class SearchIncludeFragment implements java.io.Serializable {
     ThumbnailServiceWrapper thumbnailServiceWrapper;
     @Inject
     WidgetWrapper widgetWrapper;  
+
     @Inject
     DataversePage dataversePage;
     @Autowired

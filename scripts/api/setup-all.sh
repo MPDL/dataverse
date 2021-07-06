@@ -55,7 +55,7 @@ curl -X PUT -H "Content-Type: text/plain" -d yes "$SERVER/admin/settings/:AllowS
 curl -X PUT -H "Content-Type: text/plain" -d /dataverseuser.xhtml?editMode=CREATE "$SERVER/admin/settings/:SignUpUrl"
 
 curl -X PUT -H "Content-Type: text/plain" -d doi "$SERVER/admin/settings/:Protocol"
-curl -X PUT -H "Content-Type: text/plain" -d 10.5072 "$SERVER/admin/settings/:Authority"
+curl -X PUT -H "Content-Type: text/plain" -d 10.15771 "$SERVER/admin/settings/:Authority"
 curl -X PUT -H "Content-Type: text/plain" -d "FK2/" "$SERVER/admin/settings/:Shoulder"
 curl -X PUT -H "Content-Type: text/plain" -d DataCite "$SERVER/admin/settings/:DoiProvider"
 curl -X PUT -H "Content-Type: text/plain" -d burrito $SERVER/admin/settings/BuiltinUsers.KEY

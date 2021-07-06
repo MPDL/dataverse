@@ -13,12 +13,14 @@ import javax.faces.convert.FacesConverter;
 import javax.inject.Inject;
 
 import edu.harvard.iq.dataverse.authorization.RoleAssignee;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author gdurand
  */
-@FacesConverter("roleAssigneeConverter")
+
+@Component
 public class RoleAssigneeConverter implements Converter {
     
     //@Autowired

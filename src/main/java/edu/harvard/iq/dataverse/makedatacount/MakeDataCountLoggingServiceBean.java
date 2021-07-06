@@ -28,14 +28,14 @@ import edu.harvard.iq.dataverse.DatasetVersion;
 import edu.harvard.iq.dataverse.DataverseRequestServiceBean;
 import edu.harvard.iq.dataverse.batch.util.LoggingUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author matthew
  */
 
-@Named
-@RequestScoped
+@Service
 public class MakeDataCountLoggingServiceBean {
     
     @Autowired

@@ -8,7 +8,7 @@
     <parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.5</version>
+		<version>2.4.8</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
     <groupId>edu.harvard.iq</groupId>
@@ -27,6 +27,7 @@
         <project.timezone>UTC</project.timezone>
         <project.language>en</project.language>
         <project.region>US</project.region>
+        <joinfaces.version>3.2.6</joinfaces.version>
         <!--
             Moving this from plugin config to global config, because of GH-5122.
             This seems to play well with NetBeans 8.2, IDEA 2018.1 and mvn including compatibility with JaCoCo.
@@ -120,6 +121,13 @@
                 <scope>import</scope>
             </dependency>
             -->
+                <dependency>
+                    <groupId>org.joinfaces</groupId>
+                    <artifactId>joinfaces-dependencies</artifactId>
+                    <version>4.4.7</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
             <dependency>
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-bom</artifactId>
@@ -193,6 +201,43 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+        <!-- JSF/JoinFaces-->
+        <dependency>
+            <groupId>org.joinfaces</groupId>
+            <artifactId>jsf-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.joinfaces</groupId>
+            <artifactId>rewrite-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.joinfaces</groupId>
+            <artifactId>omnifaces3-spring-boot-starter</artifactId>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.joinfaces</groupId>
+            <artifactId>weld-spring-boot-starter</artifactId>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>org.ocpsoft.rewrite</groupId>
+            <artifactId>rewrite-config-prettyfaces</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet.jsp.jstl</groupId>
+            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.jboss.weld.servlet</groupId>
+            <artifactId>weld-servlet-shaded</artifactId>
+            <version>3.0.0.Final</version>
+        </dependency>
+        -->
+        <!-- JSF/JoinFaces END-->
+
         <!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -393,6 +438,7 @@
         -->
 
         <!--JSF -->
+        <!--
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.faces</artifactId>
@@ -413,6 +459,7 @@
             <artifactId>jsp-api</artifactId>
             <version>2.2</version>
         </dependency>
+        -->
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
@@ -423,11 +470,13 @@
             <artifactId>all-themes</artifactId>
             <version>1.0.10</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.omnifaces</groupId>
             <artifactId>omnifaces</artifactId>
-            <version>1.14.1</version> <!-- Or 1.8-SNAPSHOT -->
+            <version>1.14.1</version> <
         </dependency>
+    -->
 
         <!--JSF END -->
         <dependency>
@@ -541,6 +590,7 @@
             <artifactId>jai-imageio-core</artifactId>
             <version>1.3.1</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.ocpsoft.rewrite</groupId>
             <artifactId>rewrite-servlet</artifactId>
@@ -551,6 +601,7 @@
             <artifactId>rewrite-config-prettyfaces</artifactId>
             <version>3.4.2.Final</version>
         </dependency>
+        -->
         <dependency>
             <groupId>edu.ucsb.nceas</groupId>
             <artifactId>ezid</artifactId>
@@ -838,6 +889,7 @@
                     <include>**/*.properties</include>
                     <include>**/mime.types</include>
                     <include>**/*.R</include>
+
                 </includes>
             </resource>
             <resource>
@@ -849,18 +901,67 @@
                     <include>**/*.xsl</include>
                     <include>**/*.properties</include>
                     <include>**/services/*</include>
+                    <include>**/*.conf</include>
+                    <include>**/*.xsd</include>
                 </includes>
             </resource>
             <resource>
                 <directory>src/main/webapp</directory>
             </resource>
         </resources>
+
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.joinfaces</groupId>
+                    <artifactId>joinfaces-maven-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>classpath-scan</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+
+
+        </pluginManagement>
         <plugins>
+    <!--
+            <plugin>
+                <groupId>org.joinfaces</groupId>
+                <artifactId>joinfaces-maven-plugin</artifactId>
+            </plugin>
+-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <fork>false</fork>
+                    <jvmArguments>
+                        -XX:MaxMetaspaceSize=512m
+                        -XX:MetaspaceSize=256m
+                        -Dfish.payara.classloading.delegate=false
+                        -XX:+UseG1GC         -XX:+UseStringDeduplication
+                        -XX:+DisableExplicitGC
+                        -Ddataverse.rserve.host=localhost
+                        -Ddataverse.rserve.port=6311
+                        -Ddataverse.rserve.user=rserve
+                        -Ddataverse.rserve.password=${ALIAS=rserve_password_alias}
+                        -Ddataverse.fqdn=localhost
+                        -Ddataverse.siteUrl=https://localhost:8080
+                        -Ddataverse.auth.password-reset-timeout-in-minutes=60
+                        -Ddataverse.timerServer=true
+                        -Xmx3891m
+                        -Djavax.xml.parsers.SAXParserFactory=com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl
+                        "-Ddataverse.files.directory=C:/dataverse/files"
+                        -Ddataverse.files.file.type=file
+                        -Ddataverse.files.file.label=file
+                        "-Ddataverse.files.file.directory=C:/dataverse/files"
+
+                    </jvmArguments>
                 </configuration>
             </plugin>
 

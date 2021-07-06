@@ -268,7 +268,9 @@ public class DatasetVersion implements Serializable {
         for ( DatasetField dsf : datasetFields ) {
             dsf.setDatasetVersion(this);
         }
-        this.datasetFields = datasetFields;
+        this.datasetFields.clear();
+        this.datasetFields.addAll(datasetFields);
+        //this.datasetFields = datasetFields;
     }
     
     /**
@@ -1654,7 +1656,8 @@ public class DatasetVersion implements Serializable {
         
         return returnSet;
     }
-    
+
+
     public List<WorkflowComment> getWorkflowComments() {
         return workflowComments;
     }

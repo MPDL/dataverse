@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 
@@ -33,6 +34,9 @@ public class DOIDataCiteServiceBean extends AbstractGlobalIdServiceBean {
 
     @Autowired
     DOIDataCiteRegisterService doiDataCiteRegisterService;
+
+    @Autowired
+    Environment env;
 
     public DOIDataCiteServiceBean() {
     }
@@ -220,8 +224,8 @@ public class DOIDataCiteServiceBean extends AbstractGlobalIdServiceBean {
     	
     	//ToDo - incorporate into DataCiteRESTfulClient
         String baseUrl = systemConfig.getDataCiteRestApiUrlString();
-        String username = System.getProperty("doi.username");
-        String password = System.getProperty("doi.password");
+        String username = env.getProperty("doi.username");
+        String password = env.getProperty("doi.password");
         GlobalId doi = dvObject.getGlobalId();
         /**
          * Deletes the DOI from DataCite if it can. Returns 204 if PID was deleted

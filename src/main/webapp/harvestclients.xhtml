@@ -263,7 +263,7 @@
                                                         value="#{harvestingClientsPage.selectedDestinationDataverse}"
                                                         completeMethod="#{harvestingClientsPage.completeSelectedDataverse}"
                                                         var="destDV" styleClass="DropdownPopup" panelStyleClass="DropdownPopupPanel"
-                                                        itemLabel="#{destDV.alias}" itemValue="#{destDV}" converter="dataverseConverter">
+                                                        itemLabel="#{destDV.alias}" itemValue="#{destDV}" converter="#{dataverseConverter}">
                                             <p:column>
                                                 <h:outputText value="#{destDV.name}"/>
                                                 <h:outputText value=" (#{destDV.affiliation})" rendered="#{!empty destDV.affiliation}"/>

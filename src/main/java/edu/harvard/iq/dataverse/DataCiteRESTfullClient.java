@@ -169,6 +169,7 @@ public class DataCiteRESTfullClient implements Closeable {
         httpPost.setEntity(new StringEntity(metadata, "utf-8"));
         HttpResponse response = httpClient.execute(httpPost, context);
         String data = EntityUtils.toString(response.getEntity(), encoding);
+        logger.info(data);
         if (response.getStatusLine().getStatusCode() != 201) {
             String errMsg = "Response from postMetadata: " + response.getStatusLine().getStatusCode() + ", " + data;
             logger.log(Level.SEVERE, errMsg);

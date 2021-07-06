@@ -48,7 +48,7 @@
                                                         value="#{DashboardDatamovePage.selectedSourceDataset}"
                                                         completeMethod="#{DashboardDatamovePage.completeSelectedDataset}"
                                                         var="srcDS" styleClass="DropdownPopup" panelStyleClass="DropdownPopupPanel"
-                                                        itemLabel="#{srcDS.globalId}" itemValue="#{srcDS}" converter="datasetConverter">
+                                                        itemLabel="#{srcDS.globalId}" itemValue="#{srcDS}" converter="#{datasetConverter}">
                                             <p:column>
                                                 <h:outputText value="#{srcDS.globalId}"/>
                                             </p:column>
@@ -91,7 +91,7 @@
                                                         value="#{DashboardDatamovePage.selectedDestinationDataverse}"
                                                         completeMethod="#{DashboardDatamovePage.completeSelectedDataverse}"
                                                         var="destDV" styleClass="DropdownPopup" panelStyleClass="DropdownPopupPanel"
-                                                        itemLabel="#{destDV.alias}" itemValue="#{destDV}" converter="dataverseConverter">
+                                                        itemLabel="#{destDV.alias}" itemValue="#{destDV}" converter="#{dataverseConverter}">
                                             <p:column>
                                                 <h:outputText value="#{destDV.name}"/>
                                                 <h:outputText value=" (#{destDV.affiliation})" rendered="#{!empty destDV.affiliation}"/>

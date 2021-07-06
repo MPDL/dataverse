@@ -7,11 +7,15 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import edu.ucsb.nceas.ezid.EZIDException;
 import edu.ucsb.nceas.ezid.EZIDService;
 import edu.ucsb.nceas.ezid.EZIDServiceRequest;
+
+import javax.annotation.PostConstruct;
 
 /**
  *
@@ -29,12 +33,23 @@ public class DOIEZIdServiceBean extends AbstractGlobalIdServiceBean {
     private String USERNAME = "";
     private String PASSWORD = "";
 
+
+    @Autowired
+    Environment env;
+
     public DOIEZIdServiceBean() {
+
         logger.log(Level.FINE,"Constructor");
-        baseURLString = System.getProperty("doi.baseurlstring");
+
+    }
+
+    @PostConstruct
+    public void init()
+    {
+        baseURLString = env.getProperty("doi.baseurlstring");
         ezidService = new EZIDService(baseURLString);
-        USERNAME = System.getProperty("doi.username");
-        PASSWORD = System.getProperty("doi.password");
+        USERNAME = env.getProperty("doi.username");
+        PASSWORD = env.getProperty("doi.password");
         logger.log(Level.FINE, "Using baseURLString {0}", baseURLString);
         try {
             ezidService.login(USERNAME, PASSWORD);

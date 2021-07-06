@@ -30,7 +30,7 @@
     -->            
     </ui:remove>
     
-    <ui:param name="isFilePg" value="#{of:isInstance('edu.harvard.iq.dataverse.FilePage', bean)}"/>
+    <ui:param name="isFilePg" value="#{bean['class'].name eq 'edu.harvard.iq.dataverse.FilePage'}"/>
 
 
     <!-- Edit Options -->

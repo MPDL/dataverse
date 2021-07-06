@@ -23,8 +23,10 @@ import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 import edu.harvard.iq.dataverse.validation.PasswordValidatorServiceBean;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class PasswordResetServiceBean {
 
     private static final Logger logger = Logger.getLogger(PasswordResetServiceBean.class.getCanonicalName());

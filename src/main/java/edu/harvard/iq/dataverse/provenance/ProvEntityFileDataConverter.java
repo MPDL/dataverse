@@ -1,5 +1,7 @@
 package edu.harvard.iq.dataverse.provenance;
 
+import org.springframework.stereotype.Component;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -11,14 +13,15 @@ import javax.inject.Inject;
  * @author madunlap
  * To sort our entity objects in the provenance bundle dropdown
  */
-@FacesConverter("provEntityFileDataConverter")
+
+
+@FacesConverter(value = "provEntityFileDataConverter", managed = true)
 public class ProvEntityFileDataConverter implements Converter{
 
-    @Inject
-    ProvPopupFragmentBean provBean;
     
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
+        ProvPopupFragmentBean provBean = context.getApplication().evaluateExpressionGet(context, "#{provPopupFragmentBean}", ProvPopupFragmentBean.class);
         return provBean.getEntityByEntityName(value);
     }
 

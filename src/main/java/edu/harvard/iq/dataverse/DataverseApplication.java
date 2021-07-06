@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFac
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
@@ -18,18 +19,26 @@ import org.springframework.jms.support.converter.MessageType;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.annotation.PostConstruct;
 import javax.jms.ConnectionFactory;
 
 @SpringBootApplication
 @EnableScheduling
 @EnableBatchProcessing
 @EnableJms
+@PropertySource("classpath:dataverse.properties")
 public class DataverseApplication {
 	
 
 
 	public static void main(String[] args) {
 		SpringApplication.run(DataverseApplication.class, args);
+	}
+
+	@PostConstruct
+	protected void setSystemProperties()
+	{
+
 	}
 
 	@Bean

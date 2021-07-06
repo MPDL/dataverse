@@ -27,6 +27,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import edu.harvard.iq.dataverse.branding.BrandingUtil;
@@ -48,6 +49,9 @@ public class DOIDataCiteRegisterService {
 
     @Autowired
     DOIDataCiteServiceBean doiDataCiteServiceBean;
+
+    @Autowired
+    private Environment env;
     
         
     //A singleton since it, and the httpClient in it can be reused.
@@ -55,7 +59,7 @@ public class DOIDataCiteRegisterService {
     
     private DataCiteRESTfullClient getClient() throws IOException {
         if (client == null) {
-            client = new DataCiteRESTfullClient(System.getProperty("doi.baseurlstring"), System.getProperty("doi.username"), System.getProperty("doi.password"));
+            client = new DataCiteRESTfullClient(env.getProperty("doi.baseurlstring"), env.getProperty("doi.username"), env.getProperty("doi.password"));
         }
         return client;
     }

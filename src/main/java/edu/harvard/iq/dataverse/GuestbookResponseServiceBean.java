@@ -7,6 +7,7 @@ package edu.harvard.iq.dataverse;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,6 +38,7 @@ import edu.harvard.iq.dataverse.util.StringUtil;
  * @author skraffmiller
  */
 @Service
+@Transactional
 public class GuestbookResponseServiceBean {
     private static final Logger logger = Logger.getLogger(GuestbookResponseServiceBean.class.getCanonicalName());
     
@@ -892,19 +894,19 @@ public class GuestbookResponseServiceBean {
     public Long getCountGuestbookResponsesByDataFileId(Long dataFileId) {
         // datafile id is null, will return 0
         Query query = em.createNativeQuery("select count(o.id) from GuestbookResponse  o  where o.datafile_id  = " + dataFileId);
-        return (Long) query.getSingleResult();
+        return (Long) ((BigInteger)query.getSingleResult()).longValue();
     }
     
     public Long getCountGuestbookResponsesByDatasetId(Long datasetId) {
         // dataset id is null, will return 0        
         Query query = em.createNativeQuery("select count(o.id) from GuestbookResponse  o  where o.dataset_id  = " + datasetId);
-        return (Long) query.getSingleResult();
+        return (Long) ((BigInteger)query.getSingleResult()).longValue();
     }    
 
     public Long getCountOfAllGuestbookResponses() {
         // dataset id is null, will return 0        
         Query query = em.createNativeQuery("select count(o.id) from GuestbookResponse  o;");
-        return (Long) query.getSingleResult();
+        return ((BigInteger)query.getSingleResult()).longValue();
     }
     
     public List<GuestbookResponse> findByAuthenticatedUserId(AuthenticatedUser user) {

@@ -86,6 +86,7 @@ public class SpringServletInitializer
 
          */
 
+
         servletContext.setInitParameter(
           "contextConfigLocation", "edu.harvard.iq.dataverse");
 
@@ -95,22 +96,25 @@ public class SpringServletInitializer
         servletContext.addFilter("Blocker", apiBlockingFilter())
                 .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD),false, "/api/*");
         */
+        /*
         ServletRegistration.Dynamic reg = servletContext.addServlet("Faces Servlet", FacesServlet.class);
                 reg.addMapping("/faces/*", "*.faces", "*.jsf", "*.xhtml");
                 reg.setLoadOnStartup(1);
+
+         */
         //servletContext.addServlet("Push Servlet", PushServlet.class).addMapping("/primepush/*");
         servletContext.addServlet("OAI Servlet", oaiServlet()).addMapping("/oai");
         servletContext.addServlet("Citation Servlet",citationServlet()).addMapping("/citation");
         servletContext.addServlet("Homepage Servlet", homepageServlet()).addMapping("/Homepage");
 
         servletContext.setInitParameter("org.jboss.weld.context.conversation.lazy", "false");
-        servletContext.setInitParameter("javax.faces.PROJECT_STAGE", "Production");
+/*        servletContext.setInitParameter("javax.faces.PROJECT_STAGE", "Production");
         servletContext.setInitParameter("primefaces.THEME", "bootstrap");
         servletContext.setInitParameter("javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL", "true");
         servletContext.setInitParameter("javax.faces.FACELETS_SKIP_COMMENTS", "true");
         servletContext.setInitParameter("javax.faces.FACELETS_BUFFER_SIZE", "102400");
         servletContext.setInitParameter("javax.faces.FACELETS_REFRESH_PERIOD", "-1");
-        servletContext.setInitParameter("com.sun.faces.forceLoadConfiguration", Boolean.TRUE.toString());
+        servletContext.setInitParameter("com.sun.faces.forceLoadConfiguration", Boolean.TRUE.toString());*/
         servletContext.setInitParameter("config-impl", "edu.harvard.iq.dataverse.api.datadeposit.SwordConfigurationImpl");
         servletContext.setInitParameter("edu.harvard.iq.dataverse.api.datadeposit.SWORDv2ServiceDocumentServlet", "edu.harvard.iq.dataverse.api.datadeposit.SwordConfigurationImpl");
         servletContext.setInitParameter("config-impl", "edu.harvard.iq.dataverse.api.datadeposit.SwordConfigurationImpl");

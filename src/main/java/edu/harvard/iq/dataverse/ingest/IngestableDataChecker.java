@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang.builder.*;
 import org.apache.commons.io.IOUtils;
 
+
 /**
  * This is a virtually unchanged DVN v2-3 implementation by 
  * @author Akio Sone
@@ -40,6 +41,7 @@ import org.apache.commons.io.IOUtils;
  * @author Leonid Andreev
  * 
  */
+@SuppressWarnings("JAVA_MODULE_DOES_NOT_EXPORT_PACKAGE")
 public class IngestableDataChecker implements java.io.Serializable {
 
     /**
@@ -610,6 +612,7 @@ public class IngestableDataChecker implements java.io.Serializable {
         String readableFormatType = null;
         FileChannel srcChannel = null;
         FileInputStream inp = null;
+        MappedByteBuffer buff = null;
         try {
             int buffer_size = this.getBufferSize(fh);
             dbgLog.fine("buffer_size: " + buffer_size);
@@ -619,7 +622,7 @@ public class IngestableDataChecker implements java.io.Serializable {
             srcChannel = inp.getChannel();
 
             // create a read-only MappedByteBuffer
-            MappedByteBuffer buff = srcChannel.map(FileChannel.MapMode.READ_ONLY, 0, buffer_size);
+            buff = srcChannel.map(FileChannel.MapMode.READ_ONLY, 0, buffer_size);
 
             //this.printHexDump(buff, "hex dump of the byte-buffer");
 
@@ -680,8 +683,22 @@ public class IngestableDataChecker implements java.io.Serializable {
             dbgLog.fine("other io exception detected");
             ie.printStackTrace();
         } finally {
+
             IOUtils.closeQuietly(srcChannel);
             IOUtils.closeQuietly(inp);
+            //Workaround for windows, as windows locks the file when an MAppedByteBuffer is not garbage collected yet
+            try {
+                Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+                Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+                unsafeField.setAccessible(true);
+                Object unsafe = unsafeField.get(null);
+                Method invokeCleaner = unsafeClass.getMethod("invokeCleaner", ByteBuffer.class);
+                invokeCleaner.invoke(unsafe, buff);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
         }
         return readableFormatType;
     }

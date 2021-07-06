@@ -28,13 +28,14 @@ import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.JsfHelper;
 import edu.harvard.iq.dataverse.util.SessionUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
+import org.springframework.web.context.annotation.SessionScope;
 
 /**
  *
  * @author gdurand
  */
 @Named
-@SessionScoped
+@SessionScope
 public class DataverseSession implements Serializable{
     
     /* Note that on logout, variables must be cleared manually in DataverseHeaderFragment*/

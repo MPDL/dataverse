@@ -6,6 +6,8 @@
 
 package edu.harvard.iq.dataverse;
 
+import org.springframework.stereotype.Component;
+
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -16,7 +18,8 @@ import javax.inject.Inject;
  *
  * @author skraffmiller
  */
-@FacesConverter("templateConverter")
+
+@Component
 public class TemplateConverter implements Converter {
     
 	@Inject

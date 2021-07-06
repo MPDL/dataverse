@@ -23,6 +23,7 @@ import edu.harvard.hul.ois.jhove.App;
 import edu.harvard.hul.ois.jhove.JhoveBase;
 import edu.harvard.hul.ois.jhove.Module;
 import edu.harvard.hul.ois.jhove.RepInfo;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,6 +50,8 @@ public class JhoveFileType implements java.io.Serializable  {
     
     
     public static String getJhoveConfigFile() {
+        return JhoveFileType.class.getClassLoader().getResource("jhove.conf").getPath();
+        /*
         Properties p = System.getProperties();
         String domainRoot = p.getProperty("com.sun.aas.instanceRoot");
         if (domainRoot == null) {
@@ -56,6 +59,8 @@ public class JhoveFileType implements java.io.Serializable  {
             return null;
         }
         return domainRoot+File.separator+"config"+File.separator+"jhove.conf";
+        */
+
     }
     
     private static final int[] ORIGINAL_RELEASE_DATE = { 2013, 8, 30 };

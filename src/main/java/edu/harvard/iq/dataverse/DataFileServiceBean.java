@@ -1,6 +1,7 @@
 package edu.harvard.iq.dataverse;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -316,9 +317,9 @@ public class DataFileServiceBean implements java.io.Serializable {
     }
     
     public Long findCountByDatasetVersionId(Long datasetVersionId){
-        return (Long) em.createNativeQuery("select count(*)  from FileMetadata fmd "
+        return ((BigInteger)em.createNativeQuery("select count(*)  from FileMetadata fmd "
                 + " where fmd.datasetVersion_id = " + datasetVersionId
-                + ";").getSingleResult();
+                + ";").getSingleResult()).longValue();
     }
 
     public FileMetadata findFileMetadata(Long fileMetadataId) {

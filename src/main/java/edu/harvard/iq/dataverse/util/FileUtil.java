@@ -47,10 +47,7 @@ import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
@@ -579,12 +576,13 @@ public class FileUtil implements java.io.Serializable  {
     private static boolean isGraphMLFile(File file) {
         boolean isGraphML = false;
         logger.fine("begin isGraphMLFile()");
-        try{
-            FileReader fileReader = new FileReader(file);
+        XMLStreamReader xmlr = null;
+        try (FileReader fileReader = new FileReader(file)){
+            //FileReader fileReader = new FileReader(file);
             javax.xml.stream.XMLInputFactory xmlif = javax.xml.stream.XMLInputFactory.newInstance();
             xmlif.setProperty("javax.xml.stream.isCoalescing", java.lang.Boolean.TRUE);
 
-            XMLStreamReader xmlr = xmlif.createXMLStreamReader(fileReader);
+            xmlr = xmlif.createXMLStreamReader(fileReader);
             for (int event = xmlr.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlr.next()) {
                 if (event == XMLStreamConstants.START_ELEMENT) {
                     if (xmlr.getLocalName().equals("graphml")) {
@@ -598,11 +596,21 @@ public class FileUtil implements java.io.Serializable  {
                     break;
                 }
             }
+            xmlr.close();
         } catch(XMLStreamException e) {
             logger.fine("XML error - this is not a valid graphML file.");
             isGraphML = false;
         } catch(IOException e) {
             throw new EJBException(e);
+        }
+        finally {
+            if (xmlr !=null)
+            {
+                try {
+                    xmlr.close();
+                } catch (XMLStreamException e) {
+                }
+            }
         }
         logger.fine("end isGraphML()");
         return isGraphML;
@@ -1229,11 +1237,11 @@ public class FileUtil implements java.io.Serializable  {
             version.getDataset().getFiles().add(datafile);
         }
         if(storageIdentifier==null) {
-        generateStorageIdentifier(datafile);
-        if (!tempFile.renameTo(new File(getFilesTempDirectory() + "/" + datafile.getStorageIdentifier()))) {
-            return null;
-        }
-        } else {
+            generateStorageIdentifier(datafile);
+            if (!tempFile.renameTo(new File(getFilesTempDirectory() + "/" + datafile.getStorageIdentifier()))) {
+                return null;
+            }
+        }    else{
         	datafile.setStorageIdentifier(storageIdentifier);
         }
 

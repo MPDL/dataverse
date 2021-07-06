@@ -123,7 +123,7 @@
                                                     completeMethod="#{manageGroupsPage.completeRoleAssignee}"
                                                     var="roleAssignee"
                                                     styleClass="DropdownPopup" panelStyleClass="DropdownPopupPanel"
-                                                    itemLabel="#{roleAssignee.displayInfo.title}" itemValue="#{roleAssignee}" converter="roleAssigneeConverter">
+                                                    itemLabel="#{roleAssignee.displayInfo.title}" itemValue="#{roleAssignee}" converter="#{roleAssigneeConverter}">
                                         <p:column>
                                             <h:outputText value="#{roleAssignee.displayInfo.title}"/>
                                             <h:outputText value=" (#{roleAssignee.displayInfo.affiliation})" rendered="#{!empty roleAssignee.displayInfo.affiliation}"/>

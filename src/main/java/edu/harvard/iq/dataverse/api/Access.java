@@ -107,8 +107,10 @@ public class Access extends AbstractApiBean {
     FileDownloadServiceBean fileDownloadService; 
     @Inject
     AuxiliaryFileServiceBean auxiliaryFileService;
+    /*
     @Inject
     PermissionsWrapper permissionsWrapper;
+    */
     @Inject
     MakeDataCountLoggingServiceBean mdcLogService;
     

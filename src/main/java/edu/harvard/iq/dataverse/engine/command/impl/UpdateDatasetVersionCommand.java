@@ -115,10 +115,12 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
             validateOrDie(getDataset().getEditVersion(fmVarMet), isValidateLenient());
 
             final DatasetVersion editVersion = getDataset().getEditVersion(fmVarMet);
-            
+
             tidyUpFields(editVersion);
 
             // Merge the new version into out JPA context, if needed.
+            //TODO MH  Isn't it sufficient to merge the Dataset itself, which contains the dataset version
+            /*
             if (editVersion.getId() == null || editVersion.getId() == 0L) {
                 ctxt.em().persist(editVersion);
             } else {
@@ -130,6 +132,7 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
             		throw e;
             	}
             }
+            */
 
             for (DataFile dataFile : theDataset.getFiles()) {
                 if (dataFile.getCreateDate() == null) {

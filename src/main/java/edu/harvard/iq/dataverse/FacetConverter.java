@@ -5,6 +5,8 @@
  */
 package edu.harvard.iq.dataverse;
 
+import org.springframework.stereotype.Component;
+
 import javax.faces.annotation.ManagedProperty;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -16,7 +18,8 @@ import javax.inject.Inject;
  *
  * @author xyang
  */
-@FacesConverter("facetConverter")
+
+@Component
 public class FacetConverter implements Converter {
 
     //@Autowired

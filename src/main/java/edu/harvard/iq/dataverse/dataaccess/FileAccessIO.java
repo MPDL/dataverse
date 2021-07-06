@@ -104,8 +104,11 @@ public class FileAccessIO<T extends DvObject> extends StorageIO<T> {
                     throw new IOException ("Failed to open local file "+getStorageLocation());
                 }
 
+                /*
                 this.setInputStream(fin);
                 setChannel(fin.getChannel());
+
+                 */
                 this.setSize(getLocalFileSize());
 
                 if (dataFile.getContentType() != null
@@ -124,6 +127,7 @@ public class FileAccessIO<T extends DvObject> extends StorageIO<T> {
             	if (datasetPath != null && !Files.exists(datasetPath)) {
             		Files.createDirectories(datasetPath);
             	}
+            	/*
                 FileOutputStream fout = openLocalFileAsOutputStream();
 
                 if (fout == null) {
@@ -132,6 +136,8 @@ public class FileAccessIO<T extends DvObject> extends StorageIO<T> {
 
                 this.setOutputStream(fout);
                 setChannel(fout.getChannel());
+                */
+
                 if (!storageIdentifier.startsWith(this.driverId + "://")) {
                     dvObject.setStorageIdentifier(this.driverId + "://" + storageIdentifier);
                 }

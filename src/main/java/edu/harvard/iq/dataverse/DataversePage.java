@@ -102,8 +102,8 @@ public class DataversePage implements java.io.Serializable {
     @Inject
     SystemConfig systemConfig;
     @Inject DataverseRoleServiceBean dataverseRoleServiceBean;
-    @Inject
-    SearchIncludeFragment searchIncludeFragment;
+    //@Inject
+    //SearchIncludeFragment searchIncludeFragment;
     @Inject
     DataverseRequestServiceBean dvRequestService;
     @Inject

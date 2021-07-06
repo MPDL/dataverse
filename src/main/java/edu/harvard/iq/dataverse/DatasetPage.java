@@ -3499,6 +3499,7 @@ public class DatasetPage implements java.io.Serializable {
                         dataset = commandEngine.submit(cmd);
                         addFilesSuccess = true;
                     } catch (Exception ex) {
+                        logger.severe("Error while updating dataset version " + ex );
                         addFilesSuccess = false;
                     }
                     if (addFilesSuccess && dataset.getFiles().size() > 0) {

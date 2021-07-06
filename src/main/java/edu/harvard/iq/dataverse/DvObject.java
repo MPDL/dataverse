@@ -44,6 +44,9 @@ import javax.persistence.*;
 // in the child tables. (i.e., the id sequences will be "sparse" in the 3 
 // child tables). Tested, appears to be working properly. -- L.A. Nov. 4 2014
 @Inheritance(strategy=InheritanceType.JOINED)
+@DiscriminatorColumn(
+        discriminatorType = DiscriminatorType.STRING,
+        name = "dtype")
 @Table(indexes = {@Index(columnList="dtype")
 		, @Index(columnList="owner_id")
 		, @Index(columnList="creator_id")

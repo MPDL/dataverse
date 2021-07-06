@@ -86,10 +86,7 @@ public class ProvPopupFragmentBean extends AbstractApiBean implements java.io.Se
     DataverseRequestServiceBean dvRequestService;
     @Inject
     FilePage filePage;
-    @Inject
-    DatasetPage datasetPage;
-    @Inject
-    EditDatafilesPage datafilesPage;
+
     ProvInvestigator provUtil = ProvInvestigator.getInstance();
         
     public void handleFileUpload(FileUploadEvent event) throws IOException {

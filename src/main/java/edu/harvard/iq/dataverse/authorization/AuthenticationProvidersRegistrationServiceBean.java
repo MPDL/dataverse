@@ -16,6 +16,7 @@ import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,11 @@ import edu.harvard.iq.dataverse.authorization.providers.oauth2.OAuth2Authenticat
 import edu.harvard.iq.dataverse.authorization.providers.oauth2.oidc.OIDCAuthenticationProviderFactory;
 import edu.harvard.iq.dataverse.authorization.providers.shib.ShibAuthenticationProviderFactory;
 import edu.harvard.iq.dataverse.validation.PasswordValidatorServiceBean;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  *
@@ -45,6 +51,7 @@ import edu.harvard.iq.dataverse.validation.PasswordValidatorServiceBean;
  */
 
 @Service
+@Transactional
 public class AuthenticationProvidersRegistrationServiceBean {
 
     private static final Logger logger = Logger.getLogger(AuthenticationProvidersRegistrationServiceBean.class.getName());
@@ -60,6 +67,10 @@ public class AuthenticationProvidersRegistrationServiceBean {
     
     @Autowired
     AuthenticationServiceBean authenticationService;
+
+    @Autowired
+    @Qualifier("transactionManager")
+    protected PlatformTransactionManager txManager;
     
     /**
      * The maps below (the objects themselves) are "final", but the
@@ -93,35 +104,43 @@ public class AuthenticationProvidersRegistrationServiceBean {
     @PostConstruct
     @Lock(LockModeType.READ)
     public void startup() {
-        
-        // First, set up the factories
-        try {
-            // @todo: Instead of hard-coding the factories here, consider 
-            // using @AutoService - similiarly how we are using with the 
-            // metadata Exporter classes. (may not necessarily be possible, or 
-            // easy; hence "consider" -- L.A.)
-            registerProviderFactory( new BuiltinAuthenticationProviderFactory(builtinUserServiceBean, passwordValidatorService, authenticationService) );
-            registerProviderFactory( new ShibAuthenticationProviderFactory() );
-            registerProviderFactory( new OAuth2AuthenticationProviderFactory() );
-            registerProviderFactory( new OIDCAuthenticationProviderFactory() );
-        
-        } catch (AuthorizationSetupException ex) { 
-            logger.log(Level.SEVERE, "Exception setting up the authentication provider factories: " + ex.getMessage(), ex);
-        }
-        
-        // Now, load the providers.
-        em.createNamedQuery("AuthenticationProviderRow.findAllEnabled", AuthenticationProviderRow.class)
-                .getResultList().forEach((row) -> {
+
+        TransactionTemplate tmpl = new TransactionTemplate(txManager);
+        tmpl.execute(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                // First, set up the factories
+                try {
+                    // @todo: Instead of hard-coding the factories here, consider
+                    // using @AutoService - similiarly how we are using with the
+                    // metadata Exporter classes. (may not necessarily be possible, or
+                    // easy; hence "consider" -- L.A.)
+                    registerProviderFactory( new BuiltinAuthenticationProviderFactory(builtinUserServiceBean, passwordValidatorService, authenticationService) );
+                    registerProviderFactory( new ShibAuthenticationProviderFactory() );
+                    registerProviderFactory( new OAuth2AuthenticationProviderFactory() );
+                    registerProviderFactory( new OIDCAuthenticationProviderFactory() );
+
+                } catch (AuthorizationSetupException ex) {
+                    logger.log(Level.SEVERE, "Exception setting up the authentication provider factories: " + ex.getMessage(), ex);
+                }
+
+                // Now, load the providers.
+                em.createNamedQuery("AuthenticationProviderRow.findAllEnabled", AuthenticationProviderRow.class)
+                        .getResultList().forEach((row) -> {
                     try {
                         registerProvider( loadProvider(row) );
-                        
+
                     } catch ( AuthenticationProviderFactoryNotFoundException e ) {
                         logger.log(Level.SEVERE, "Cannot find authentication provider factory with alias '" + e.getFactoryAlias() + "'",e);
-                        
+
                     } catch (AuthorizationSetupException ex) {
                         logger.log(Level.SEVERE, "Exception setting up the authentication provider '" + row.getId() + "': " + ex.getMessage(), ex);
                     }
+                });
+            }
         });
+
+
     }
 
     @Lock(LockModeType.READ)
