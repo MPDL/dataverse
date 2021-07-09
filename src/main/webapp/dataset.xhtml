@@ -1673,6 +1673,7 @@
                     $(document).ready(function () {
                         popoverHTML('#{bundle.htmlAllowedTitle}', '#{bundle.htmlAllowedTags}');
                         summaryDescTruncation();
+                        bindAffiliationAutoComplete();
                     });
                     function summaryDescTruncation() {
                         // truncate summary description, contentTruncate function in dv_rebind_bootstrap_ui.js
@@ -1738,10 +1739,10 @@
                         }
                     }
 
-                    //Add autosuggest functionality for affiliations
-                    $(document).ready(function () {
+                    //function to bind an autosuggest for organization identifiers
+                    function bindAffiliationAutoComplete() {
                         $("input[data-fieldtype-name='authorAffiliation']").each(function () {
-                            $(this).autocomplete({
+                            let autocompleteWidget = $(this).autocomplete({
                                 source: function (request, response) {
                                     $.ajax({
                                         url: "http://localhost:8080/api/controlledvocabulary/grid",
@@ -1762,9 +1763,17 @@
 
                                 minLength: 2
 
-                            }).autocomplete("widget").wrap("<span class='jqueryui'></span>");
+                            }).autocomplete("widget");
+
+                            autocompleteWidget.wrap("<span class='jqueryui'></span>");
                         });
+                    }
+
+                    //Rebind autosuggest after ajax requests (+/- Buttons)
+                    $(document).on('pfAjaxComplete', function() {
+                        bindAffiliationAutoComplete();
                     });
+
 
                     //]]>
                 </script>
