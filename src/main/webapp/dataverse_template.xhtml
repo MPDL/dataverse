@@ -39,6 +39,10 @@
         <link type="text/css" rel="stylesheet" href="#{resource['css/fontcustom.css']}?version=#{systemConfig.getVersion()}" />
         <link type="text/css" rel="stylesheet" href="#{resource['css/socicon.css']}?version=#{systemConfig.getVersion()}" />
         <link type="text/css" rel="stylesheet" href="#{resource['css/structure.css']}?version=#{systemConfig.getVersion()}" />
+        <link type="text/css" rel="stylesheet" href="#{resource['js/jquery-ui/jquery-ui.min.css']}?version=#{systemConfig.getVersion()}" />
+        <link type="text/css" rel="stylesheet" href="#{resource['js/jquery-ui/jquery-ui.structure.min.css']}?version=#{systemConfig.getVersion()}" />
+        <link type="text/css" rel="stylesheet" href="#{resource['js/jquery-ui/jquery-ui.theme.min.css']}?version=#{systemConfig.getVersion()}" />
+
         <ui:fragment rendered="#{!widgetWrapper.widgetView}">
             <script>
                 // Break out of iframe
@@ -86,6 +90,7 @@
         <script defer="defer" src="#{resource['js/jquery.matchHeight.js']}?version=#{systemConfig.getVersion()}"></script>
         <script defer="defer" src="#{resource['js/jquery.sharrre.js']}?version=#{systemConfig.getVersion()}"></script>
         <script defer="defer" src="#{resource['js/clipboard.min.js']}?version=#{systemConfig.getVersion()}"></script>
+        <script defer="defer" src="#{resource['js/jquery-ui/jquery-ui.min.js']}?version=#{systemConfig.getVersion()}"></script>
         <ui:fragment rendered="#{systemConfig.isShibPassiveLoginEnabled()}">
             <script defer="defer" src="#{resource['js/shib/isPassive.js']}"></script>
         </ui:fragment>

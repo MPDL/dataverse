@@ -1736,7 +1736,36 @@
                         if (outcome ==='GuestbookRequired'){
                             PF('downloadPopup').show();
                         }
-                    }    
+                    }
+
+                    //Add autosuggest functionality for affiliations
+                    $(document).ready(function () {
+                        $("input[data-fieldtype-name='authorAffiliation']").each(function () {
+                            $(this).autocomplete({
+                                source: function (request, response) {
+                                    $.ajax({
+                                        url: "http://localhost:8080/api/controlledvocabulary/grid",
+                                        dataType: "json",
+                                        data: {
+                                            q: request.term
+                                        },
+                                        success: function (data) {
+                                            response($.map(data.response.docs, function (item) {
+                                                return {
+                                                    label: item['institutes.name'][0] + " (" + item['institutes.id'][0] + ")",
+                                                    value: item['institutes.name'][0]
+                                                };
+                                            }));
+                                        }
+                                    });
+                                },
+
+                                minLength: 2
+
+                            }).autocomplete("widget").wrap("<span class='jqueryui'></span>");
+                        });
+                    });
+
                     //]]>
                 </script>
             </ui:define>
