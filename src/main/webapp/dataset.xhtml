@@ -1745,7 +1745,7 @@
                             let autocompleteWidget = $(this).autocomplete({
                                 source: function (request, response) {
                                     $.ajax({
-                                        url: "http://localhost:8080/api/controlledvocabulary/grid",
+                                        url: "http://localhost:8080/api/controlledvocabulary/ror",
                                         dataType: "json",
                                         data: {
                                             q: request.term
@@ -1753,8 +1753,8 @@
                                         success: function (data) {
                                             response($.map(data.response.docs, function (item) {
                                                 return {
-                                                    label: item['institutes.name'][0] + " (" + item['institutes.id'][0] + ")",
-                                                    value: item['institutes.name'][0]
+                                                    label: item['name'][0] + " (" + item['id'] + ")",
+                                                    value: item['name'][0]
                                                 };
                                             }));
                                         }
@@ -1765,6 +1765,7 @@
 
                             }).autocomplete("widget");
 
+                            //wrap the suggest list into a span to enable CSS class scoping, otherwise jqueryui css conflicts with primefaces css
                             autocompleteWidget.wrap("<span class='jqueryui'></span>");
                         });
                     }

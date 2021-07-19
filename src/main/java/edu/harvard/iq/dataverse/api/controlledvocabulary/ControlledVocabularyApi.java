@@ -36,18 +36,19 @@ public class ControlledVocabularyApi extends AbstractApiBean {
     }
 
     @GET
-    @Path("grid")
+    @Path("ror")
     public Response queryGridData(@QueryParam("q") String queryString) throws Exception
     {
+        logger.info(queryString);
         try {
             final StringBuilder sbb = new StringBuilder();
-            sbb.append("institutes.autosuggest:(");
+            sbb.append("autosuggest:(");
             sbb.append(queryString);
             sbb.append(")");
 
             final SolrQuery query = new SolrQuery(sbb.toString());
-            query.addField("institutes.id");
-            query.addField("institutes.name");
+            query.addField("id");
+            query.addField("name");
             query.setParam("q.op","AND");
             query.setRows(20);
 
@@ -57,7 +58,7 @@ public class ControlledVocabularyApi extends AbstractApiBean {
             rawJsonResponseParser.setWriterType("json");
             req.setResponseParser(rawJsonResponseParser);
 
-            NamedList<Object> resp = solrClient.request(req, "griddata");
+            NamedList<Object> resp = solrClient.request(req, "rordata");
             String jsonResponse = (String) resp.get("response");
 
             return Response.ok( jsonResponse )
