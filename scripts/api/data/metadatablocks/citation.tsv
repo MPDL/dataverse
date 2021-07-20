@@ -24,7 +24,7 @@
 	grantNumber	Grant Information	Grant Information		none	46	:	FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	https://schema.org/sponsor
 	grantNumberAgency	Grant Agency	Grant Number Agency		text	47	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	grantNumber	citation
 	grantNumberValue	Grant Number	The grant or contract number of the project that  sponsored the effort.		text	48	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	grantNumber	citation
-	studyType	Study type			text	62	#VALUE	TRUE	FALSE	TRUE	TRUE	TRUE	FALSE		citation	
+	studyType	Study type			text	62	#VALUE	TRUE	TRUE	TRUE	TRUE	TRUE	FALSE		citation	
 	geolocation	Geolocation			none	63		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	
 	geolocationLatitude	Latitude			text	64	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	geolocation	citation	
 	geolocationLongitude	Longitude			text	65	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	geolocation	citation	
@@ -231,3 +231,10 @@
 	language	Zhuang, Chuang		183											
 	language	Zulu		184	zul
 	language	Not applicable		185											
+	studyType	observational		0
+	studyType	experimental		1
+	studyType	simulation		2
+	studyType	derived		3
+	studyType	survey		4
+	studyType	other		5
+
