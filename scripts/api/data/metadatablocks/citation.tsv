@@ -4,10 +4,10 @@
 	title	Title	Full title by which the Dataset is known.	Enter title...	text	0		TRUE	FALSE	FALSE	FALSE	TRUE	TRUE		citation	http://purl.org/dc/terms/title
 	author	Author	The person(s), corporate body(ies), or agency(ies) responsible for creating the work.		none	7		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation	http://purl.org/dc/terms/creator
 	authorName	Name	The author's Family Name, Given Name or the name of the organization responsible for this Dataset.	FamilyName, GivenName or Organization	text	8	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	TRUE	author	citation
-	authorAffiliation	Affiliation	The organization with which the author is affiliated.		text	9	(#VALUE)	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation
+	authorAffiliation	Organization	The organization with which the author is affiliated.		text	9	(#VALUE)	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation
 	authorAffiliationGridId	GRID			text	10	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
 	authorAffiliationDepartment	Department/Group			text	11	(#VALUE)	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation	
-	authorIdentifier	Identifier	Uniquely identifies an individual author or organization, according to various schemes.		text	11	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	http://purl.org/spar/datacite/AgentIdentifier
+	authorIdentifier	ORCID	Uniquely identifies an individual author or organization, according to various schemes.		text	11	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	http://purl.org/spar/datacite/AgentIdentifier
 	datasetContact	Contact	The contact(s) for this Dataset.		none	12		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation
 	datasetContactEmail	E-mail	The e-mail address(es) of the contact(s) for the Dataset. This will not be displayed.		email	15	#EMAIL	FALSE	FALSE	FALSE	FALSE	TRUE	TRUE	datasetContact	citation
 	dsDescription	Description	A summary describing the purpose, nature, and scope of the Dataset.		none	16		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation	
@@ -18,7 +18,7 @@
 	keywordVocabulary	Vocabulary	For the specification of the keyword controlled vocabulary in use, such as LCSH, MeSH, or others.		text	22	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	keyword	citation
 	keywordVocabularyURI	Vocabulary URL	Keyword vocabulary URL points to the web presence that describes the keyword vocabulary, if appropriate. Enter an absolute URL where the keyword vocabulary web site is found, such as http://www.my.org.	Enter full URL, starting with http://	url	23	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	keyword	citation
 	publication	Related Publication	Publications that use the data from this Dataset. The full list of Related Publications will be displayed on the metadata tab.		none	28		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/isReferencedBy
-	publicationCitation	Citation	The full bibliographic citation for this related publication.		textbox	29	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	http://purl.org/dc/terms/bibliographicCitation
+	publicationCitation	Title	The full bibliographic citation for this related publication.		textbox	29	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	http://purl.org/dc/terms/bibliographicCitation
 	publicationURL	URL	Link to the publication web page (e.g., journal article page, archive record page, or other).	Enter full URL, starting with http://	url	32	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	publication	citation	https://schema.org/distribution
 	language	Language	Language of the Dataset		text	34		TRUE	TRUE	TRUE	TRUE	FALSE	FALSE		citation	http://purl.org/dc/terms/language
 	grantNumber	Grant Information	Grant Information		none	46	:	FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	https://schema.org/sponsor
