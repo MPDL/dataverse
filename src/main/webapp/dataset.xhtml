@@ -1745,7 +1745,7 @@
                             let autocompleteWidget = $(this).autocomplete({
                                 source: function (request, response) {
                                     $.ajax({
-                                        url: "http://localhost:8080/api/controlledvocabulary/ror",
+                                        url: "/api/controlledvocabulary/ror",
                                         dataType: "json",
                                         data: {
                                             q: request.term

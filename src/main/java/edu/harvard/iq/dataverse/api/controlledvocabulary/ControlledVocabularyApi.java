@@ -37,9 +37,8 @@ public class ControlledVocabularyApi extends AbstractApiBean {
 
     @GET
     @Path("ror")
-    public Response queryGridData(@QueryParam("q") String queryString) throws Exception
+    public Response queryRorData(@QueryParam("q") String queryString) throws Exception
     {
-        logger.info(queryString);
         try {
             final StringBuilder sbb = new StringBuilder();
             sbb.append("autosuggest:(");
