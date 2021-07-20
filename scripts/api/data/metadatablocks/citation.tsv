@@ -5,6 +5,8 @@
 	author	Author	The person(s), corporate body(ies), or agency(ies) responsible for creating the work.		none	7		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation	http://purl.org/dc/terms/creator
 	authorName	Name	The author's Family Name, Given Name or the name of the organization responsible for this Dataset.	FamilyName, GivenName or Organization	text	8	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	TRUE	author	citation
 	authorAffiliation	Affiliation	The organization with which the author is affiliated.		text	9	(#VALUE)	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation
+	authorAffiliationGridId	GRID			text	10	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
+	authorAffiliationDepartment	Department/Group			text	11	(#VALUE)	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation	
 	authorIdentifier	Identifier	Uniquely identifies an individual author or organization, according to various schemes.		text	11	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	http://purl.org/spar/datacite/AgentIdentifier
 	datasetContact	Contact	The contact(s) for this Dataset.		none	12		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation
 	datasetContactEmail	E-mail	The e-mail address(es) of the contact(s) for the Dataset. This will not be displayed.		email	15	#EMAIL	FALSE	FALSE	FALSE	FALSE	TRUE	TRUE	datasetContact	citation
@@ -22,6 +24,11 @@
 	grantNumber	Grant Information	Grant Information		none	46	:	FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	https://schema.org/sponsor
 	grantNumberAgency	Grant Agency	Grant Number Agency		text	47	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	grantNumber	citation
 	grantNumberValue	Grant Number	The grant or contract number of the project that  sponsored the effort.		text	48	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	grantNumber	citation
+	studyType	Study type			text	62	#VALUE	TRUE	FALSE	TRUE	TRUE	TRUE	FALSE		citation	
+	geolocation	Geolocation			none	63		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	
+	geolocationLatitude	Latitude			text	64	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	geolocation	citation	
+	geolocationLongitude	Longitude			text	65	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	geolocation	citation	
+	geolocationDescription	Description			textbox	66	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	
 	relatedDatasets	Related Datasets	Any Datasets that are related to this Dataset, such as previous research on this subject.		textbox	72		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	http://purl.org/dc/terms/relation
 #controlledVocabulary	DatasetField	Value	identifier	displayOrder
 	subject	Agricultural Sciences	D01	0											
