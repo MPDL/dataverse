@@ -19,17 +19,17 @@
 	keywordVocabularyURI	Vocabulary URL	Keyword vocabulary URL points to the web presence that describes the keyword vocabulary, if appropriate. Enter an absolute URL where the keyword vocabulary web site is found, such as http://www.my.org.	Enter full URL, starting with http://	url	23	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	keyword	citation
 	publication	Related Publication	Publications that use the data from this Dataset. The full list of Related Publications will be displayed on the metadata tab.		none	28		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/isReferencedBy
 	publicationCitation	Title	The full bibliographic citation for this related publication.		textbox	29	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	http://purl.org/dc/terms/bibliographicCitation
-	publicationURL	URL	Link to the publication web page (e.g., journal article page, archive record page, or other).	Enter full URL, starting with http://	url	32	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	publication	citation	https://schema.org/distribution
-	language	Language	Language of the Dataset		text	34		TRUE	TRUE	TRUE	TRUE	FALSE	FALSE		citation	http://purl.org/dc/terms/language
-	grantNumber	Grant Information	Grant Information		none	46	:	FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	https://schema.org/sponsor
-	grantNumberAgency	Grant Agency	Grant Number Agency		text	47	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	grantNumber	citation
-	grantNumberValue	Grant Number	The grant or contract number of the project that  sponsored the effort.		text	48	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	grantNumber	citation
+	publicationURL	URL	Link to the publication web page (e.g., journal article page, archive record page, or other).	Enter full URL, starting with http://	url	32	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	https://schema.org/distribution
+	language	Language	Language of the Dataset		text	34		TRUE	TRUE	TRUE	TRUE	TRUE	FALSE		citation	http://purl.org/dc/terms/language
+	grantNumber	Grant Information	Grant Information		none	46	:	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	https://schema.org/sponsor
+	grantNumberAgency	Grant Agency	Grant Number Agency		text	47	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	grantNumber	citation
+	grantNumberValue	Grant Number	The grant or contract number of the project that  sponsored the effort.		text	48	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	grantNumber	citation
 	studyType	Study type			text	62	#VALUE	TRUE	TRUE	TRUE	TRUE	TRUE	FALSE		citation	
 	geolocation	Geolocation			none	63		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	
 	geolocationLatitude	Latitude			text	64	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	geolocation	citation	
 	geolocationLongitude	Longitude			text	65	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	geolocation	citation	
 	geolocationDescription	Description			textbox	66	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	
-	relatedDatasets	Related Datasets	Any Datasets that are related to this Dataset, such as previous research on this subject.		textbox	72		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	http://purl.org/dc/terms/relation
+	relatedDatasets	Related Datasets	Any Datasets that are related to this Dataset, such as previous research on this subject.		textbox	72		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/relation
 #controlledVocabulary	DatasetField	Value	identifier	displayOrder
 	subject	Agricultural Sciences	D01	0											
 	subject	Arts and Humanities	D0	1											
