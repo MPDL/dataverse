@@ -29,6 +29,9 @@
 	geolocationLatitude	Latitude			text	64	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	geolocation	citation	
 	geolocationLongitude	Longitude			text	65	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	geolocation	citation	
 	geolocationDescription	Description			textbox	66	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	
+	software	Software	Information about the software used to generate the Dataset.		none	68	,	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	https://www.w3.org/TR/prov-o/#wasGeneratedBy
+	softwareName	Name	Name of software used to generate the Dataset.		text	69	#VALUE	FALSE	TRUE	FALSE	FALSE	TRUE	FALSE	software	citation
+	softwareVersion	Version	Version of the software used to generate the Dataset.		text	70	#NAME: #VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	software	citation
 	relatedDatasets	Related Datasets	Any Datasets that are related to this Dataset, such as previous research on this subject.		textbox	72		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/relation
 #controlledVocabulary	DatasetField	Value	identifier	displayOrder
 	subject	Agricultural Sciences	D01	0											
