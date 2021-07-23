@@ -272,7 +272,7 @@ public class TermsOfUseAndAccess implements Serializable {
     
         
     public enum License {
-        NONE, CC0
+        NONE, CC0, CCBY
     }
     
         /**
