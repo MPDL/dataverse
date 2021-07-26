@@ -13,15 +13,11 @@
 	authorAffiliation	Organization	The organization with which the author is affiliated.		text	9	(#VALUE)	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation
 	authorAffiliationId	ROR ID			text	10	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
 	authorAffiliationDepartment	Department/Group			text	11	(#VALUE)	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation	
-	authorIdentifierScheme	Identifier Scheme	Name of the identifier scheme (ORCID, ISNI).		text	12	- #VALUE:	FALSE	TRUE	FALSE	FALSE	TRUE	FALSE	author	citation	http://purl.org/spar/datacite/AgentIdentifierScheme
 	authorIdentifier	ORCID	Uniquely identifies an individual author or organization, according to various schemes.		text	13	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	http://purl.org/spar/datacite/AgentIdentifier
 	datasetContact	Contact	The contact(s) for this Dataset.		none	14		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation
-	datasetContactName	Name	The contact's Family Name, Given Name or the name of the organization.	FamilyName, GivenName or Organization	text	15	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	datasetContact	citation
-	datasetContactAffiliation	Affiliation	The organization with which the contact is affiliated.		text	16	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	datasetContact	citation
 	datasetContactEmail	E-mail	The e-mail address(es) of the contact(s) for the Dataset. This will not be displayed.		email	17	#EMAIL	FALSE	FALSE	FALSE	FALSE	TRUE	TRUE	datasetContact	citation
 	dsDescription	Description	A summary describing the purpose, nature, and scope of the Dataset.		none	18		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation	
 	dsDescriptionValue	Text	A summary describing the purpose, nature, and scope of the Dataset.		textbox	19	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	TRUE	dsDescription	citation
-	dsDescriptionDate	Date	In cases where a Dataset contains more than one description (for example, one might be supplied by the data producer and another prepared by the data repository where the data are deposited), the date attribute is used to distinguish between the two descriptions. The date attribute follows the ISO convention of YYYY-MM-DD.	YYYY-MM-DD	date	20	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	dsDescription	citation
 	subject	Subject	Domain-specific Subject Categories that are topically relevant to the Dataset.		text	21		TRUE	TRUE	TRUE	TRUE	TRUE	TRUE		citation	http://purl.org/dc/terms/subject
 	keyword	Keyword	Key terms that describe important aspects of the Dataset.		none	22		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation
 	keywordValue	Term	Key terms that describe important aspects of the Dataset. Can be used for building keyword indexes and for classification and retrieval purposes. A controlled vocabulary can be employed. The vocab attribute is provided for specification of the controlled vocabulary in use, such as LCSH, MeSH, or others. The vocabURI attribute specifies the location for the full controlled vocabulary.		text	23	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	keyword	citation
@@ -33,8 +29,6 @@
 	topicClassVocabURI	Vocabulary URL	Specifies the URL location for the full controlled vocabulary.	Enter full URL, starting with http://	url	29	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	topicClassification	citation
 	publication	Related Publication	Publications that use the data from this Dataset. The full list of Related Publications will be displayed on the metadata tab.		none	30		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/isReferencedBy
 	publicationCitation	Title	The full bibliographic citation for this related publication.		textbox	31	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	http://purl.org/dc/terms/bibliographicCitation
-	publicationIDType	ID Type	The type of digital identifier used for this publication (e.g., Digital Object Identifier (DOI)).		text	32	#VALUE: 	TRUE	TRUE	FALSE	FALSE	TRUE	FALSE	publication	citation	http://purl.org/spar/datacite/ResourceIdentifierScheme
-	publicationIDNumber	ID Number	The identifier for the selected ID type.		text	33	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	http://purl.org/spar/datacite/ResourceIdentifier
 	publicationURL	URL	Link to the publication web page (e.g., journal article page, archive record page, or other).	Enter full URL, starting with http://	url	34	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	https://schema.org/distribution
 	notesText	Notes	Additional important information about the Dataset.		textbox	35		FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		citation
 	language	Language	Language of the Dataset		text	36		TRUE	TRUE	TRUE	TRUE	TRUE	FALSE		citation	http://purl.org/dc/terms/language
