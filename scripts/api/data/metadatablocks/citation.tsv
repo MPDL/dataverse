@@ -33,7 +33,7 @@
 	notesText	Notes	Additional important information about the Dataset.		textbox	35		FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		citation
 	language	Language	Language of the Dataset		text	36		TRUE	TRUE	TRUE	TRUE	TRUE	FALSE		citation	http://purl.org/dc/terms/language
 	producer	Producer	Person or organization with the financial or administrative responsibility over this Dataset		none	37		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation
-	producerName	Name	Producer name	FamilyName, GivenName or Organization	text	38	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	TRUE	producer	citation
+	producerName	Name	Producer name	FamilyName, GivenName or Organization	text	38	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	producer	citation
 	producerAffiliation	Affiliation	The organization with which the producer is affiliated.		text	39	(#VALUE)	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	producer	citation
 	producerAbbreviation	Abbreviation	The abbreviation by which the producer is commonly known. (ex. IQSS, ICPSR)		text	40	(#VALUE)	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	producer	citation
 	producerURL	URL	Producer URL points to the producer's web presence, if appropriate. Enter an absolute URL where the producer's web site is found, such as http://www.my.org.  	Enter full URL, starting with http://	url	41	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	producer	citation
