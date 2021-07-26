@@ -272,7 +272,7 @@ public class TermsOfUseAndAccess implements Serializable {
     
     // TODO Vila
     public enum License {
-        NONE, CC0, CCBY, CCBYSA
+        NONE, CC0, CCBY, CCBYSA, PDDL, ODCBY, ODBL
     }
     
         /**
