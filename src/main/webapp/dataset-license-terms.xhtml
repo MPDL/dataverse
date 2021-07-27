@@ -43,15 +43,6 @@
                                </ui:fragment>
                                <ui:fragment rendered="#{!empty editMode}">
                                    <p class="help-block"><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.description']}" escape="false"/></p>
-                                   <!--
-                                   <p:selectOneRadio id="options" value="#{termsOfUseAndAccess.license}">
-                                       <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.notCCO']}" itemValue="NONE" />
-                                       <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.CCBY']}" itemValue="CCBY" />
-                                       <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.CCBYSA']}" itemValue="CCBYSA" />
-                                       <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.CCO']}" itemValue="CC0" />
-                                       <p:ajax update="touFragment" oncomplete="javascript:bind_bsui_components();" />
-                                   </p:selectOneRadio>
-                                   -->
                                    <div class="col-sm-8">
                                        <p:selectOneListbox id="options" value="#{termsOfUseAndAccess.license}" style="width:100%;">
                                            <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.notCCO']}" itemValue="NONE" />
@@ -67,30 +58,32 @@
                                        </p:selectOneListbox>
                                    </div>
                                </ui:fragment>
-                               <ui:fragment rendered="#{termsOfUseAndAccess.license == 'CCBY'}">
-                                   <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.CCBY.txt']}" escape="false"/> <img src="/resources/images/ccby.png" alt="#{bundle['file.ccby.icon.alttxt']}" class="waiver-CC0-inline"/></p>
-                               </ui:fragment>
-                               <ui:fragment rendered="#{termsOfUseAndAccess.license == 'CCBYSA'}">
-                                   <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.CCBYSA.txt']}" escape="false"/> <img src="/resources/images/ccbysa.png" alt="#{bundle['file.ccbysa.icon.alttxt']}" class="waiver-CC0-inline"/></p>
-                               </ui:fragment>
-                               <ui:fragment rendered="#{termsOfUseAndAccess.license == 'CC0'}">
-                                   <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.txt']}" escape="false"/> <img src="/resources/images/cc0.png" alt="#{bundle['file.cc0.icon.alttxt']}" class="waiver-CC0-inline"/></p>
-                               </ui:fragment>
-                               <ui:fragment rendered="#{termsOfUseAndAccess.license == 'PDDL'}">
-                                   <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.PDDL.txt']}" escape="false"/> <img src="/resources/images/pddl.png" alt="#{bundle['file.pddl.icon.alttxt']}" class="waiver-CC0-inline"/></p>
-                               </ui:fragment>
-                               <ui:fragment rendered="#{termsOfUseAndAccess.license == 'ODCBY'}">
-                                   <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.ODCBY.txt']}" escape="false"/> <img src="/resources/images/odcby.png" alt="#{bundle['file.odcby.icon.alttxt']}" class="waiver-CC0-inline"/></p>
-                               </ui:fragment>
-                               <ui:fragment rendered="#{termsOfUseAndAccess.license == 'ODBL'}">
-                                   <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.ODBL.txt']}" escape="false"/> <img src="/resources/images/odbl.png" alt="#{bundle['file.odbl.icon.alttxt']}" class="waiver-CC0-inline"/></p>
-                               </ui:fragment>
-                               <ui:fragment rendered="#{termsOfUseAndAccess.license == 'DLGA'}">
-                                   <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.DLGA.txt']}" escape="false"/> <img src="/resources/images/dlg.png" alt="#{bundle['file.dlga.icon.alttxt']}" class="waiver-CC0-inline"/></p>
-                               </ui:fragment>
-                               <ui:fragment rendered="#{termsOfUseAndAccess.license == 'DLGZ'}">
-                                   <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.DLGZ.txt']}" escape="false"/> <img src="/resources/images/dlg.png" alt="#{bundle['file.dlgz.icon.alttxt']}" class="waiver-CC0-inline"/></p>
-                               </ui:fragment>
+                               <div class="text-right">
+                                   <ui:fragment rendered="#{termsOfUseAndAccess.license == 'CCBY'}">
+                                       <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.CCBY.txt']}" escape="false"/></p> <p><img src="/resources/images/ccby.png" alt="#{bundle['file.ccby.icon.alttxt']}" class="waiver-CC0-inline"/></p>
+                                   </ui:fragment>
+                                   <ui:fragment rendered="#{termsOfUseAndAccess.license == 'CCBYSA'}">
+                                       <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.CCBYSA.txt']}" escape="false"/></p> <p><img src="/resources/images/ccbysa.png" alt="#{bundle['file.ccbysa.icon.alttxt']}" class="waiver-CC0-inline"/></p>
+                                   </ui:fragment>
+                                   <ui:fragment rendered="#{termsOfUseAndAccess.license == 'CC0'}">
+                                       <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.txt']}" escape="false"/></p> <p><img src="/resources/images/cc0.png" alt="#{bundle['file.cc0.icon.alttxt']}" class="waiver-CC0-inline"/></p>
+                                   </ui:fragment>
+                                   <ui:fragment rendered="#{termsOfUseAndAccess.license == 'PDDL'}">
+                                       <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.PDDL.txt']}" escape="false"/></p> <p><img src="/resources/images/odc.png" alt="#{bundle['file.pddl.icon.alttxt']}" class="waiver-CC0-inline"/></p>
+                                   </ui:fragment>
+                                   <ui:fragment rendered="#{termsOfUseAndAccess.license == 'ODCBY'}">
+                                       <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.ODCBY.txt']}" escape="false"/></p> <p><img src="/resources/images/odc.png" alt="#{bundle['file.odcby.icon.alttxt']}" class="waiver-CC0-inline"/></p>
+                                   </ui:fragment>
+                                   <ui:fragment rendered="#{termsOfUseAndAccess.license == 'ODBL'}">
+                                       <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.ODBL.txt']}" escape="false"/></p> <p><img src="/resources/images/odc.png" alt="#{bundle['file.odbl.icon.alttxt']}" class="waiver-CC0-inline"/></p>
+                                   </ui:fragment>
+                                   <ui:fragment rendered="#{termsOfUseAndAccess.license == 'DLGA'}">
+                                       <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.DLGA.txt']}" escape="false"/></p> <p><img src="/resources/images/dlg.png" alt="#{bundle['file.dlga.icon.alttxt']}" class="waiver-CC0-inline"/></p>
+                                   </ui:fragment>
+                                   <ui:fragment rendered="#{termsOfUseAndAccess.license == 'DLGZ'}">
+                                       <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.DLGZ.txt']}" escape="false"/></p> <p><img src="/resources/images/dlg.png" alt="#{bundle['file.dlgz.icon.alttxt']}" class="waiver-CC0-inline"/></p>
+                                   </ui:fragment>
+                               </div>
                            </div>
                        </div>
                        <div class="form-group" jsf:rendered="#{termsOfUseAndAccess.license == 'NONE'}">
