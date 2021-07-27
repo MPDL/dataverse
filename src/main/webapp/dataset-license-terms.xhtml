@@ -61,6 +61,8 @@
                                            <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.PDDL']}" itemValue="PDDL" />
                                            <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.ODCBY']}" itemValue="ODCBY" />
                                            <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.ODBL']}" itemValue="ODBL" />
+                                           <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.DLGA']}" itemValue="DLGA" />
+                                           <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.DLGZ']}" itemValue="DLGZ" />
                                            <p:ajax update="touFragment" oncomplete="javascript:bind_bsui_components();" />
                                        </p:selectOneListbox>
                                    </div>
@@ -82,6 +84,12 @@
                                </ui:fragment>
                                <ui:fragment rendered="#{termsOfUseAndAccess.license == 'ODBL'}">
                                    <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.ODBL.txt']}" escape="false"/> <img src="/resources/images/odbl.png" alt="#{bundle['file.odbl.icon.alttxt']}" class="waiver-CC0-inline"/></p>
+                               </ui:fragment>
+                               <ui:fragment rendered="#{termsOfUseAndAccess.license == 'DLGA'}">
+                                   <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.DLGA.txt']}" escape="false"/> <img src="/resources/images/dlg.png" alt="#{bundle['file.dlga.icon.alttxt']}" class="waiver-CC0-inline"/></p>
+                               </ui:fragment>
+                               <ui:fragment rendered="#{termsOfUseAndAccess.license == 'DLGZ'}">
+                                   <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.DLGZ.txt']}" escape="false"/> <img src="/resources/images/dlg.png" alt="#{bundle['file.dlgz.icon.alttxt']}" class="waiver-CC0-inline"/></p>
                                </ui:fragment>
                            </div>
                        </div>
