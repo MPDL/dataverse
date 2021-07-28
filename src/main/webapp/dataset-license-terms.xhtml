@@ -43,8 +43,7 @@
                                </ui:fragment>
                                <ui:fragment rendered="#{!empty editMode}">
                                    <p class="help-block"><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.description']}" escape="false"/></p>
-                                   <div class="col-sm-8">
-                                       <p:selectOneListbox id="options" value="#{termsOfUseAndAccess.license}" style="width:100%;">
+                                       <p:selectOneListbox id="options" value="#{termsOfUseAndAccess.license}" styleClass="col-sm-8">
                                            <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.notCCO']}" itemValue="NONE" />
                                            <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.CCBY']}" itemValue="CCBY" />
                                            <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.CCBYSA']}" itemValue="CCBYSA" />
@@ -56,7 +55,6 @@
                                            <f:selectItem itemLabel="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.select.DLGZ']}" itemValue="DLGZ" />
                                            <p:ajax update="touFragment" oncomplete="javascript:bind_bsui_components();" />
                                        </p:selectOneListbox>
-                                   </div>
                                </ui:fragment>
                                <div class="text-right">
                                    <ui:fragment rendered="#{termsOfUseAndAccess.license == 'CCBY'}">
