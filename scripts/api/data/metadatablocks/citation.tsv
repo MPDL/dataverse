@@ -10,10 +10,10 @@
 	otherIdValue	Identifier	Other identifier that corresponds to this Dataset.		text	6	#VALUE	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	otherId	citation
 	author	Author	The person(s), corporate body(ies), or agency(ies) responsible for creating the work.		none	7		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation	http://purl.org/dc/terms/creator
 	authorName	Name	The author's Family Name, Given Name or the name of the organization responsible for this Dataset.	FamilyName, GivenName or Organization	text	8	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	TRUE	author	citation
-	authorAffiliation	Organization	The organization with which the author is affiliated.		text	9	(#VALUE)	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation
-	authorAffiliationId	ROR ID			text	10	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
-	authorAffiliationDepartment	Department/Group			text	11	(#VALUE)	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation	
-	authorIdentifier	ORCID	Uniquely identifies an individual author or organization, according to various schemes.		text	13	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	http://purl.org/spar/datacite/AgentIdentifier
+	authorAffiliation	Organization	The organization with which the author is affiliated.		text	10	(#VALUE)	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation
+	authorAffiliationId	ROR ID			text	11	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
+	authorAffiliationDepartment	Department/Group			text	12	(#VALUE)	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation	
+	authorIdentifier	ORCID	Uniquely identifies an individual author or organization, according to various schemes.		text	9	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	http://purl.org/spar/datacite/AgentIdentifier
 	datasetContact	Contact	The contact(s) for this Dataset.		none	14		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation
 	datasetContactEmail	E-mail	The e-mail address(es) of the contact(s) for the Dataset. This will not be displayed.		email	17	#EMAIL	FALSE	FALSE	FALSE	FALSE	TRUE	TRUE	datasetContact	citation
 	dsDescription	Description	A summary describing the purpose, nature, and scope of the Dataset.		none	18		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation	
@@ -27,7 +27,7 @@
 	topicClassValue	Term	Topic or Subject term that is relevant to this Dataset.		text	27	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	topicClassification	citation
 	topicClassVocab	Vocabulary	Provided for specification of the controlled vocabulary in use, e.g., LCSH, MeSH, etc.		text	28	(#VALUE)	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	topicClassification	citation
 	topicClassVocabURI	Vocabulary URL	Specifies the URL location for the full controlled vocabulary.	Enter full URL, starting with http://	url	29	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	topicClassification	citation
-	publication	Related Publication	Publications that use the data from this Dataset. The full list of Related Publications will be displayed on the metadata tab.		none	30		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/isReferencedBy
+	publication	Related Publication	Publications that use the data from this Dataset. The full list of Related Publications will be displayed on the metadata tab.		none	74		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/isReferencedBy
 	publicationCitation	Title	The full bibliographic citation for this related publication.		textbox	31	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	http://purl.org/dc/terms/bibliographicCitation
 	publicationURL	URL	Link to the publication web page (e.g., journal article page, archive record page, or other).	Enter full URL, starting with http://	url	34	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	https://schema.org/distribution
 	notesText	Notes	Additional important information about the Dataset.		textbox	35		FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		citation
@@ -69,7 +69,7 @@
 	software	Software	Information about the software used to generate the Dataset.		none	71	,	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	https://www.w3.org/TR/prov-o/#wasGeneratedBy
 	softwareName	Name	Name of software used to generate the Dataset.		text	72	#VALUE	FALSE	TRUE	FALSE	FALSE	TRUE	FALSE	software	citation
 	softwareVersion	Version	Version of the software used to generate the Dataset.		text	73	#NAME: #VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	software	citation
-	relatedMaterial	Related Material	Any material related to this Dataset.		textbox	74		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation
+	relatedMaterial	Related Material	Any material related to this Dataset.		textbox	88		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation
 	relatedDatasets	Related Datasets	Any Datasets that are related to this Dataset, such as previous research on this subject.		textbox	75		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/relation
 	otherReferences	Other References	Any references that would serve as background or supporting material to this Dataset.		text	76		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	http://purl.org/dc/terms/references
 	dataSources	Data Sources	List of books, articles, serials, or machine-readable data files that served as the sources of the data collection.		textbox	77		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	https://www.w3.org/TR/prov-o/#wasDerivedFrom	
