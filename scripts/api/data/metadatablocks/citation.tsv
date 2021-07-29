@@ -137,7 +137,7 @@
 	authorIdentifierScheme	DAI		5
 	authorIdentifierScheme	ResearcherID		6
 	authorIdentifierScheme	ScopusID		7
-	language	Abkhaz		0
+	language	Abkhaz		40
 	language	Afar		1	aar
 	language	Afrikaans		2	afr
 	language	Akan		3	aka
@@ -177,7 +177,7 @@
 	language	Divehi, Dhivehi, Maldivian		37											
 	language	Dutch		38	nld
 	language	Dzongkha		39	dzo
-	language	English		40	eng
+	language	English		0	eng
 	language	Esperanto		41	epo
 	language	Estonian		42	est
 	language	Ewe		43	ewe
