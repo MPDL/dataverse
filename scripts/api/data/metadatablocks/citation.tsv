@@ -18,7 +18,7 @@
 	datasetContactEmail	E-mail	The e-mail address(es) of the contact(s) for the Dataset. This will not be displayed.		email	17	#EMAIL	FALSE	FALSE	FALSE	FALSE	TRUE	TRUE	datasetContact	citation
 	dsDescription	Description	A summary describing the purpose, nature, and scope of the Dataset.		none	18		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation	
 	dsDescriptionValue	Text	A summary describing the purpose, nature, and scope of the Dataset.		textbox	19	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	TRUE	dsDescription	citation
-	subject	Subject	Domain-specific Subject Categories that are topically relevant to the Dataset.		text	21		TRUE	TRUE	TRUE	TRUE	TRUE	TRUE		citation	http://purl.org/dc/terms/subject
+	subject	Subject	Domain-specific Subject Categories that are topically relevant to the Dataset.		text	21		TRUE	TRUE	TRUE	TRUE	TRUE	FALSE		citation	http://purl.org/dc/terms/subject
 	keyword	Keyword	Key terms that describe important aspects of the Dataset.		none	22		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation
 	keywordValue	Term	Key terms that describe important aspects of the Dataset. Can be used for building keyword indexes and for classification and retrieval purposes. A controlled vocabulary can be employed. The vocab attribute is provided for specification of the controlled vocabulary in use, such as LCSH, MeSH, or others. The vocabURI attribute specifies the location for the full controlled vocabulary.		text	23	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	keyword	citation
 	keywordVocabulary	Vocabulary	For the specification of the keyword controlled vocabulary in use, such as LCSH, MeSH, or others.		text	24	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	keyword	citation
