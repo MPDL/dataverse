@@ -28,8 +28,8 @@
 	topicClassVocab	Vocabulary	Provided for specification of the controlled vocabulary in use, e.g., LCSH, MeSH, etc.		text	28	(#VALUE)	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	topicClassification	citation
 	topicClassVocabURI	Vocabulary URL	Specifies the URL location for the full controlled vocabulary.	Enter full URL, starting with http://	url	29	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	topicClassification	citation
 	publication	Related Publication	Publications that use the data from this Dataset. The full list of Related Publications will be displayed on the metadata tab.		none	74		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/isReferencedBy
-	publicationCitation	Title	The full bibliographic citation for this related publication.		textbox	31	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	http://purl.org/dc/terms/bibliographicCitation
-	publicationURL	URL	Link to the publication web page (e.g., journal article page, archive record page, or other).	Enter full URL, starting with http://	url	34	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	https://schema.org/distribution
+	publicationCitation	Title	The full bibliographic citation for this related publication.		textbox	75	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	http://purl.org/dc/terms/bibliographicCitation
+	publicationURL	URL	Link to the publication web page (e.g., journal article page, archive record page, or other).	Enter full URL, starting with http://	url	76	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	https://schema.org/distribution
 	notesText	Notes	Additional important information about the Dataset.		textbox	35		FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		citation
 	language	Language	Language of the Dataset		text	36		TRUE	TRUE	TRUE	TRUE	TRUE	FALSE		citation	http://purl.org/dc/terms/language
 	producer	Producer	Person or organization with the financial or administrative responsibility over this Dataset		none	37		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation
@@ -70,16 +70,16 @@
 	softwareName	Name	Name of software used to generate the Dataset.		text	72	#VALUE	FALSE	TRUE	FALSE	FALSE	TRUE	FALSE	software	citation
 	softwareVersion	Version	Version of the software used to generate the Dataset.		text	73	#NAME: #VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	software	citation
 	relatedMaterial	Related Material	Any material related to this Dataset.		textbox	88		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation
-	relatedDatasets	Related Datasets	Any Datasets that are related to this Dataset, such as previous research on this subject.		textbox	75		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/relation
-	otherReferences	Other References	Any references that would serve as background or supporting material to this Dataset.		text	76		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	http://purl.org/dc/terms/references
-	dataSources	Data Sources	List of books, articles, serials, or machine-readable data files that served as the sources of the data collection.		textbox	77		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	https://www.w3.org/TR/prov-o/#wasDerivedFrom	
-	originOfSources	Origin of Sources	For historical materials, information about the origin of the sources and the rules followed in establishing the sources should be specified.		textbox	78		FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation
-	characteristicOfSources	Characteristic of Sources Noted	Assessment of characteristics and source material.		textbox	79		FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation
-	accessToSources	Documentation and Access to Sources	Level of documentation of the original sources.		textbox	80		FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation
-	geolocation	Geolocation			none	81		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	
-	geolocationLatitude	Latitude			text	82	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	geolocation	citation	
-	geolocationLongitude	Longitude			text	83	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	geolocation	citation	
-	geolocationDescription	Description			textbox	84	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	
+	relatedDatasets	Related Datasets	Any Datasets that are related to this Dataset, such as previous research on this subject.		textbox	77		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/relation
+	otherReferences	Other References	Any references that would serve as background or supporting material to this Dataset.		text	78		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	http://purl.org/dc/terms/references
+	dataSources	Data Sources	List of books, articles, serials, or machine-readable data files that served as the sources of the data collection.		textbox	79		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	https://www.w3.org/TR/prov-o/#wasDerivedFrom	
+	originOfSources	Origin of Sources	For historical materials, information about the origin of the sources and the rules followed in establishing the sources should be specified.		textbox	80		FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation
+	characteristicOfSources	Characteristic of Sources Noted	Assessment of characteristics and source material.		textbox	81		FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation
+	accessToSources	Documentation and Access to Sources	Level of documentation of the original sources.		textbox	82		FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation
+	geolocation	Geolocation			none	83		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	
+	geolocationLatitude	Latitude			text	84	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	geolocation	citation	
+	geolocationLongitude	Longitude			text	85	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	geolocation	citation	
+	geolocationDescription	Description			textbox	86	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	
 #controlledVocabulary	DatasetField	Value	identifier	displayOrder
 	subject	Humanities		0											
 	subject	Social and Behavioural Sciences		1											
