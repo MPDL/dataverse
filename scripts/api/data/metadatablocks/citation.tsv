@@ -95,23 +95,6 @@
 	subject	Materials Science and Engineering		11											
 	subject	Computer Science, Systems and Electrical Engineering		12											
 	subject	Construction Engineering and Architecture		13											
-	publicationIDType	ark		0											
-	publicationIDType	arXiv		1											
-	publicationIDType	bibcode		2											
-	publicationIDType	doi		3											
-	publicationIDType	ean13		4											
-	publicationIDType	eissn		5											
-	publicationIDType	handle		6											
-	publicationIDType	isbn		7											
-	publicationIDType	issn		8											
-	publicationIDType	istc		9											
-	publicationIDType	lissn		10											
-	publicationIDType	lsid		11											
-	publicationIDType	pmid		12											
-	publicationIDType	purl		13											
-	publicationIDType	upc		14											
-	publicationIDType	url		15											
-	publicationIDType	urn		16											
 	contributorType	Data Collector		0											
 	contributorType	Data Curator		1											
 	contributorType	Data Manager		2											
@@ -129,14 +112,6 @@
 	contributorType	Supervisor		14											
 	contributorType	Work Package Leader		15											
 	contributorType	Other		16											
-	authorIdentifierScheme	ORCID		0											
-	authorIdentifierScheme	ISNI		1											
-	authorIdentifierScheme	LCNA		2											
-	authorIdentifierScheme	VIAF		3											
-	authorIdentifierScheme	GND		4											
-	authorIdentifierScheme	DAI		5
-	authorIdentifierScheme	ResearcherID		6
-	authorIdentifierScheme	ScopusID		7
 	language	Abkhaz		40
 	language	Afar		1	aar
 	language	Afrikaans		2	afr
