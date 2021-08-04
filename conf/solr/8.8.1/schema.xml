@@ -301,6 +301,8 @@
     <copyField source="astroType" dest="_text_" maxChars="3000"/>
     <copyField source="author" dest="_text_" maxChars="3000"/>
     <copyField source="authorAffiliation" dest="_text_" maxChars="3000"/>
+    <copyField source="authorAffiliationDepartment" dest="_text_" maxChars="3000"/>
+    <copyField source="authorAffiliationId" dest="_text_" maxChars="3000"/>
     <copyField source="authorIdentifier" dest="_text_" maxChars="3000"/>
     <copyField source="authorIdentifierScheme" dest="_text_" maxChars="3000"/>
     <copyField source="authorName" dest="_text_" maxChars="3000"/>
@@ -333,12 +335,12 @@
     <copyField source="coverage.Temporal.StopTime" dest="_text_" maxChars="3000"/>
     <copyField source="dataCollectionSituation" dest="_text_" maxChars="3000"/>
     <copyField source="dataCollector" dest="_text_" maxChars="3000"/>
-    <copyField source="dataSources" dest="_text_" maxChars="3000"/>
     <copyField source="datasetContact" dest="_text_" maxChars="3000"/>
     <copyField source="datasetContactAffiliation" dest="_text_" maxChars="3000"/>
     <copyField source="datasetContactEmail" dest="_text_" maxChars="3000"/>
     <copyField source="datasetContactName" dest="_text_" maxChars="3000"/>
     <copyField source="datasetLevelErrorNotes" dest="_text_" maxChars="3000"/>
+    <copyField source="dataSources" dest="_text_" maxChars="3000"/>
     <copyField source="dateOfCollection" dest="_text_" maxChars="3000"/>
     <copyField source="dateOfCollectionEnd" dest="_text_" maxChars="3000"/>
     <copyField source="dateOfCollectionStart" dest="_text_" maxChars="3000"/>
@@ -360,6 +362,10 @@
     <copyField source="geographicBoundingBox" dest="_text_" maxChars="3000"/>
     <copyField source="geographicCoverage" dest="_text_" maxChars="3000"/>
     <copyField source="geographicUnit" dest="_text_" maxChars="3000"/>
+    <copyField source="geolocation" dest="_text_" maxChars="3000"/>
+    <copyField source="geolocationDescription" dest="_text_" maxChars="3000"/>
+    <copyField source="geolocationLatitude" dest="_text_" maxChars="3000"/>
+    <copyField source="geolocationLongitude" dest="_text_" maxChars="3000"/>
     <copyField source="grantNumber" dest="_text_" maxChars="3000"/>
     <copyField source="grantNumberAgency" dest="_text_" maxChars="3000"/>
     <copyField source="grantNumberValue" dest="_text_" maxChars="3000"/>
@@ -424,14 +430,15 @@
     <copyField source="studyAssayOrganism" dest="_text_" maxChars="3000"/>
     <copyField source="studyAssayOtherMeasurmentType" dest="_text_" maxChars="3000"/>
     <copyField source="studyAssayOtherOrganism" dest="_text_" maxChars="3000"/>
-    <copyField source="studyAssayPlatform" dest="_text_" maxChars="3000"/>
     <copyField source="studyAssayOtherPlatform" dest="_text_" maxChars="3000"/>
-    <copyField source="studyAssayTechnologyType" dest="_text_" maxChars="3000"/>
     <copyField source="studyAssayOtherTechnologyType" dest="_text_" maxChars="3000"/>
+    <copyField source="studyAssayPlatform" dest="_text_" maxChars="3000"/>
+    <copyField source="studyAssayTechnologyType" dest="_text_" maxChars="3000"/>
     <copyField source="studyDesignType" dest="_text_" maxChars="3000"/>
-    <copyField source="studyOtherDesignType" dest="_text_" maxChars="3000"/>
     <copyField source="studyFactorType" dest="_text_" maxChars="3000"/>
+    <copyField source="studyOtherDesignType" dest="_text_" maxChars="3000"/>
     <copyField source="studyOtherFactorType" dest="_text_" maxChars="3000"/>
+    <copyField source="studyType" dest="_text_" maxChars="3000"/>
     <copyField source="subject" dest="_text_" maxChars="3000"/>
     <copyField source="subtitle" dest="_text_" maxChars="3000"/>
     <copyField source="targetSampleActualSize" dest="_text_" maxChars="3000"/>
@@ -442,10 +449,10 @@
     <copyField source="timePeriodCoveredEnd" dest="_text_" maxChars="3000"/>
     <copyField source="timePeriodCoveredStart" dest="_text_" maxChars="3000"/>
     <copyField source="title" dest="_text_" maxChars="3000"/>
+    <copyField source="topicClassification" dest="_text_" maxChars="3000"/>
     <copyField source="topicClassValue" dest="_text_" maxChars="3000"/>
     <copyField source="topicClassVocab" dest="_text_" maxChars="3000"/>
     <copyField source="topicClassVocabURI" dest="_text_" maxChars="3000"/>
-    <copyField source="topicClassification" dest="_text_" maxChars="3000"/>
     <copyField source="unitOfAnalysis" dest="_text_" maxChars="3000"/>
     <copyField source="universe" dest="_text_" maxChars="3000"/>
     <copyField source="weighting" dest="_text_" maxChars="3000"/>
