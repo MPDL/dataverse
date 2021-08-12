@@ -13,7 +13,7 @@
 	authorAffiliation	Organization	The organization with which the author is affiliated.		text	10	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation
 	authorAffiliationId	ROR ID			URL	11	(<a href=#VALUE>#VALUE</a>),	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
 	authorAffiliationDepartment	Department/Group			text	12	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation	
-	authorIdentifier	ORCID	Uniquely identifies an individual author or organization, according to various schemes.		URL	9	(<a href=#VALUE>#VALUE</a>),	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	http://purl.org/spar/datacite/AgentIdentifier
+	authorIdentifier	ORCID	Uniquely identifies an individual author or organization, according to various schemes.	https://orcid.org/0000-0000-0000-0000	URL	9	(<a href=#VALUE>#VALUE</a>),	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	http://purl.org/spar/datacite/AgentIdentifier
 	datasetContact	Contact	The contact(s) for this Dataset.		none	14		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation
 	datasetContactEmail	E-mail	The e-mail address(es) of the contact(s) for the Dataset. This will not be displayed.		email	17	#EMAIL	FALSE	FALSE	FALSE	FALSE	TRUE	TRUE	datasetContact	citation
 	dsDescription	Description	A summary describing the purpose, nature, and scope of the Dataset.		none	18		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation	
