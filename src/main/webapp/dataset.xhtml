@@ -1681,6 +1681,7 @@
                     <p:remoteCommand name="returnToAuthorCommand" action="#{DatasetPage.sendBackToContributor}"/>
                     <!-- END: Publish/Submit for Review Dialogs -->
                 </h:form>
+                <script defer="defer" src="#{resource['js/affiliationSuggest.js']}?version=#{systemConfig.getVersion()}"></script>
                 <script>
                     //<![CDATA[
                     $(document).ready(function () {
@@ -1751,44 +1752,6 @@
                             PF('downloadPopup').show();
                         }
                     }
-
-                    //function to bind an autosuggest for organization identifiers
-                    function bindAffiliationAutoComplete() {
-                        $("input[data-fieldtype-name='authorAffiliation']").each(function () {
-                            let autocompleteWidget = $(this).autocomplete({
-                                source: function (request, response) {
-                                    $.ajax({
-                                        url: "/api/controlledvocabulary/ror",
-                                        dataType: "json",
-                                        data: {
-                                            q: request.term
-                                        },
-                                        success: function (data) {
-                                            response($.map(data.response.docs, function (item) {
-                                                return {
-                                                    label: item['name'][0] + " (" + item['id'] + ")",
-                                                    value: item['name'][0]
-                                                };
-                                            }));
-                                        }
-                                    });
-                                },
-
-                                minLength: 2
-
-                            }).autocomplete("widget");
-
-                            //wrap the suggest list into a span to enable CSS class scoping, otherwise jqueryui css conflicts with primefaces css
-                            autocompleteWidget.wrap("<span class='jqueryui'></span>");
-                        });
-                    }
-
-                    //Rebind autosuggest after ajax requests (+/- Buttons)
-                    $(document).on('pfAjaxComplete', function() {
-                        bindAffiliationAutoComplete();
-                    });
-
-
                     //]]>
                 </script>
             </ui:define>
