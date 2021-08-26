@@ -37,6 +37,7 @@
     </div>
 
     <!-- This button / script is for replication data for the title field and is client side only -->
+    <ui:remove><!-- Removed by MPDL -->
     <ui:fragment rendered="#{dsfv.datasetField.datasetFieldType.name == 'title' and DatasetPage.editMode == 'CREATE' }">
         <input type="button" id="replicationDataButton"
                class="btn btn-default" value="#{bundle['dataset.AddReplication']}"
@@ -50,4 +51,5 @@
             //]]>
         </script>
     </ui:fragment>
+    </ui:remove>
 </ui:composition>
