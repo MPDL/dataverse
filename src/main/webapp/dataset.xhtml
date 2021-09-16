@@ -612,16 +612,21 @@
                     <ui:fragment rendered="#{DatasetPage.editMode == 'METADATA' or DatasetPage.editMode == 'CREATE'}">
                         <p:focus context="datasetForm"/>
                         <div class="form-group">
+                            <ui:remove>
                             <label jsf:for="#{DatasetPage.editMode == 'CREATE' ? 'selectHostDataverse' : 'select_HostDataverse_Static'}" class="col-md-3 control-label">
                                 #{bundle.hostDataverse}
                                 <span class="glyphicon glyphicon-question-sign tooltip-icon"
                                       data-toggle="tooltip" data-placement="auto right" data-original-title="#{bundle['dataverse.host.title']}"></span>
                             </label>
+                            </ui:remove>
                             <div class="col-md-7">
                                 <ui:fragment rendered="#{DatasetPage.editMode == 'METADATA'}">
+                                    <ui:remove>
                                     <p jsf:id="select_HostDataverse_Static" class="form-control-static">#{DatasetPage.dataset.owner.name}</p>
+                                    </ui:remove>
                                     <h:inputHidden value="#{DatasetPage.ownerId}" id="select_HostDataverseStatic"/>
                                 </ui:fragment>
+                                <ui:remove>
                                 <ui:fragment rendered="#{DatasetPage.editMode == 'CREATE'}">
                                     <p class="help-block">
                                         #{bundle['dataset.host.tip']}
@@ -659,6 +664,7 @@
                                         </p:fragment>
                                     </div>
                                 </ui:fragment>
+                                </ui:remove>
                             </div>
                         </div>
                         <div class="form-group" jsf:rendered="#{!empty DatasetPage.dataverseTemplates and DatasetPage.editMode == 'CREATE'}">
