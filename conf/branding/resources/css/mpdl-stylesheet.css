@@ -127,7 +127,15 @@ a.highlightBold,
 	background: transparent;
 }
 
+/* Hide the "Dataverse" search facet */
+#facetType > div.clearfix:first-of-type {
+	display:none;
+}
 
+/* Hide the dataverse selection on top of the page when creating or editing a dataset */
+#datasetForm > div.form-group:nth-of-type(2) {
+	display:none;
+}
 
 
 
