@@ -88,6 +88,7 @@
             <!--TYPE FACET (DATAVERSES, DATASETS, FILES)-->
             <h:form id="facetType">
                 <!--DATAVERSE TOGGLE-->
+                <ui:remove>
                 <div class="clearfix">
                     <h:outputLink value="#{widgetWrapper.wrapURL(page)}" styleClass="facetTypeChBox facetLink #{SearchIncludeFragment.selectedTypesList.contains('dataverses') ? 'facetSelected': ''}" disabled="#{SearchIncludeFragment.getNewSelectedTypes('dataverses') == null}">
                         <f:param name="q" value="#{SearchIncludeFragment.query}"/>
@@ -118,6 +119,7 @@
                         </h:outputFormat>
                     </h:outputLink>
                 </div>
+                </ui:remove>
                 <!--DATASETS TOGGLE-->
                 <div class="clearfix">
                     <h:outputLink value="#{widgetWrapper.wrapURL(page)}" styleClass="facetTypeChBox facetLink #{SearchIncludeFragment.selectedTypesList.contains('datasets') ? 'facetSelected': ''}" disabled="#{SearchIncludeFragment.getNewSelectedTypes('datasets') == null}">
