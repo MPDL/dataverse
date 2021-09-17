@@ -24,11 +24,15 @@
 	    <ui:insert name="og_header"></ui:insert>
 	    <ui:insert name="jsonld_header"></ui:insert>
         </f:facet>
+        <link rel="icon" type="image/png" sizes="32x32" href="#{resource['images/fav/edmond_favicon_red.svg']}"/>
+        <link rel="mask-icon" href="#{resource['images/fav/edmond_favicon_red.svg']}" color="#b20005"/>
+        <ui:remove>
         <link rel="apple-touch-icon" sizes="180x180" href="#{resource['images/fav/apple-touch-icon.png']}"/>
         <link rel="icon" type="image/png" sizes="16x16" href="#{resource['images/fav/favicon-16x16.png']}"/>
         <link rel="icon" type="image/png" sizes="32x32" href="#{resource['images/fav/favicon-32x32.png']}"/>
         <link rel="manifest" href="#{resource['images/fav/site.webmanifest']}"/>
         <link rel="mask-icon" href="#{resource['images/fav/safari-pinned-tab.svg']}" color="#da532c"/>
+        </ui:remove>
         <meta name="msapplication-TileColor" content="#da532c"/>
         <meta name="theme-color" content="#ffffff"/>
         <link type="image/png" rel="image_src" href="#{resource['images/dataverseproject.png']}" />
@@ -53,6 +57,17 @@
                 <o:resourceInclude path="/CustomizationFilesServlet?customFileType=style" />
             </style>
         </ui:fragment>
+        <style>
+            /* Hide the "Dataverse" search facet */
+            #facetType > div.clearfix:first-of-type {
+                display:none;
+            }
+            /* Hide the dataverse selection on top of the page when creating or editing a dataset */
+            #datasetForm > div.form-group:nth-of-type(2) {
+                display:none;
+            }
+
+        </style>
     </h:head>
     <h:body styleClass="#{widgetWrapper.widgetView ? 'widget-view' : ''}">
         <f:loadBundle basename="propertyFiles.Bundle" var="bundle"/>
