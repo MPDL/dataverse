@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300italic,400,200,200italic,300,600,400italic,600italic,700italic,700,900');
 
 html body {
-	background: url("/logos/images/bg_pic_v2.jpg") no-repeat center bottom fixed;	
+	background: linear-gradient(to right, rgb(255, 255, 255, 0.2), transparent 70%) fixed, url("/logos/images/bg_pic_v2.jpg") no-repeat center bottom fixed;
 	background-size: cover;
 	font-family: "Titillium Web",Arial,Helvetica,Verdana,sans-serif !important;
 }
@@ -16,25 +16,7 @@ html body {
 #content.container {
 	background: white;
 	padding-bottom: 20px;
-}
-
-img.navbar-brand.custom-logo {
-	width: 188px;
-	height: 64px;
-}
-
-#navbarFixed .navbar-brand.custom-logo {
-	padding: 15px 0;
-}
-
-.nav {
-	padding-top: 15px;
-}
-
-.navbar-default {
-	background: transparent;
-	border: none;
-	box-shadow: none;
+	
 }
 
 #dataverseHeader {
@@ -44,6 +26,36 @@ img.navbar-brand.custom-logo {
 #dataverse-header-block {
 	padding-top: 90px;
 	height: 130px;
+	width: 1170px;
+	margin-left: auto;
+	margin-right: auto;
+	background: linear-gradient(white 58%,transparent 42%);
+}
+
+#navbarFixed .container {
+	background: transparent;
+}
+
+.nav {
+	padding-top: 15px;
+}
+
+.navbar-default {
+	background: linear-gradient(white 80%, transparent);
+	border: none;
+	box-shadow: none;
+	width: 1170px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#navbarFixed .navbar-brand.custom-logo {
+	padding: 15px 0;
+}
+
+img.navbar-brand.custom-logo {
+	width: 188px;
+	height: 64px;
 }
 
 #dataverseHeader .dataverseHeaderName {
@@ -55,6 +67,9 @@ img.navbar-brand.custom-logo {
 	border: none;
 }
 
+#j_idt101 {
+	background: coral;
+}
 
 div.panel-heading.text-info[data-toggle="collapse"] {
 	color: #04725d;
