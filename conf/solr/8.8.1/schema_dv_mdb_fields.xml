@@ -9,10 +9,15 @@
     <field name="astroType" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="author" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="authorAffiliation" type="text_en" multiValued="true" stored="true" indexed="true"/>
+    <field name="authorAffiliation2" type="text_en" multiValued="true" stored="true" indexed="true"/>
+    <field name="authorAffiliation2Department" type="text_en" multiValued="true" stored="true" indexed="true"/>
+    <field name="authorAffiliation2Id" type="text_en" multiValued="true" stored="true" indexed="true"/>
+    <field name="authorAffiliation3" type="text_en" multiValued="true" stored="true" indexed="true"/>
+    <field name="authorAffiliation3Department" type="text_en" multiValued="true" stored="true" indexed="true"/>
+    <field name="authorAffiliation3Id" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="authorAffiliationDepartment" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="authorAffiliationId" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="authorIdentifier" type="text_en" multiValued="true" stored="true" indexed="true"/>
-    <field name="authorIdentifierScheme" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="authorName" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="characteristicOfSources" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="city" type="text_en" multiValued="true" stored="true" indexed="true"/>
@@ -44,9 +49,7 @@
     <field name="dataCollectionSituation" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="dataCollector" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="datasetContact" type="text_en" multiValued="true" stored="true" indexed="true"/>
-    <field name="datasetContactAffiliation" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="datasetContactEmail" type="text_en" multiValued="true" stored="true" indexed="true"/>
-    <field name="datasetContactName" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="datasetLevelErrorNotes" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="dataSources" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="dateOfCollection" type="text_en" multiValued="true" stored="true" indexed="true"/>
@@ -63,7 +66,6 @@
     <field name="distributorName" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="distributorURL" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="dsDescription" type="text_en" multiValued="true" stored="true" indexed="true"/>
-    <field name="dsDescriptionDate" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="dsDescriptionValue" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="eastLongitude" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="frequencyOfDataCollection" type="text_en" multiValued="false" stored="true" indexed="true"/>
@@ -107,8 +109,6 @@
     <field name="productionPlace" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="publication" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="publicationCitation" type="text_en" multiValued="true" stored="true" indexed="true"/>
-    <field name="publicationIDNumber" type="text_en" multiValued="true" stored="true" indexed="true"/>
-    <field name="publicationIDType" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="publicationURL" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="redshiftType" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="relatedDatasets" type="text_en" multiValued="true" stored="true" indexed="true"/>
