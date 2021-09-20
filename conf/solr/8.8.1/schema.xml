@@ -301,10 +301,15 @@
     <copyField source="astroType" dest="_text_" maxChars="3000"/>
     <copyField source="author" dest="_text_" maxChars="3000"/>
     <copyField source="authorAffiliation" dest="_text_" maxChars="3000"/>
+    <copyField source="authorAffiliation2" dest="_text_" maxChars="3000"/>
+    <copyField source="authorAffiliation2Department" dest="_text_" maxChars="3000"/>
+    <copyField source="authorAffiliation2Id" dest="_text_" maxChars="3000"/>
+    <copyField source="authorAffiliation3" dest="_text_" maxChars="3000"/>
+    <copyField source="authorAffiliation3Department" dest="_text_" maxChars="3000"/>
+    <copyField source="authorAffiliation3Id" dest="_text_" maxChars="3000"/>
     <copyField source="authorAffiliationDepartment" dest="_text_" maxChars="3000"/>
     <copyField source="authorAffiliationId" dest="_text_" maxChars="3000"/>
     <copyField source="authorIdentifier" dest="_text_" maxChars="3000"/>
-    <copyField source="authorIdentifierScheme" dest="_text_" maxChars="3000"/>
     <copyField source="authorName" dest="_text_" maxChars="3000"/>
     <copyField source="characteristicOfSources" dest="_text_" maxChars="3000"/>
     <copyField source="city" dest="_text_" maxChars="3000"/>
@@ -336,9 +341,7 @@
     <copyField source="dataCollectionSituation" dest="_text_" maxChars="3000"/>
     <copyField source="dataCollector" dest="_text_" maxChars="3000"/>
     <copyField source="datasetContact" dest="_text_" maxChars="3000"/>
-    <copyField source="datasetContactAffiliation" dest="_text_" maxChars="3000"/>
     <copyField source="datasetContactEmail" dest="_text_" maxChars="3000"/>
-    <copyField source="datasetContactName" dest="_text_" maxChars="3000"/>
     <copyField source="datasetLevelErrorNotes" dest="_text_" maxChars="3000"/>
     <copyField source="dataSources" dest="_text_" maxChars="3000"/>
     <copyField source="dateOfCollection" dest="_text_" maxChars="3000"/>
@@ -355,7 +358,6 @@
     <copyField source="distributorName" dest="_text_" maxChars="3000"/>
     <copyField source="distributorURL" dest="_text_" maxChars="3000"/>
     <copyField source="dsDescription" dest="_text_" maxChars="3000"/>
-    <copyField source="dsDescriptionDate" dest="_text_" maxChars="3000"/>
     <copyField source="dsDescriptionValue" dest="_text_" maxChars="3000"/>
     <copyField source="eastLongitude" dest="_text_" maxChars="3000"/>
     <copyField source="frequencyOfDataCollection" dest="_text_" maxChars="3000"/>
@@ -399,8 +401,6 @@
     <copyField source="productionPlace" dest="_text_" maxChars="3000"/>
     <copyField source="publication" dest="_text_" maxChars="3000"/>
     <copyField source="publicationCitation" dest="_text_" maxChars="3000"/>
-    <copyField source="publicationIDNumber" dest="_text_" maxChars="3000"/>
-    <copyField source="publicationIDType" dest="_text_" maxChars="3000"/>
     <copyField source="publicationURL" dest="_text_" maxChars="3000"/>
     <copyField source="redshiftType" dest="_text_" maxChars="3000"/>
     <copyField source="relatedDatasets" dest="_text_" maxChars="3000"/>
