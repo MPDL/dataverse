@@ -55,17 +55,17 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1043"
+     inkscape:window-height="960"
      id="namedview1177"
      showgrid="true"
      inkscape:zoom="3.6698842"
-     inkscape:cx="225.34771"
-     inkscape:cy="31.336139"
+     inkscape:cx="209.5434"
+     inkscape:cy="31.472383"
      inkscape:current-layer="svg1175"
      inkscape:document-rotation="0"
      inkscape:pagecheckerboard="0"
-     inkscape:window-x="3840"
-     inkscape:window-y="0"
+     inkscape:window-x="1920"
+     inkscape:window-y="27"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
@@ -391,11 +391,11 @@
        x="11.420889"
        y="170.54149"
        fill="#000000"
-       font-family="Helvetica"
+       font-family="Titillium Web"
        font-size="14px"
        id="text1165"
-       style="font-size:14.7128px;stroke-width:1.00293"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.7128px;font-family:Roboto;-inkscape-font-specification:Roboto"
+       style="font-size:14.7128px;font-family:'Titillium Web';fill:#000000;stroke-width:1.00293"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:14.7128px;font-family:'Titillium Web';-inkscape-font-specification:'Titillium Web, Semi-Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
          id="tspan47358"
          dy="0"
          rotate="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0">doi:10.17616/R3N33V</tspan></text>
@@ -422,11 +422,11 @@
        x="-5.1730008"
        y="45.710239"
        fill="#000000"
-       font-family="Helvetica"
+       font-family="Titillium Web"
        font-size="18px"
-       style="font-weight:bold;font-size:24.0755px;font-family:Helvetica;fill:#000000;stroke-width:1.00293"
+       style="font-weight:bold;font-size:24.0755px;font-family:'Titillium Web';fill:#000000;stroke-width:1.00293"
        id="text1170"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24.0755px;font-family:Roboto;-inkscape-font-specification:Roboto;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:24.0755px;font-family:'Titillium Web';-inkscape-font-specification:'Titillium Web, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal"
          id="tspan2026">Edmond</tspan></text>
   </switch>
 </svg>
