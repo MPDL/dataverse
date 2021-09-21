@@ -15,6 +15,7 @@ html body {
 
 #content.container {
 	background: white;
+	padding-top: 15px;
 	padding-bottom: 20px;
 	
 }
@@ -67,8 +68,8 @@ img.navbar-brand.custom-logo {
 	border: none;
 }
 
-#j_idt101 {
-	background: coral;
+.alert-dismissable, .alert-dismissible {
+	float: inline-end;
 }
 
 div.panel-heading.text-info[data-toggle="collapse"] {
