@@ -202,7 +202,7 @@
                                                 <div class="form-group form-col-container col-sm-9 edit-compound-field">
                                                     <!-- Sub Fields -->
                                                     <ui:repeat value="#{compoundValue.childDatasetFields}" var="subdsf">
-                                                        <div class="form-col-container #{subdsf.datasetFieldType.fieldType == 'TEXTBOX' ? 'col-sm-12' : 'col-sm-6'}">
+                                                        <div class="form-col-container #{subdsf.datasetFieldType.fieldType == 'TEXTBOX' ? 'col-sm-12' : 'col-sm-6'}" data-fieldtype-name="#{subdsf.singleValue.datasetField.datasetFieldType.name}.parent">
                                                             <ui:fragment rendered="#{subdsf.datasetFieldType.name == 'dsDescriptionValue'}">
                                                                 <p class="help-block">
                                                                     <h:outputText value="#{bundle.htmlAllowedMsg}" escape="false"/>

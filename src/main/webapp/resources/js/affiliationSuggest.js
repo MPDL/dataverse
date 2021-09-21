@@ -8,8 +8,8 @@ let removeButton= `
     </span>`;
 
 function removeAffiliationId(buttonElement){
-    let affiliationIdField = $(buttonElement).closest(".form-group").find("input[data-fieldtype-name='authorAffiliationId']");
-    let affiliationTextField = $(buttonElement).closest(".form-group").find("input[data-fieldtype-name='authorAffiliation']");
+    let affiliationIdField = $(buttonElement).closest(".form-group").find("input[data-fieldtype-name='" + $(buttonElement).attr("data-for-affiliationId")+ "']");
+    let affiliationTextField = $(buttonElement).closest(".form-group").find("input[data-fieldtype-name='" + $(buttonElement).attr("data-for-affiliationText")+ "']");
 
     affiliationIdField.val("");
     affiliationTextField.val("");
@@ -43,21 +43,31 @@ function addAffiliationId(affiliationTextField, affiliationIdField){
 
     //add the text field and the remove button to the input group
     inputGroup.prepend(affiliationTextField);
-    inputGroup.append($(removeButton));
+    let affRemoveButton = $(removeButton)
+    affRemoveButton.find("button")
+        .attr("data-for-affiliationText", affiliationTextField.attr("data-fieldtype-name"))
+        .attr("data-for-affiliationId", affiliationIdField.attr("data-fieldtype-name"));
+
+    inputGroup.append(affRemoveButton);
 }
 //function to bind an autosuggest for organization identifiers
 function bindAffiliationAutoComplete() {
 
 
     $("input[data-fieldtype-name='authorAffiliation']").each(function () {
-        bindAffiliationInputField(this);
-
+        bindAffiliationInputField(this, "authorAffiliationId");
+    });
+    $("input[data-fieldtype-name='authorAffiliation2']").each(function () {
+        bindAffiliationInputField(this, "authorAffiliation2Id");
+    });
+    $("input[data-fieldtype-name='authorAffiliation3']").each(function () {
+        bindAffiliationInputField(this, "authorAffiliation3Id");
     });
 }
 
-function bindAffiliationInputField(element) {
+function bindAffiliationInputField(element, nameOfIdElement) {
     console.log("Rebind Autosuggest for " + element);
-    let idField = $(element).parent().parent().find("input[data-fieldtype-name='authorAffiliationId']");
+    let idField = $(element).parent().parent().find("input[data-fieldtype-name='" + nameOfIdElement + "']");
 
     if(idField) {
         if (idField.val()) {
