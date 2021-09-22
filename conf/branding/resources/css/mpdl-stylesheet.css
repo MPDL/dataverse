@@ -27,10 +27,9 @@ html body {
 #dataverse-header-block {
 	padding-top: 90px;
 	height: 130px;
-	width: 1170px;
 	margin-left: auto;
 	margin-right: auto;
-	background: linear-gradient(white 58%,transparent 42%);
+	background: linear-gradient(to bottom,white 0 58%, transparent 58% 70%, white 70% 100%);
 }
 
 #navbarFixed .container {
@@ -45,9 +44,26 @@ html body {
 	background: linear-gradient(white 80%, transparent);
 	border: none;
 	box-shadow: none;
-	width: 1170px;
 	margin-left: auto;
 	margin-right: auto;
+}
+@media(min-width:768px){
+	#dataverse-header-block,
+    .navbar-default {
+		width: 750px;
+	}
+}
+@media(min-width:992px){
+	#dataverse-header-block,
+    .navbar-default {
+		width: 970px;
+	}
+}
+@media(min-width:1200px){
+	#dataverse-header-block,
+    .navbar-default {
+		width: 1170px;
+	}
 }
 
 #navbarFixed .navbar-brand.custom-logo {
@@ -68,8 +84,17 @@ img.navbar-brand.custom-logo {
 	border: none;
 }
 
-.alert-dismissable, .alert-dismissible {
-	float: inline-end;
+div.alert-danger {
+	display: inline-block;
+}
+
+div.alert-info {
+	float: inline-end
+}
+
+.ui-widget {
+	font-family: "Titillium Web",Arial,Helvetica,Verdana,sans-serif !important;
+	line-height: normal;
 }
 
 div.panel-heading.text-info[data-toggle="collapse"] {
@@ -78,11 +103,6 @@ div.panel-heading.text-info[data-toggle="collapse"] {
 
 table[id$='resultsTable'] td > div.datasetResult {
 	border-color: #04725d;
-}
-
-.control-label,
-th {
-	color: #04725d;
 }
 
 a {
@@ -109,7 +129,6 @@ fieldset[disabled] .ui-button.btn-link {
 	color: #04725d;
 }
 
-.highlightBold, 
 a.highlightBold, 
 .dropdown-menu > li > a.highlightBold {
 	color: #04725d;
@@ -152,10 +171,4 @@ a.highlightBold,
 #datasetForm > div.form-group:nth-of-type(2) {
 	display:none;
 }
-
-
-
-
-
-
 
