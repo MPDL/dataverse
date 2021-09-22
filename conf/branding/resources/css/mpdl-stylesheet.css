@@ -15,9 +15,8 @@ html body {
 
 #content.container {
 	background: white;
-	padding-top: 15px;
+	padding-top: 30px;
 	padding-bottom: 20px;
-	
 }
 
 #dataverseHeader {
@@ -84,12 +83,14 @@ img.navbar-brand.custom-logo {
 	border: none;
 }
 
-div.alert-danger {
+.alert-danger {
 	display: inline-block;
 }
 
-div.alert-info {
-	float: inline-end
+.alert-info {
+	position: relative;
+	z-index: 1;
+	float: inline-end;
 }
 
 .ui-widget {
