@@ -90,7 +90,7 @@ img.navbar-brand.custom-logo {
 .alert-info {
 	position: relative;
 	z-index: 1;
-	float: inline-end;
+	float: right;
 }
 
 .ui-widget {
