@@ -8,8 +8,11 @@ let removeButton= `
     </span>`;
 
 function removeAffiliationId(buttonElement){
-    let affiliationIdField = $(buttonElement).closest(".form-group").find("input[data-fieldtype-name='" + $(buttonElement).attr("data-for-affiliationId")+ "']");
-    let affiliationTextField = $(buttonElement).closest(".form-group").find("input[data-fieldtype-name='" + $(buttonElement).attr("data-for-affiliationText")+ "']");
+    let affiliationIdFieldName = $(buttonElement).attr("data-for-affiliationId");
+    let affiliationTextFieldName = $(buttonElement).attr("data-for-affiliationText");
+
+    let affiliationIdField = $(buttonElement).closest(".form-group").find("input[data-fieldtype-name='" + affiliationIdFieldName + "']");
+    let affiliationTextField = $(buttonElement).closest(".form-group").find("input[data-fieldtype-name='" + affiliationTextFieldName + "']");
 
     affiliationIdField.val("");
     affiliationTextField.val("");
@@ -26,7 +29,7 @@ function removeAffiliationId(buttonElement){
     //Remove input group
     inputGroup.remove();
 
-    bindAffiliationInputField(affiliationTextField);
+    bindAffiliationInputField(affiliationTextField, affiliationIdFieldName);
 
 
 
