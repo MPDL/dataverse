@@ -173,3 +173,16 @@ a.highlightBold,
 	display:none;
 }
 
+div[data-fieldtype-name="authorAffiliation2.parent"] {
+	clear: both;
+}
+
+div[data-fieldtype-name="authorAffiliation3.parent"] {
+	clear: both;
+}
+
+div[data-fieldtype-name="authorAffiliationDepartment.parent"], div[data-fieldtype-name="authorAffiliation2Department.parent"],
+div[data-fieldtype-name="authorIdentifier.parent"]{
+	margin-bottom: 20px !important;
+}
+
