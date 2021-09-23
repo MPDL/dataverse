@@ -14,12 +14,12 @@
 	authorAffiliation	Organization	The organization with which the author is affiliated.	Type for autosuggest...	text	10	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	TRUE	author	citation
 	authorAffiliationId	ROR ID	Uniquely identifies an organization.	https://ror.org/000000000	URL	11	<a href=#VALUE>#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
 	authorAffiliationDepartment	Department/Group	The department or group with which the author is affiliated within the organization.		text	12	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	https://schema.org/department
-	authorAffiliation2	2. Organization	The organization with which the author is affiliated.	Type for autosuggest...	text	13	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation
+	authorAffiliation2	2. Organization	The organization with which the author is affiliated.	Type for autosuggest...	text	13	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation
 	authorAffiliation2Id	2. ROR ID	Uniquely identifies an organization.	https://ror.org/000000000	URL	14	<a href=#VALUE>#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
-	authorAffiliation2Department	2. Department/Group	The department or group with which the author is affiliated within the organization.		text	15	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	https://schema.org/department
-	authorAffiliation3	3. Organization	The organization with which the author is affiliated.	Type for autosuggest...	text	16	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	author	citation
+	authorAffiliation2Department	2. Department/Group	The department or group with which the author is affiliated within the organization.		text	15	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	https://schema.org/department
+	authorAffiliation3	3. Organization	The organization with which the author is affiliated.	Type for autosuggest...	text	16	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation
 	authorAffiliation3Id	3. ROR ID	Uniquely identifies an organization.	https://ror.org/000000000	URL	17	<a href=#VALUE>#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
-	authorAffiliation3Department	3. Department/Group	The department or group with which the author is affiliated within the organization.		text	18	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	https://schema.org/department
+	authorAffiliation3Department	3. Department/Group	The department or group with which the author is affiliated within the organization.		text	18	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	https://schema.org/department
 	datasetContact	Contact	The contact(s) for this Dataset.		none	19		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation
 	datasetContactEmail	E-mail	The e-mail address(es) of the contact(s) for the Dataset. This will not be displayed.		email	20	#EMAIL	FALSE	FALSE	FALSE	FALSE	TRUE	TRUE	datasetContact	citation
 	dsDescription	Description	A summary describing the purpose, nature, and scope of the Dataset.		none	21		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	
