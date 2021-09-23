@@ -458,7 +458,20 @@
     <copyField source="weighting" dest="_text_" maxChars="3000"/>
     <copyField source="westLongitude" dest="_text_" maxChars="3000"/>
     <!-- End: Dataverse-specific -->
-    
+
+    <!-- Dataverse-specific Affiliations Copyfileds -->
+    <copyField source="authorAffiliation2" dest="authorAffiliation" maxChars="3000"/>
+    <copyField source="authorAffiliation2Department" dest="authorAffiliationDepartment" maxChars="3000"/>
+    <copyField source="authorAffiliation2Id" dest="authorAffiliationId" maxChars="3000"/>
+    <copyField source="authorAffiliation3" dest="authorAffiliation" maxChars="3000"/>
+    <copyField source="authorAffiliation3Department" dest="authorAffiliationDepartment" maxChars="3000"/>
+    <copyField source="authorAffiliation3Id" dest="authorAffiliationId" maxChars="3000"/>
+    <!-- Dataverse-specific Affiliations Copyfileds for Facets _ss Solr Fields -->
+    <copyField source="authorAffiliation2" dest="authorAffiliation_ss" maxChars="3000"/>
+    <copyField source="authorAffiliation3" dest="authorAffiliation_ss" maxChars="3000"/>
+    <!-- End: Dataverse-specific Affiliations Copyfileds for Facets _ss Solr Fields -->
+    <!-- End: Dataverse-specific Affiliations Copyfileds -->
+
     <!-- This can be enabled, in case the client does not know what fields may be searched. It isn't enabled by default
          because it's very expensive to index everything twice. -->
     <!--<copyField source="*" dest="_text_"/>-->
