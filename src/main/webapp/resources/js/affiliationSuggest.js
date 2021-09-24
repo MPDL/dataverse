@@ -87,7 +87,7 @@ function bindAffiliationInputField(element, nameOfIdElement) {
                         success: function (data) {
                             response($.map(data.response.docs, function (item) {
                                 return {
-                                    label: item['name'][0] + " (" + item['id'] + ")",
+                                    label: item['name'][0],
                                     value: item['name'][0],
                                     id: item['id']
                                 };
