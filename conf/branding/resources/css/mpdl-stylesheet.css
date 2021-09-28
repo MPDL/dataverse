@@ -15,20 +15,27 @@ html body {
 
 #content.container {
 	background: white;
-	padding-top: 30px;
 	padding-bottom: 20px;
 }
 
 #dataverseHeader {
 	background: white !important;
+	margin-top: 15px;
+	margin-bottom: -15px;
+}
+
+#breadCrumbPanel {
+	margin-top: 15px;
+	padding-top: .5em;
+	background: white !important;
+	margin-bottom: -15px;
+	padding-bottom: 0.5em;
 }
 
 #dataverse-header-block {
-	padding-top: 90px;
-	height: 130px;
+	padding-top: 77px;
 	margin-left: auto;
 	margin-right: auto;
-	background: linear-gradient(to bottom,white 0 58%, transparent 58% 70%, white 70% 100%);
 }
 
 #navbarFixed .container {
@@ -40,11 +47,12 @@ html body {
 }
 
 .navbar-default {
-	background: linear-gradient(white 80%, transparent);
+	background: linear-gradient(white 0 83%, transparent 83% 100%);
 	border: none;
 	box-shadow: none;
 	margin-left: auto;
 	margin-right: auto;
+	height: 92px;
 }
 @media(min-width:768px){
 	#dataverse-header-block,
@@ -83,14 +91,12 @@ img.navbar-brand.custom-logo {
 	border: none;
 }
 
-.alert-danger {
-	display: inline-block;
+#messagePanel div.messagePanel {
+	margin-top: 15px;
 }
 
-.alert-info {
-	position: relative;
-	z-index: 1;
-	float: right;
+#messagePanel div.alert.alert-danger {
+	margin-top:1em;
 }
 
 .ui-widget {
@@ -181,8 +187,13 @@ div[data-fieldtype-name="authorAffiliation3.parent"] {
 	clear: both;
 }
 
-div[data-fieldtype-name="authorAffiliationDepartment.parent"], div[data-fieldtype-name="authorAffiliation2Department.parent"],
+div[data-fieldtype-name="authorAffiliationDepartment.parent"], 
+div[data-fieldtype-name="authorAffiliation2Department.parent"],
 div[data-fieldtype-name="authorIdentifier.parent"]{
 	margin-bottom: 20px !important;
 }
 
+/* Hide the dataverse advanced search panel for dataverses */
+#advancedSearchForm > div.panel:nth-of-type(2) {
+	display:none;
+}
