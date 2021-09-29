@@ -86,8 +86,6 @@
     <field name="journalVolumeIssue" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="keyword" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="keywordValue" type="text_en" multiValued="true" stored="true" indexed="true"/>
-    <field name="keywordVocabulary" type="text_en" multiValued="true" stored="true" indexed="true"/>
-    <field name="keywordVocabularyURI" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="kindOfData" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="language" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="northLongitude" type="text_en" multiValued="true" stored="true" indexed="true"/>
@@ -142,6 +140,9 @@
     <field name="studyAssayOtherTechnologyType" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="studyAssayPlatform" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="studyAssayTechnologyType" type="text_en" multiValued="true" stored="true" indexed="true"/>
+    <field name="studyContext" type="text_en" multiValued="true" stored="true" indexed="true"/>
+    <field name="studyContextKey" type="text_en" multiValued="true" stored="true" indexed="true"/>
+    <field name="studyContextValue" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="studyDesignType" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="studyFactorType" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="studyOtherDesignType" type="text_en" multiValued="true" stored="true" indexed="true"/>

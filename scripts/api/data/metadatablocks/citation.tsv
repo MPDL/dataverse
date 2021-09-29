@@ -27,8 +27,6 @@
 	subject	Subject	Domain-specific Subject Categories that are topically relevant to the Dataset.		text	23		TRUE	TRUE	TRUE	TRUE	TRUE	FALSE		citation	http://purl.org/dc/terms/subject
 	keyword	Keyword	Key terms that describe important aspects of the Dataset.		none	24		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	https://schema.org/keywords
 	keywordValue	Term	Key terms that describe important aspects of the Dataset. Can be used for building keyword indexes and for classification and retrieval purposes. A controlled vocabulary can be employed. The vocab attribute is provided for specification of the controlled vocabulary in use, such as LCSH, MeSH, or others. The vocabURI attribute specifies the location for the full controlled vocabulary.		text	25	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	keyword	citation
-	keywordVocabulary	Vocabulary	For the specification of the keyword controlled vocabulary in use, such as LCSH, MeSH, or others.		text	26	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	keyword	citation
-	keywordVocabularyURI	Vocabulary URL	Keyword vocabulary URL points to the web presence that describes the keyword vocabulary, if appropriate. Enter an absolute URL where the keyword vocabulary web site is found, such as http://www.my.org.	Enter full URL, starting with http://	url	27	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	keyword	citation
 	topicClassification	Topic Classification	The classification field indicates the broad important topic(s) and subjects that the data cover. Library of Congress subject terms may be used here.  		none	28		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation
 	topicClassValue	Term	Topic or Subject term that is relevant to this Dataset.		text	29	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	topicClassification	citation
 	topicClassVocab	Vocabulary	Provided for specification of the controlled vocabulary in use, e.g., LCSH, MeSH, etc.		text	30	(#VALUE)	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	topicClassification	citation
@@ -86,6 +84,9 @@
 	geolocationLatitude	Latitude	Latitude (-90 to 90)		float	84	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	
 	geolocationLongitude	Longitude	Longitude (-180 to 180)		float	85	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	
 	geolocationDescription	Description	Additional information like the named place or the altitude of the geolocation.		textbox	86	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	http://purl.org/dc/terms/coverage
+	studyContext	Study Context			none	87	:	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation
+	studyContextKey	Context			text	88	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	studyContext	citation
+	studyContextValue	Term			text	89	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	studyContext	citation
 #controlledVocabulary	DatasetField	Value	identifier	displayOrder
 	subject	Humanities		0											
 	subject	Social and Behavioural Sciences		1											
