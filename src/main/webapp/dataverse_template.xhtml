@@ -44,6 +44,7 @@
         <link type="text/css" rel="stylesheet" href="#{resource['css/socicon.css']}?version=#{systemConfig.getVersion()}" />
         <link type="text/css" rel="stylesheet" href="#{resource['css/structure.css']}?version=#{systemConfig.getVersion()}" />
         <link type="text/css" rel="stylesheet" href="#{resource['js/jquery-ui/jquery-ui.min.css']}?version=#{systemConfig.getVersion()}" />
+        <link type="text/css" rel="stylesheet" href="#{resource['css/taggle-minimal.css']}?version=#{systemConfig.getVersion()}" />
 
         <ui:fragment rendered="#{!widgetWrapper.widgetView}">
             <script>
@@ -57,17 +58,6 @@
                 <o:resourceInclude path="/CustomizationFilesServlet?customFileType=style" />
             </style>
         </ui:fragment>
-        <style>
-            /* Hide the "Dataverse" search facet */
-            #facetType > div.clearfix:first-of-type {
-                display:none;
-            }
-            /* Hide the dataverse selection on top of the page when creating or editing a dataset */
-            #datasetForm > div.form-group:nth-of-type(2) {
-                display:none;
-            }
-
-        </style>
     </h:head>
     <h:body styleClass="#{widgetWrapper.widgetView ? 'widget-view' : ''}">
         <f:loadBundle basename="propertyFiles.Bundle" var="bundle"/>
@@ -104,6 +94,7 @@
         <script defer="defer" src="#{resource['js/jquery.sharrre.js']}?version=#{systemConfig.getVersion()}"></script>
         <script defer="defer" src="#{resource['js/clipboard.min.js']}?version=#{systemConfig.getVersion()}"></script>
         <script defer="defer" src="#{resource['js/jquery-ui/jquery-ui.min.js']}?version=#{systemConfig.getVersion()}"></script>
+        <script defer="defer" src="#{resource['js/taggle.js']}?version=#{systemConfig.getVersion()}"></script>
         <ui:fragment rendered="#{systemConfig.isShibPassiveLoginEnabled()}">
             <script defer="defer" src="#{resource['js/shib/isPassive.js']}"></script>
         </ui:fragment>

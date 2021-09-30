@@ -103,7 +103,8 @@ function bindAffiliationInputField(element, nameOfIdElement) {
 
                 },
 
-                minLength: 2
+                minLength: 2,
+
 
             }).autocomplete("widget");
 
@@ -113,8 +114,72 @@ function bindAffiliationInputField(element, nameOfIdElement) {
     }
 }
 
+
+function bindTaggleKeywordInput() {
+
+
+    $("div[data-fieldtype-name='keyword']").each(function () {
+        console.log("Found keyword div" + this);
+        //let select = $(this).next("select");
+        //console.log("Found  select" + select);
+        //let divElement = this.get();
+        let hiddenInput = $(this).next("input");
+        let taggle = new Taggle(this, {
+            placeholder: $(hiddenInput).attr('placeholder'),
+            saveOnBlur: true,
+            preserveCase: true,
+            onTagAdd : function (event, tagText) {
+                console.log("Tag Added");
+                setTagValuesInInput(hiddenInput,taggle.getTagValues());
+                /*
+                select.attr("size", taggle.getTagValues().length);
+                select.append("<option selected='selected' value='" + tagText + "'>" + tagText + "</option>")
+                */
+
+            },
+            onTagRemove : function (event, tagText) {
+                setTagValuesInInput(hiddenInput,taggle.getTagValues());
+            }
+
+
+        });
+        var currentValues = $(hiddenInput).val().split('||');
+        taggle.add(currentValues);
+    });
+
+    function setTagValuesInInput(textAreaElement, tagArray)
+    {
+        $(textAreaElement).val(tagArray.join('||'));
+    }
+
+    /*
+    let divElement = $("div[data-fieldtype-name='keywordValue.parent']").get()[0];
+    if(divElement) {
+        let keywordElementName = $("input[data-fieldtype-name='keywordValue']").attr("name");
+        $("input[data-fieldtype-name='keywordValue']").remove();
+        //datasetForm:j_idt502:0:j_idt505:9:j_idt546:1:j_idt548:0:inputText
+        //datasetForm:j_idt502:0:j_idt505:9:j_idt546:0:j_idt548:0:inputText
+
+        const keyWordValueBaseIdParts = keywordElementName.split(":");
+        console.log(keyWordValueBaseIdParts);
+        console.log(divElement.getAttribute("class"));
+        new Taggle(divElement, {
+            hiddenInputNameFunction : function(index){
+                keyWordValueBaseIdParts[6] = index;
+                return keyWordValueBaseIdParts.join(":");
+            }
+
+        });
+    }
+    */
+
+
+
+}
+
 //Rebind autosuggest after ajax requests (+/- Buttons)
 $(document).on('pfAjaxComplete', function() {
     bindAffiliationAutoComplete();
+    bindTaggleKeywordInput();
 });
 
