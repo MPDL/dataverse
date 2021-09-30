@@ -49,7 +49,7 @@ public class ControlledVocabularyApi extends AbstractApiBean {
             query.addField("id");
             query.addField("name");
             query.setParam("q.op","AND");
-            query.setRows(20);
+            query.setRows(100);
 
             QueryRequest req = new QueryRequest(query);
 
