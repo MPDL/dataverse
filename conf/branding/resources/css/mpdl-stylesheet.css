@@ -2,9 +2,10 @@
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300italic,400,200,200italic,300,600,400italic,600italic,700italic,700,900');
 
 html body {
-	background: linear-gradient(to right, rgb(255, 255, 255, 0.2), transparent 70%) fixed, url("/logos/images/bg_pic_v2.jpg") no-repeat center bottom fixed;
+	background: linear-gradient(-45deg, rgb(255, 255, 255, 0.2) 30%, transparent, rgb(255, 255, 255, 0.2) 70%) fixed, url("/logos/images/bg_pic_v2.jpg") no-repeat center bottom fixed;
 	background-size: cover;
 	font-family: "Titillium Web",Arial,Helvetica,Verdana,sans-serif !important;
+	line-height: 1.5;
 }
 
 .container {
@@ -15,20 +16,41 @@ html body {
 
 #content.container {
 	background: white;
+	padding-top: 1em;
 	padding-bottom: 20px;
+}
+
+#dashboard-block.content div.container {
+	padding-right: 0;
+	padding-left: 0;
+}
+@media(min-width:768px){
+	#dashboard-block.content div.container {
+		width: 670px;
+	}
+}
+@media(min-width:992px){
+	#dashboard-block.content div.container {
+		width: 890px;
+	}
+}
+@media(min-width:1200px){
+	#dashboard-block.content div.container {
+		width: 1090px;
+	}
 }
 
 #dataverseHeader {
 	background: white !important;
-	margin-top: 15px;
-	margin-bottom: -15px;
+	margin-top: 20px;
+	margin-bottom: -20px;
 }
 
 #breadCrumbPanel {
-	margin-top: 15px;
+	margin-top: 20px;
 	padding-top: .5em;
 	background: white !important;
-	margin-bottom: -15px;
+	margin-bottom: -20px;
 	padding-bottom: 0.5em;
 }
 
@@ -95,19 +117,40 @@ img.navbar-brand.custom-logo {
 	margin-top: 15px;
 }
 
-#messagePanel div.alert.alert-danger {
-	margin-top:1em;
+#messagePanel div.alert {
+	margin-top: 1em;
 }
 
-.ui-widget {
+.text-danger {
+	color: #b20005;
+}
+
+.glyphicon:not(.glyphicon-user) {
+	color: #04725d;
+}
+
+.ui-widget,
+.ui-widget input, 
+.ui-widget select, 
+.ui-widget textarea, 
+.ui-widget button {
 	font-family: "Titillium Web",Arial,Helvetica,Verdana,sans-serif !important;
-	line-height: normal;
+}
+
+#div-card-results > div > div,
+#div-card-results > div {
+	border-color: #04725d !important;
+}
+
+.icon-dataset.text-info {
+	color: #04725d;
 }
 
 div.panel-heading.text-info[data-toggle="collapse"] {
 	color: #04725d;
 }
 
+table[id$='resultsTable'] td > div.dataverseResult,
 table[id$='resultsTable'] td > div.datasetResult {
 	border-color: #04725d;
 }
@@ -196,4 +239,11 @@ div[data-fieldtype-name="authorIdentifier.parent"]{
 /* Hide the dataverse advanced search panel for dataverses */
 #advancedSearchForm > div.panel:nth-of-type(2) {
 	display:none;
+}
+
+.jqueryui .ui-autocomplete {
+	max-height: 250px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
 }
