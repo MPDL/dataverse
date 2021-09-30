@@ -125,7 +125,7 @@ img.navbar-brand.custom-logo {
 	color: #b20005;
 }
 
-.glyphicon:not(.glyphicon-user) {
+.glyphicon:not(.glyphicon-user, .glyphicon-asterisk) {
 	color: #04725d;
 }
 
