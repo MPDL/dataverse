@@ -129,7 +129,7 @@
                                                 we wrap them in a ui:repeat that iterates on a single list. Note: dummyVar is never used--></ui:remove>
                                             <ui:repeat value="#{Collections:singletonList('')}" var="dummyVar">
                                                 <div class="form-col-container col-sm-12">
-                                                    <ui:repeat value="#{dsf.datasetFieldValues}" var="dsfv" varStatus="valCount" rendered="#{dsf.datasetFieldType.fieldType!='TAG'}">
+                                                    <ui:repeat value="#{dsf.datasetFieldValues}" var="dsfv" varStatus="valCount">
                                                         <div class="form-group dataset-field-values">
                                                             <div class="form-col-container col-sm-9 edit-field">
                                                                 <ui:include src="datasetFieldForEditFragment.xhtml">
