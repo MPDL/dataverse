@@ -306,7 +306,7 @@
 	language	Not applicable		185											
 	studyType	observational		0
 	studyType	experimental		1
-	studyType	simulation		2
-	studyType	derived		3
+	studyType	simulation/modelling		2
+	studyType	derived/complied		3
 	studyType	survey		4
 	studyType	other		5
