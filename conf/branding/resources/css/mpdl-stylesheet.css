@@ -1,10 +1,11 @@
 /* Add any CSS necessary for your custom content */
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300italic,400,200,200italic,300,600,400italic,600italic,700italic,700,900');
 
-html body {
-	background: linear-gradient(to right, rgb(255, 255, 255, 0.2), transparent 70%) fixed, url("/logos/images/bg_pic_v2.jpg") no-repeat center bottom fixed;
+body {
+	background: linear-gradient(-45deg, rgb(255, 255, 255, 0.2) 30%, transparent, rgb(255, 255, 255, 0.2) 70%) fixed, url("/logos/images/bg_pic_v2.jpg") no-repeat center bottom fixed;
 	background-size: cover;
 	font-family: "Titillium Web",Arial,Helvetica,Verdana,sans-serif !important;
+	line-height: 1.6;
 }
 
 .container {
@@ -15,20 +16,41 @@ html body {
 
 #content.container {
 	background: white;
+	padding-top: 20px;
 	padding-bottom: 20px;
+}
+
+#dashboard-block.content div.container {
+	padding-right: 0;
+	padding-left: 0;
+}
+@media(min-width:768px){
+	#dashboard-block.content div.container {
+		width: 670px;
+	}
+}
+@media(min-width:992px){
+	#dashboard-block.content div.container {
+		width: 890px;
+	}
+}
+@media(min-width:1200px){
+	#dashboard-block.content div.container {
+		width: 1090px;
+	}
 }
 
 #dataverseHeader {
 	background: white !important;
-	margin-top: 15px;
-	margin-bottom: -15px;
+	margin-top: 20px;
+	margin-bottom: -20px;
 }
 
 #breadCrumbPanel {
-	margin-top: 15px;
+	margin-top: 20px;
 	padding-top: .5em;
 	background: white !important;
-	margin-bottom: -15px;
+	margin-bottom: -20px;
 	padding-bottom: 0.5em;
 }
 
@@ -92,22 +114,47 @@ img.navbar-brand.custom-logo {
 }
 
 #messagePanel div.messagePanel {
-	margin-top: 15px;
+	margin-top: 20px;
 }
 
-#messagePanel div.alert.alert-danger {
-	margin-top:1em;
+#messagePanel div.alert {
+	margin-top: 1em;
 }
 
-.ui-widget {
+.text-danger {
+	color: #b20005;
+}
+
+.glyphicon:not(.glyphicon-user, .glyphicon-asterisk, .glyphicon-log-in) {
+	color: #04725d;
+}
+
+.glyphicon.glyphicon-asterisk {
+	color: #d45900;
+}
+
+.ui-widget,
+.ui-widget input, 
+.ui-widget select, 
+.ui-widget textarea, 
+.ui-widget button {
 	font-family: "Titillium Web",Arial,Helvetica,Verdana,sans-serif !important;
-	line-height: normal;
+}
+
+#div-card-results > div > div,
+#div-card-results > div {
+	border-color: #04725d !important;
+}
+
+.icon-dataset.text-info {
+	color: #04725d;
 }
 
 div.panel-heading.text-info[data-toggle="collapse"] {
 	color: #04725d;
 }
 
+table[id$='resultsTable'] td > div.dataverseResult,
 table[id$='resultsTable'] td > div.datasetResult {
 	border-color: #04725d;
 }
@@ -165,6 +212,38 @@ a.highlightBold,
 	border-color: #04725d;
 }
 
+input[type="checkbox"] {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	width: 16px;
+ 	height: 16px;
+	padding: 0;
+	margin: 4px 0 0 0;
+	color: rgb(51, 51, 51);
+	background-color: rgb(230, 230, 230);
+	background-position: 0px -15px;
+	background-repeat: repeat-x;
+ 	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-bottom-color: rgba(0, 0, 0, 0.25);
+	border-radius: 2px;
+	display: inline-block;
+	box-sizing: border-box;
+}
+
+input[type=checkbox]:focus {
+    outline: none;
+}
+
+input[type=checkbox]:checked:before {
+	display: block;
+	background-image: url("/javax.faces.resource/images/ui-icons_333333_256x240.png.xhtml?ln=primefaces-bootstrap&v=10.0.0");
+	background-position: -64px -144px;
+	background-repeat: no-repeat;
+	content:"\2713";
+	text-indent: -99999px;
+}
+
 #footer .container {
 	background: transparent;
 }
@@ -196,4 +275,11 @@ div[data-fieldtype-name="authorIdentifier.parent"]{
 /* Hide the dataverse advanced search panel for dataverses */
 #advancedSearchForm > div.panel:nth-of-type(2) {
 	display:none;
+}
+
+.jqueryui .ui-autocomplete {
+	max-height: 250px;
+	overflow-y: auto;
+	/* prevent horizontal scrollbar */
+	overflow-x: hidden;
 }
