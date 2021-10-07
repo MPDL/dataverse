@@ -1,11 +1,11 @@
 /* Add any CSS necessary for your custom content */
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300italic,400,200,200italic,300,600,400italic,600italic,700italic,700,900');
 
-html body {
+body {
 	background: linear-gradient(-45deg, rgb(255, 255, 255, 0.2) 30%, transparent, rgb(255, 255, 255, 0.2) 70%) fixed, url("/logos/images/bg_pic_v2.jpg") no-repeat center bottom fixed;
 	background-size: cover;
 	font-family: "Titillium Web",Arial,Helvetica,Verdana,sans-serif !important;
-	line-height: 1.5;
+	line-height: 1.6;
 }
 
 .container {
