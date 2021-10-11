@@ -76,6 +76,7 @@ body {
 	margin-right: auto;
 	height: 92px;
 }
+
 @media(min-width:768px){
 	#dataverse-header-block,
     .navbar-default {
@@ -92,6 +93,12 @@ body {
 	#dataverse-header-block,
     .navbar-default {
 		width: 1170px;
+	}
+}
+
+@media(max-width:992px){
+	div#topNavBar.navbar-collapse.collapse.in {
+		background-color: #f8f8f8;	
 	}
 }
 
