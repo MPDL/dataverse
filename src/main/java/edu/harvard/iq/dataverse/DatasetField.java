@@ -10,15 +10,8 @@ package edu.harvard.iq.dataverse;
  * @author skraffmiller
  */
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -218,6 +211,30 @@ public class DatasetField implements Serializable {
             datasetFieldValues.add(new DatasetFieldValue(this));
         }
         datasetFieldValues.get(0).setValue(value);
+    }
+
+    public void setKeywordValues(String values) {
+        datasetFieldCompoundValues.clear();
+        if(values !=null)
+        {
+            for (String val : values.split("\\|\\|")) {
+                DatasetFieldCompoundValue keywordParent = DatasetFieldCompoundValue.createNewEmptyDatasetFieldCompoundValue(this);
+
+                for(DatasetField childDf : keywordParent.getChildDatasetFields()){
+                    if(DatasetFieldConstant.keywordValue.equals(childDf.getDatasetFieldType().getName())){
+                        childDf.setSingleValue(val);
+                    }
+                }
+                datasetFieldCompoundValues.add(keywordParent);
+            }
+        }
+    }
+
+    public String getKeywordValues() {
+        return datasetFieldCompoundValues.stream().flatMap(i -> i.getChildDatasetFields().stream())
+                .filter(i -> DatasetFieldConstant.keywordValue.equals(i.getDatasetFieldType().getName()))
+                .map(i -> i.getValue()).filter(Objects::nonNull).collect(Collectors.joining("||"));
+
     }
 
     public ControlledVocabularyValue getSingleControlledVocabularyValue() {

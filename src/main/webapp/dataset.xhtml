@@ -1681,13 +1681,14 @@
                     <p:remoteCommand name="returnToAuthorCommand" action="#{DatasetPage.sendBackToContributor}"/>
                     <!-- END: Publish/Submit for Review Dialogs -->
                 </h:form>
-                <script defer="defer" src="#{resource['js/affiliationSuggest.js']}?version=#{systemConfig.getVersion()}"></script>
+                <script defer="defer" src="#{resource['js/mpdl.js']}?version=#{systemConfig.getVersion()}"></script>
                 <script>
                     //<![CDATA[
                     $(document).ready(function () {
                         popoverHTML('#{bundle.htmlAllowedTitle}', '#{bundle.htmlAllowedTags}');
                         summaryDescTruncation();
                         bindAffiliationAutoComplete();
+                        bindTaggleKeywordInput();
                     });
                     function summaryDescTruncation() {
                         // truncate summary description, contentTruncate function in dv_rebind_bootstrap_ui.js

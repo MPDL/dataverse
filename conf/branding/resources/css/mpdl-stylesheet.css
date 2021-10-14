@@ -319,9 +319,15 @@ div[data-fieldtype-name="authorIdentifier.parent"]{
 	display:none;
 }
 
+/* Make the autosuggest for affiliations scrollable */
 .jqueryui .ui-autocomplete {
 	max-height: 250px;
 	overflow-y: auto;
 	/* prevent horizontal scrollbar */
 	overflow-x: hidden;
+}
+
+/* Make the file description in the single file view displaying line breaks */
+#fileDescriptionBlock > td {
+	white-space: pre-line;
 }
