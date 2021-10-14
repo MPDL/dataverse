@@ -6,7 +6,7 @@ html {
 	--mpdl-lightgreen: #06a385;
 	--mpdl-red: #b20005;
 	--mpdl-orange: #d45900;
-	--mpdl-darkgray: #333333;
+	--mpdl-darkgray: #222222;
 }
 
 body {
@@ -108,6 +108,12 @@ body {
 	}
 }
 
+ul.nav.navbar-nav.navbar-right li:nth-last-child(2) {
+	visibility: hidden;
+	width: 0;
+	height: 0;
+}
+
 #navbarFixed .navbar-brand.custom-logo {
 	padding: 15px 10px;
 }
@@ -173,10 +179,15 @@ div.panel-heading.text-info[data-toggle="collapse"] {
 	color: var(--mpdl-darkgreen);
 }
 
+.datasetResult {
+	color: #222222;
+	color: var(--mpdl-darkgray);
+}
+
 table[id$='resultsTable'] td > div.dataverseResult,
 table[id$='resultsTable'] td > div.datasetResult {
 	border-color: #04725d;
-	color: var(--mpdl-darkgreen);
+	border-color: var(--mpdl-darkgreen);
 }
 
 a {
@@ -250,7 +261,7 @@ input[type="checkbox"] {
  	height: 16px;
 	padding: 0;
 	margin: 4px 0 0 0;
-	color: #333333;
+	color: #222222;
 	color: var(--mpdl-darkgray);
 	background-color: rgb(230, 230, 230);
 	background-position: 0px -15px;
