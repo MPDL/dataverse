@@ -102,7 +102,53 @@
                                                     </p>
                                                 </ui:fragment>
                                                 <ui:repeat value="#{dsf.datasetFieldCompoundValues}" var="compoundValue">
-                                                    <ui:repeat value="#{compoundValue.displayValueMap.entrySet().toArray()}" var="cvPart" varStatus="partStatus">
+                                                    <!--MPDL specific -->
+                                                    <!-- 	authorName authorIdentifier authorAffiliation authorAffiliationId authorAffiliationDepartment authorAffiliation2 authorAffiliation2Id authorAffiliation2Department authorAffiliation3 authorAffiliation3Id authorAffiliation3Department -->
+                                                    <ui:fragment rendered="#{dsf.datasetFieldType.name == 'author'}">
+                                                        <ui:param name="authorName" value="#{compoundValue.getChildDatasetFieldByTypeName('authorName')}"/>
+                                                        <ui:param name="authorIdentifier" value="#{compoundValue.getChildDatasetFieldByTypeName('authorIdentifier')}"/>
+                                                        <ui:param name="authorAffiliation" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation')}"/>
+                                                        <ui:param name="authorAffiliationId" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliationId')}"/>
+                                                        <ui:param name="authorAffiliationDepartment" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliationDepartment')}"/>
+                                                        <ui:param name="authorAffiliation2" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation2')}"/>
+                                                        <ui:param name="authorAffiliation2Id" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation2Id')}"/>
+                                                        <ui:param name="authorAffiliation2Department" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation2Department')}"/>
+                                                        <ui:param name="authorAffiliation3" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation3')}"/>
+                                                        <ui:param name="authorAffiliation3Id" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation3Id')}"/>
+                                                        <ui:param name="authorAffiliation3Department" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation3Department')}"/>
+
+                                                        <h:outputText class="highlightBold" value="#{authorName.displayValue}"/>
+                                                        <h:outputLink value="#{authorIdentifier.value}" rendered="#{not empty authorIdentifier}" target="_blank">
+                                                            <img alt="ORCID logo" src="/resources/images/orcid_16x16.png" width="16" height="16" />
+                                                        </h:outputLink>
+                                                        <br/>
+                                                        <h:outputText value="#{authorAffiliationDepartment.displayValue}, " rendered="#{not empty authorAffiliationDepartment}"/>
+                                                        <h:outputText value="#{authorAffiliation.displayValue}"/>
+                                                        <h:outputLink value="#{authorAffiliationId.value}" rendered="#{not empty authorAffiliationId}" target="_blank">
+                                                            <img alt="ROR logo" src="/resources/images/ror-icon-rgb-16.png" width="16" height="16" />
+                                                        </h:outputLink>
+                                                        <ui:fragment rendered="#{not empty authorAffiliation2}">
+                                                            <br/>
+                                                            <h:outputText value="#{authorAffiliation2Department.displayValue}, " rendered="#{not empty authorAffiliation2Department}"/>
+                                                            <h:outputText value="#{authorAffiliation2.displayValue}"/>
+                                                            <h:outputLink value="#{authorAffiliation2Id.value}" rendered="#{not empty authorAffiliation2Id}" target="_blank">
+                                                                <img alt="ROR logo" src="/resources/images/ror-icon-rgb-16.png" width="16" height="16" />
+                                                            </h:outputLink>
+                                                        </ui:fragment>
+                                                        <ui:fragment rendered="#{not empty authorAffiliation3}">
+                                                            <br/>
+                                                            <h:outputText value="#{authorAffiliation3Department.displayValue}, " rendered="#{not empty authorAffiliation3Department}"/>
+                                                            <h:outputText value="#{authorAffiliation3.displayValue}"/>
+                                                            <h:outputLink value="#{authorAffiliation3Id.value}" rendered="#{not empty authorAffiliation3Id}" target="_blank">
+                                                                <img alt="ROR logo" src="/resources/images/ror-icon-rgb-16.png" width="16" height="16" />
+                                                            </h:outputLink>
+                                                        </ui:fragment>
+                                                        <br/>
+
+                                                    </ui:fragment>
+                                                    <!--END MPDL specific-->
+
+                                                    <ui:repeat value="#{compoundValue.displayValueMap.entrySet().toArray()}" var="cvPart" varStatus="partStatus" rendered="#{dsf.datasetFieldType.name != 'author'}">
                                                         <h:outputText value="#{dsf.datasetFieldType.displayFormat} " rendered="${!partStatus.first and !cvocConf.containsKey(dsf.datasetFieldType.id)}"/>
                                                         <h:outputText value="#{cvPart.value}"
                                                                       escape="#{cvPart.key.datasetFieldType.isEscapeOutputText()}"

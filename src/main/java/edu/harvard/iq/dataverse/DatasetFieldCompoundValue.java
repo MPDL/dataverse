@@ -194,4 +194,9 @@ public class DatasetFieldCompoundValue implements Serializable {
         return mapIn;
 
     }
+
+
+    public DatasetField getChildDatasetFieldByTypeName(String typeName) {
+        return childDatasetFields.stream().filter(i -> typeName.equals(i.getDatasetFieldType().getName())).findFirst().orElse(null);
+    }
 }
