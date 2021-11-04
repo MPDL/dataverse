@@ -103,7 +103,8 @@ body {
 }
 
 @media(max-width:992px){
-	div#topNavBar.navbar-collapse.collapse.in {
+	div#topNavBar.navbar-collapse.collapse.in,
+	div#topNavBar.navbar-collapse.collapsing {
 		background-color: #f8f8f8;	
 	}
 }
