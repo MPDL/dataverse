@@ -5,11 +5,11 @@
 ####
 
 ### SOLR index for dataverse ###
-#SOLR_PATH=/srv/web/solr/solr-8.8.1
-#SOLR_USER=solr
+SOLR_PATH=/srv/web/solr/solr-8.8.1
+SOLR_USER=solr
 
-SOLR_PATH=/Users/haarlae1/Servers/solr-8.8.2
-SOLR_USER=haarlae1
+#SOLR_PATH=/Users/haarlae1/Servers/solr-8.8.2
+#SOLR_USER=haarlae1
 
 echo "Copying schema.xml and solrconfig.xml to collection1 index core"
 cp ../solr/8.8.1/schema.xml $SOLR_PATH/server/solr/collection1/conf
