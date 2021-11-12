@@ -106,6 +106,9 @@ body {
 	div#topNavBar.navbar-collapse.collapse.in {
 		background-color: #f8f8f8;	
 	}
+	div#topNavBar.navbar-collapse.collapsing {
+		background-color: #f8f8f8;
+	}
 }
 
 #navbarFixed .navbar-brand.custom-logo {

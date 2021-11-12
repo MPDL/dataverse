@@ -8,15 +8,16 @@ SOLR_SCHEMA=${INSTALLER_ZIP_DIR}/schema.xml ${INSTALLER_ZIP_DIR}/update-fields.s
 SOLR_CONFIG=${INSTALLER_ZIP_DIR}/solrconfig.xml
 PYTHON_FILES=${INSTALLER_ZIP_DIR}/README_python.txt ${INSTALLER_ZIP_DIR}/installConfig.py ${INSTALLER_ZIP_DIR}/installUtils.py ${INSTALLER_ZIP_DIR}/install.py ${INSTALLER_ZIP_DIR}/installAppServer.py ${INSTALLER_ZIP_DIR}/requirements.txt ${INSTALLER_ZIP_DIR}/default.config ${INSTALLER_ZIP_DIR}/interactive.config
 INSTALL_SCRIPT=${INSTALLER_ZIP_DIR}/install
+MPDL_FILES=${INSTALLER_ZIP_DIR}/branding
 
 installer:	dvinstall.zip
 
 clean: 
 	/bin/rm -rf ${INSTALLER_ZIP_DIR} dvinstall.zip
 
-dvinstall.zip:	${GLASSFISH_SETUP_SCRIPT} ${JSF_PATCH_DIR} ${DISTRIBUTION_WAR_FILE} ${API_SCRIPTS} ${JHOVE_CONFIG} ${JHOVE_SCHEMA} ${SOLR_SCHEMA} ${SOLR_CONFIG} ${PYTHON_FILES} ${INSTALL_SCRIPT}
+dvinstall.zip:	${GLASSFISH_SETUP_SCRIPT} ${JSF_PATCH_DIR} ${DISTRIBUTION_WAR_FILE} ${API_SCRIPTS} ${JHOVE_CONFIG} ${JHOVE_SCHEMA} ${SOLR_SCHEMA} ${SOLR_CONFIG} ${PYTHON_FILES} ${INSTALL_SCRIPT} ${MPDL_FILES}
 	@echo making installer...
-	zip -r dvinstall.zip ${GLASSFISH_SETUP_SCRIPT} ${JSF_PATCH_DIR} ${DISTRIBUTION_WAR_FILE} ${API_SCRIPTS} ${JHOVE_CONFIG} ${JHOVE_SCHEMA} ${SOLR_SCHEMA} ${SOLR_CONFIG} ${PYTHON_FILES} ${INSTALL_SCRIPT}
+	zip -r dvinstall.zip ${GLASSFISH_SETUP_SCRIPT} ${JSF_PATCH_DIR} ${DISTRIBUTION_WAR_FILE} ${API_SCRIPTS} ${JHOVE_CONFIG} ${JHOVE_SCHEMA} ${SOLR_SCHEMA} ${SOLR_CONFIG} ${PYTHON_FILES} ${INSTALL_SCRIPT} ${MPDL_FILES}
 	@echo 
 	@echo "Done!"
 
@@ -67,3 +68,8 @@ ${SOLR_CONFIG}:		../../conf/solr/8.8.1/solrconfig.xml ${INSTALLER_ZIP_DIR}
 ${PYTHON_FILES}: README_python.txt install.py installConfig.py installAppServer.py installUtils.py requirements.txt default.config interactive.config ${INSTALLER_ZIP_DIR}
 	@echo copying Python installer files
 	/bin/cp README_python.txt install.py installConfig.py installAppServer.py installUtils.py requirements.txt default.config interactive.config ${INSTALLER_ZIP_DIR}
+
+#MPDL-specific
+${MPDL_FILES}: ../../conf/branding ${INSTALLER_ZIP_DIR}
+	@echo copying MPDL specific branding files
+	/bin/cp -r ../../conf/branding ${INSTALLER_ZIP_DIR}

@@ -1,0 +1,5 @@
+{
+  "name": "MPG Shibboleth Users",
+  "attribute": "Shib-Identity-Provider",
+  "pattern": "https://login.mpg.de/simplesaml/saml2/idp/metadata.php"
+}

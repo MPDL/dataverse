@@ -12,9 +12,11 @@ projectHome=../..
 
 destinationDocroot="/srv/web/payara5/glassfish/domains/domain1/docroot"
 #destinationDocroot="/usr/local/payara5/glassfish/domains/domain1/docroot"
+#destinationDocroot="/Users/haarlae1/Servers/payara5/glassfish/domains/domain1/docroot"
 
 destinationCustomizationFiles="/srv/mpdl-dataverse-branding"
 #destinationCustomizationFiles=/var/www/dataverse/branding
+#destinationCustomizationFiles="/Users/haarlae1/Servers/mpdl-dataverse-branding"
 
 unblock="?unblock-key=blkAPI_dev_ed2" 
 ############################################## !!!
@@ -77,25 +79,25 @@ fi
 
 echo "... copying resources to destination ..."
 
-cp -R $projectHome/conf/branding/resources/assets/* $destinationDocroot/logos/
+cp -R resources/assets/* $destinationDocroot/logos/
 if [ $? -eq 0 ]; then
-  echo "$projectHome/conf/branding/resources/assets/* copied to $destinationDocroot/logos/"
+  echo "resources/assets/* copied to $destinationDocroot/logos/"
   status+=0
 else
   status+=1
 fi
 
-cp $projectHome/conf/branding/resources/css/*.css $destinationCustomizationFiles
+cp resources/css/*.css $destinationCustomizationFiles
 if [ $? -eq 0 ]; then
-  echo "$projectHome/conf/branding/resources/css/*.css copied to $destinationCustomizationFiles"
+  echo "resources/css/*.css copied to $destinationCustomizationFiles"
   status+=0
 else
   status+=1
 fi
 
-cp $projectHome/conf/branding/resources/*.html $destinationCustomizationFiles
+cp resources/*.html $destinationCustomizationFiles
 if [ $? -eq 0 ]; then
-  echo "$projectHome/conf/branding/resources/assets/*.html copied to $destinationCustomizationFiles"
+  echo "resources/assets/*.html copied to $destinationCustomizationFiles"
   status+=0
 else
   status+=1
