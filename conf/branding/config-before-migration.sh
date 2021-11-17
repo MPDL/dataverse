@@ -64,6 +64,9 @@ curl -X PUT -d '' http://localhost:8080/api/admin/settings/:SystemEmail
 echo "Disable tabular ingest processing for migration -- RESET after migration!!"
 curl -X PUT -d 0 http://localhost:8080/api/admin/settings/:TabularIngestSizeLimit
 
+echo "Disable zip file extraction on ingest"
+curl -X PUT -d 0 http://localhost:8080/api/admin/settings/:ZipUploadFilesLimit
+
 echo "Disable checksum validation on publish for migration -- RESET after migration to 2GB!!"
 curl -X PUT -d 0 http://localhost:8080/api/admin/settings/:DataFileChecksumValidationSizeLimit
 
