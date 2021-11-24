@@ -107,6 +107,9 @@ body {
 	div#topNavBar.navbar-collapse.collapsing {
 		background-color: #f8f8f8;	
 	}
+	div#topNavBar.navbar-collapse.collapsing {
+		background-color: #f8f8f8;
+	}
 }
 
 ul.nav.navbar-nav.navbar-right li:nth-last-child(2) {

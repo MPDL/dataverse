@@ -12,7 +12,7 @@
 		 persistence tables on startup; will make deployment
 		 faster. - L.A. -->
             <property name="eclipselink.ddl-generation" value="create-tables"/>
-            <property name="eclipselink.cache.shared.default" value="false"/>
+            <property name="eclipselink.cache.shared.default" value="true"/>
             <!-- The following property allows primary keys of 0 -->
             <property name="eclipselink.id-validation" value="NULL"/>
             <!-- Uncomment next lines to show all SQL queries in the log -->

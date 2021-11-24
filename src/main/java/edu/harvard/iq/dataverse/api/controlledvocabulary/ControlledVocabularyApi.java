@@ -46,9 +46,12 @@ public class ControlledVocabularyApi extends AbstractApiBean {
             sbb.append(")");
 
             final SolrQuery query = new SolrQuery(sbb.toString());
+            query.setParam("defType", "edismax");
             query.addField("id");
             query.addField("name");
             query.setParam("q.op","AND");
+            //Boost Max Planck related institutes
+            query.setParam("bq", "relationships.label:(\"Max Planck\")^2");
             query.setRows(100);
 
             QueryRequest req = new QueryRequest(query);

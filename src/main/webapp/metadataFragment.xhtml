@@ -3,16 +3,26 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:o="http://omnifaces.org/ui"
                 xmlns:jsf="http://xmlns.jcp.org/jsf"
                 xmlns:ptr="http://xmlns.jcp.org/jsf/passthrough">
-
-
-
+    <p:fragment>
+        <p:autoUpdate/>
+        <ui:repeat value="#{DatasetPage.vocabScripts}" var="vocabScriptUrl">
+            <script src="#{vocabScriptUrl}?version=#{systemConfig.getVersion()}"/>
+        </ui:repeat>
+    </p:fragment>
+    <c:set var="cvocConf" value="#{DatasetPage.getCVocConf()}"/>
     <!-- View Mode -->
     <div class="panel-group" jsf:rendered="${empty editMode  or managePage}">
         <o:importFunctions type="edu.harvard.iq.dataverse.util.MarkupChecker" />
+        <p>
+            <h:outputFormat rendered="#{!(empty mdLang)}" value="#{bundle['dataset.metadatalanguage.view.guidance']}" escape="false">
+                <f:param value="#{mdLang}"/>
+            </h:outputFormat>
+        </p>
         <ui:repeat value="#{metadataBlocks}"
                    var="metadataBlockVal" varStatus="block">
             <div class="panel panel-default">
@@ -48,6 +58,14 @@
                                         </th>
                                         <td>#{publicationDate}</td>
                                     </tr>
+                                    <tr id="metadata_citationDate" jsf:rendered="#{!empty publicationDate and (publicationDate ne citationDate)}">
+                                        <th scope="row">
+                                            #{bundle['dataset.metadata.citationDate']}
+                                            <span class="glyphicon glyphicon-question-sign tooltip-icon"
+                                                  data-toggle="tooltip" data-placement="auto right" data-original-title="#{bundle['dataset.metadata.citationDate.tip']}"></span>
+                                        </th>
+                                        <td>#{citationDate}</td>
+                                    </tr>
                                 </ui:fragment>
                                 <ui:repeat value="#{metadataBlockVal.value}" var="dsf">
                                     <tr id="metadata_#{dsf.datasetFieldType.name}">
@@ -58,10 +76,29 @@
                                         </th>
                                           <td jsf:rendered="#{!anonymized or !settingsWrapper.shouldBeAnonymized(dsf)}">
                                             <!-- Primitive datasetFields -->
-                                            <ui:fragment rendered="#{dsf.datasetFieldType.primitive}">   
-                                                <h:outputText value="#{dsf.displayValue}" rendered="#{!dsf.datasetFieldType.allowMultiples}"
-                                                              escape="#{dsf.datasetFieldType.isEscapeOutputText()}"/>
-                                                <ui:repeat value="#{dsf.values}" var="value" varStatus="loop" rendered="#{dsf.datasetFieldType.allowMultiples}">
+                                            <ui:fragment rendered="#{dsf.datasetFieldType.primitive}">
+                                                <h:outputText value="#{dsf.value}"
+                                                    rendered="#{!dsf.datasetFieldType.allowMultiples and cvocConf.containsKey(dsf.datasetFieldType.id)}"
+                                                    escape="#{dsf.datasetFieldType.isEscapeOutputText()}">
+                                                    <f:passThroughAttribute name="lang" value="#{DatasetPage.getFieldLanguage(cvocConf.get(dsf.datasetFieldType.id).getString('languages'))}" />
+                                                    <f:passThroughAttribute name="data-cvoc-service-url" value="#{cvocConf.get(dsf.datasetFieldType.id).getString('cvoc-url','')}" />
+                                                    <f:passThroughAttribute name="data-cvoc-protocol" value="#{cvocConf.get(dsf.datasetFieldType.id).getString('protocol','')}" />
+                                                    <f:passThroughAttribute name="data-cvoc-managedfields" value="#{cvocConf.get(dsf.datasetFieldType.id).get('managedfields').toString()}" />
+                                                </h:outputText>
+                                                <h:outputText value="#{dsf.getDisplayValue(mdLangCode)}"
+                                                    rendered="#{!dsf.datasetFieldType.allowMultiples and !cvocConf.containsKey(dsf.datasetFieldType.id)}"
+                                                    escape="#{dsf.datasetFieldType.isEscapeOutputText()}"/>
+                                                <ui:repeat value="#{dsf.getValues_nondisplay()}" var="value" varStatus="loop" rendered="#{dsf.datasetFieldType.allowMultiples and cvocConf.containsKey(dsf.datasetFieldType.id)}">
+                                                    <h:outputText value="#{loop.first?'':'; '}"/>
+                                                    <h:outputText value="#{ value }"
+                                                                  escape="#{dsf.datasetFieldType.isEscapeOutputText()}">
+                                                        <f:passThroughAttribute name="lang" value="#{DatasetPage.getFieldLanguage(cvocConf.get(dsf.datasetFieldType.id).getString('languages'))}" />
+                                                        <f:passThroughAttribute name="data-cvoc-service-url" value="#{cvocConf.get(dsf.datasetFieldType.id).getString('cvoc-url','')}" />
+                                                        <f:passThroughAttribute name="data-cvoc-protocol" value="#{cvocConf.get(dsf.datasetFieldType.id).getString('protocol','')}" />
+                                                        <f:passThroughAttribute name="data-cvoc-managedfields" value="#{cvocConf.get(dsf.datasetFieldType.id).get('managedfields').toString()}" />
+                                                    </h:outputText>
+                                                </ui:repeat>
+                                                <ui:repeat value="#{dsf.getValues(mdLangCode)}" var="value" varStatus="loop" rendered="#{dsf.datasetFieldType.allowMultiples and !cvocConf.containsKey(dsf.datasetFieldType.id)}">
                                                     <h:outputText value="#{loop.first?'':'; '}#{ value }"
                                                                   escape="#{dsf.datasetFieldType.isEscapeOutputText()}"/>
                                                 </ui:repeat>
@@ -74,10 +111,65 @@
                                                     </p>
                                                 </ui:fragment>
                                                 <ui:repeat value="#{dsf.datasetFieldCompoundValues}" var="compoundValue">
-                                                    <ui:repeat value="#{compoundValue.displayValueMap.entrySet().toArray()}" var="cvPart" varStatus="partStatus">                                           
-                                                        <h:outputText value="#{dsf.datasetFieldType.displayFormat} " rendered="${!partStatus.first}"/>
+                                                    <!--MPDL specific -->
+                                                    <!-- 	authorName authorIdentifier authorAffiliation authorAffiliationId authorAffiliationDepartment authorAffiliation2 authorAffiliation2Id authorAffiliation2Department authorAffiliation3 authorAffiliation3Id authorAffiliation3Department -->
+                                                    <ui:fragment rendered="#{dsf.datasetFieldType.name == 'author'}">
+                                                        <ui:param name="authorName" value="#{compoundValue.getChildDatasetFieldByTypeName('authorName')}"/>
+                                                        <ui:param name="authorIdentifier" value="#{compoundValue.getChildDatasetFieldByTypeName('authorIdentifier')}"/>
+                                                        <ui:param name="authorAffiliation" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation')}"/>
+                                                        <ui:param name="authorAffiliationId" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliationId')}"/>
+                                                        <ui:param name="authorAffiliationDepartment" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliationDepartment')}"/>
+                                                        <ui:param name="authorAffiliation2" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation2')}"/>
+                                                        <ui:param name="authorAffiliation2Id" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation2Id')}"/>
+                                                        <ui:param name="authorAffiliation2Department" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation2Department')}"/>
+                                                        <ui:param name="authorAffiliation3" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation3')}"/>
+                                                        <ui:param name="authorAffiliation3Id" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation3Id')}"/>
+                                                        <ui:param name="authorAffiliation3Department" value="#{compoundValue.getChildDatasetFieldByTypeName('authorAffiliation3Department')}"/>
+
+                                                        <h:outputText class="highlightBold" value="#{authorName.displayValue}"/>
+                                                        <h:outputLink value="#{authorIdentifier.value}" rendered="#{not empty authorIdentifier}" target="_blank">
+                                                            <img alt="ORCID logo" src="/resources/images/orcid_16x16.png" width="16" height="16" />
+                                                        </h:outputLink>
+                                                        <br/>
+                                                        <h:outputText value="#{authorAffiliationDepartment.displayValue}, " rendered="#{not empty authorAffiliationDepartment}"/>
+                                                        <h:outputText value="#{authorAffiliation.displayValue}"/>
+                                                        <h:outputLink value="#{authorAffiliationId.value}" rendered="#{not empty authorAffiliationId}" target="_blank">
+                                                            <img alt="ROR logo" src="/resources/images/ror-icon-rgb-16.png" width="16" height="16" />
+                                                        </h:outputLink>
+                                                        <ui:fragment rendered="#{not empty authorAffiliation2}">
+                                                            <br/>
+                                                            <h:outputText value="#{authorAffiliation2Department.displayValue}, " rendered="#{not empty authorAffiliation2Department}"/>
+                                                            <h:outputText value="#{authorAffiliation2.displayValue}"/>
+                                                            <h:outputLink value="#{authorAffiliation2Id.value}" rendered="#{not empty authorAffiliation2Id}" target="_blank">
+                                                                <img alt="ROR logo" src="/resources/images/ror-icon-rgb-16.png" width="16" height="16" />
+                                                            </h:outputLink>
+                                                        </ui:fragment>
+                                                        <ui:fragment rendered="#{not empty authorAffiliation3}">
+                                                            <br/>
+                                                            <h:outputText value="#{authorAffiliation3Department.displayValue}, " rendered="#{not empty authorAffiliation3Department}"/>
+                                                            <h:outputText value="#{authorAffiliation3.displayValue}"/>
+                                                            <h:outputLink value="#{authorAffiliation3Id.value}" rendered="#{not empty authorAffiliation3Id}" target="_blank">
+                                                                <img alt="ROR logo" src="/resources/images/ror-icon-rgb-16.png" width="16" height="16" />
+                                                            </h:outputLink>
+                                                        </ui:fragment>
+                                                        <br/>
+
+                                                    </ui:fragment>
+                                                    <!--END MPDL specific-->
+
+                                                    <ui:repeat value="#{compoundValue.displayValueMap.entrySet().toArray()}" var="cvPart" varStatus="partStatus" rendered="#{dsf.datasetFieldType.name != 'author'}">
+                                                        <h:outputText value="#{dsf.datasetFieldType.displayFormat} " rendered="${!partStatus.first and !cvocConf.containsKey(dsf.datasetFieldType.id)}"/>
                                                         <h:outputText value="#{cvPart.value}"
-                                                                      escape="#{cvPart.key.datasetFieldType.isEscapeOutputText()}"/>
+                                                                      escape="#{cvPart.key.datasetFieldType.isEscapeOutputText()}"
+                                                                      rendered="${!cvocConf.containsKey(dsf.datasetFieldType.id)}"/>
+                                                        <h:outputText value="#{cvPart.key.value}"
+                                                                      escape="#{cvPart.key.datasetFieldType.isEscapeOutputText()}"
+                                                                      rendered="${cvocConf.containsKey(dsf.datasetFieldType.id) and cvPart.key.datasetFieldType.name.equals(cvocConf.get(dsf.datasetFieldType.id).getString('term-uri-field'))}">
+                                                                      <f:passThroughAttribute name="lang" value="#{DatasetPage.getFieldLanguage(cvocConf.get(dsf.datasetFieldType.id).getString('languages'))}" />
+                                                                      <f:passThroughAttribute name="data-cvoc-service-url" value="#{cvocConf.get(dsf.datasetFieldType.id).getString('cvoc-url','')}" />
+                                                                      <f:passThroughAttribute name="data-cvoc-protocol" value="#{cvocConf.get(dsf.datasetFieldType.id).getString('protocol','')}" />
+                                                                      <f:passThroughAttribute name="data-cvoc-managedfields" value="#{cvocConf.get(dsf.datasetFieldType.id).get('managedfields').toString()}" />
+                                                        </h:outputText>
                                                     </ui:repeat>
                                                     <br/>
                                                 </ui:repeat>
@@ -100,14 +192,19 @@
         <p:fragment id="editMetadataFragement">
         <o:importFunctions type="java.util.Collections" />
         <div class="panel-group">
+            <p>
+                <h:outputFormat rendered="#{(not empty mdLangCode) and ((editMode == 'CREATE') or (editMode == 'METADATA'))}" value="#{bundle['dataset.metadatalanguage.create.guidance']}" escape="false">
+                    <f:param value="#{mdLang}"/>
+                </h:outputFormat>
+            </p>
             <ui:repeat value="#{metadataBlocks}" var="metadataBlockVal" varStatus="block">
                 <div class="panel panel-default" jsf:rendered="#{(editMode == 'METADATA' or metadataBlockVal.key.displayOnCreate or !metadataBlockVal.key.isEmpty()
                                                                  or metadataBlockVal.key.isHasRequired())
                                                                  or (!datasetPage)}">
                     <div data-toggle="collapse" data-target="#panelCollapse#{block.index}" class="panel-heading text-info">
-                        #{metadataBlockVal.key.localeDisplayName} <span class="glyphicon #{block.first || editMode == 'CREATE'  ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'}"/>
+                        #{metadataBlockVal.key.localeDisplayName} <span class="glyphicon #{block.first or editMode == 'CREATE' or !cvocConf.isEmpty() ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'}"/>
                     </div>
-                    <div id="panelCollapse#{block.index}" class="collapse #{block.first || editMode == 'CREATE' ? 'in' : ''}">
+                    <div id="panelCollapse#{block.index}" class="collapse #{block.first or editMode == 'CREATE' or !cvocConf.isEmpty() ? 'in' : ''}">
                         <div class="panel-body">
                             <ui:repeat value="#{metadataBlockVal.value}" var="dsf">
                                 <div class="form-group" role="group" aria-labelledby="metadata_#{dsf.datasetFieldType.name}"
@@ -135,6 +232,7 @@
                                                                 <ui:include src="datasetFieldForEditFragment.xhtml">
                                                                     <ui:param name="dsfv" value="#{dsfv}"/>
                                                                     <ui:param name="dsfvIndex" value="#{valCount.index}"/>
+                                                                    <ui:param name="cvoc" value="#{cvocConf.containsKey(dsf.datasetFieldType.id)? cvocConf.get(dsf.datasetFieldType.id): null}"/>
                                                                 </ui:include>
                                                             </div>
                                                             <!-- Add / Remove buttons -->
@@ -157,13 +255,13 @@
                                                             </div>
                                                         </div>
                                                     </ui:repeat>
-                                                    <ui:fragment rendered="#{dsf.datasetFieldType.controlledVocabulary}">                                                    
+                                                    <ui:fragment rendered="#{dsf.datasetFieldType.controlledVocabulary}">
                                                         <div class="form-group dataset-field-values">
                                                             <div class="form-col-container col-sm-9 edit-field">
                                                                 <p:selectOneMenu value="#{dsf.singleControlledVocabularyValue}" converter="controlledVocabularyValueConverter" style="width: auto !important; max-width:100%; min-width:200px;" styleClass="form-control primitive"
                                                                                  id="unique1" required="#{dsf.required}" rendered="#{!dsf.datasetFieldType.allowMultiples}">
                                                                     <f:selectItem itemLabel="#{bundle.select}" itemValue="" noSelectionOption="true"/>
-                                                                    <f:selectItems value="#{dsf.datasetFieldType.controlledVocabularyValues}" var="cvv" itemLabel="#{cvv.localeStrValue}" itemValue="#{cvv}"/>
+                                                                    <f:selectItems value="#{dsf.datasetFieldType.controlledVocabularyValues}" var="cvv" itemLabel="#{cvv.getLocaleStrValue(mdLangCode)}" itemValue="#{cvv}"/>
                                                                 </p:selectOneMenu>
                                                                 <!--
                                                                 <p:outputPanel id="selectedValsList" style="padding-top:.5em;">
@@ -175,7 +273,7 @@
                                                                 <p:selectCheckboxMenu value="#{dsf.controlledVocabularyValues}" converter="controlledVocabularyValueConverter" styleClass="form-control"
                                                                                       filter="true" filterMatchMode="startsWith" label="#{bundle.select}"  multiple="true"
                                                                                       id="unique2" rendered="#{dsf.datasetFieldType.allowMultiples}">
-                                                                    <f:selectItems value="#{dsf.datasetFieldType.controlledVocabularyValues}" var="cvv" itemLabel="#{cvv.localeStrValue}" itemValue="#{cvv}"/>
+                                                                    <f:selectItems value="#{dsf.datasetFieldType.controlledVocabularyValues}" var="cvv" itemLabel="#{cvv.getLocaleStrValue(mdLangCode)}" itemValue="#{cvv}"/>
                                                                 </p:selectCheckboxMenu>
                                                                 <div class="ui-message ui-message-error ui-widget ui-corner-all" aria-live="polite" jsf:rendered="#{!empty dsf.validationMessage}">
                                                                     <span class="ui-message-error-detail">#{dsf.validationMessage}</span>
@@ -202,8 +300,8 @@
                                                     <h:outputText value="#{bundle.conditionalRequiredMsg}"/>
                                                 </p>
                                             </ui:fragment>
-                                            <ui:repeat value="#{dsf.datasetFieldCompoundValues}" var="compoundValue" varStatus="valCount" rendered="#{dsf.datasetFieldType.name!='keyword'}">
-                                                <div class="form-group form-col-container col-sm-9 edit-compound-field">
+                                            <ui:repeat value="#{dsf.datasetFieldCompoundValues}" var="compoundValue" varStatus="valCount"  rendered="#{dsf.datasetFieldType.name!='keyword'}">
+                                                <div class="form-group form-col-container col-sm-9 edit-compound-field"  data-cvoc-parentfield="#{cvocConf.containsKey(dsf.datasetFieldType.id)?cvocConf.get(dsf.datasetFieldType.id).getString('field-name'):''}">
                                                     <!-- Sub Fields -->
                                                     <ui:repeat value="#{compoundValue.childDatasetFields}" var="subdsf">
                                                         <div class="form-col-container #{subdsf.datasetFieldType.fieldType == 'TEXTBOX' ? 'col-sm-12' : 'col-sm-6'}" data-fieldtype-name="#{subdsf.singleValue.datasetField.datasetFieldType.name}.parent">
@@ -223,6 +321,7 @@
                                                                 <ui:include src="datasetFieldForEditFragment.xhtml">
                                                                     <ui:param name="dsfv" value="#{subdsf.singleValue}"/>
                                                                     <ui:param name="dsfvIndex" value="0"/>
+                                                                    <ui:param name="cvoc" value="#{cvocConf.containsKey(dsf.datasetFieldType.id)? cvocConf.get(dsf.datasetFieldType.id): null}"/>
                                                                 </ui:include>
                                                             </ui:fragment>
                                                             <!-- MOVED SELECT ONE TO dataFieldForEdit -->
@@ -290,4 +389,17 @@
         </div>
         </p:fragment>
     </ui:fragment>
+ <script>
+    //<![CDATA[
+    $(document).ready(function() {
+      //The select2 widget used in external vocab scripts has trouble determining the width of an input field if it is initially hidden
+      //Starting with the metadatablocks displayed and collapsing them here is a work-around to fix that.
+      if(#{(editMode != 'CREATE') && !cvocConf.isEmpty()}) {
+        for(let i=1;i< #{fn:length(metadataBlocks)};i++) {
+          $('#panelCollapse'+i).collapse('hide');
+        }
+      }
+    });
+    //]]>
+    </script>
 </ui:composition>
