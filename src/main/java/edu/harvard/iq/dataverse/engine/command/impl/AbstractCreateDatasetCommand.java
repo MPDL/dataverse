@@ -81,18 +81,20 @@ public abstract class AbstractCreateDatasetCommand extends AbstractDatasetComman
         DatasetVersion dsv = getVersionToPersist(theDataset);
         // This re-uses the state setup logic of CreateDatasetVersionCommand, but
         // without persisting the new version, or altering its files. 
-        new CreateDatasetVersionCommand(getRequest(), theDataset, dsv).prepareDatasetAndVersion();
+        new CreateDatasetVersionCommand(getRequest(), theDataset, dsv).prepareDatasetAndVersion(ctxt);
         
         theDataset.setCreator((AuthenticatedUser) getRequest().getUser());
         
         theDataset.setCreateDate(getTimestamp());
 
         theDataset.setModificationTime(getTimestamp());
+        //TODO MPDL required?
+        /*
         for (DataFile dataFile: theDataset.getFiles() ){
             dataFile.setCreator((AuthenticatedUser) getRequest().getUser());
             dataFile.setCreateDate(theDataset.getCreateDate());
         }
-        
+        */
         String nonNullDefaultIfKeyNotFound = "";
         if (theDataset.getProtocol()==null) {
             theDataset.setProtocol(ctxt.settings().getValueForKey(SettingsServiceBean.Key.Protocol, nonNullDefaultIfKeyNotFound));

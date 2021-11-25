@@ -1,12 +1,6 @@
 package edu.harvard.iq.dataverse.api.datadeposit;
 
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetLock;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.FileMetadata;
-import edu.harvard.iq.dataverse.PermissionServiceBean;
+import edu.harvard.iq.dataverse.*;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import edu.harvard.iq.dataverse.engine.command.impl.GetDraftDatasetVersionCommand;
@@ -40,6 +34,8 @@ public class StatementManagerImpl implements StatementManager {
 
     @EJB
     DatasetServiceBean datasetService;
+    @EJB
+    DatasetVersionServiceBean datasetVersionService;
     @EJB
     PermissionServiceBean permissionService;
     @Inject
@@ -91,7 +87,7 @@ public class StatementManagerImpl implements StatementManager {
             Statement statement = new AtomStatement(feedUri, author, title, datedUpdated);
             Map<String, String> states = new HashMap<>();
             states.put("latestVersionState", dataset.getLatestVersion().getVersionState().toString());
-            Boolean isMinorUpdate = dataset.getLatestVersion().isMinorUpdate();
+            Boolean isMinorUpdate = datasetVersionService.isMinorUpdate(dataset.getLatestVersion());
             states.put("isMinorUpdate", isMinorUpdate.toString());
             
             if ( dataset.isLocked() ) {
@@ -104,7 +100,7 @@ public class StatementManagerImpl implements StatementManager {
             }
             
             statement.setStates(states);
-            List<FileMetadata> fileMetadatas = dataset.getLatestVersion().getFileMetadatas();
+            List<FileMetadata> fileMetadatas = datasetVersionService.findAllFileMetadataByVersionId(dataset.getLatestVersion().getId());
             for (FileMetadata fileMetadata : fileMetadatas) {
                 DataFile dataFile = fileMetadata.getDataFile();
                 // We are exposing the filename for informational purposes. The file id is what you

@@ -70,8 +70,10 @@ public class DestroyDatasetCommand extends AbstractVoidCommand {
         // files need to iterate through and remove 'by hand' to avoid
         // optimistic lock issues... (plus the physical files need to be 
         // deleted too!)
-        
-        Iterator <DataFile> dfIt = doomed.getFiles().iterator();
+
+        List<DataFile> filesOfDataset = ctxt.files().findByDatasetId(doomed.getId());
+        Iterator <DataFile> dfIt = filesOfDataset.iterator();
+//        Iterator <DataFile> dfIt = doomed.getFiles().iterator();
         while (dfIt.hasNext()){
             DataFile df = dfIt.next();
             // Gather potential Solr IDs of files. As of this writing deaccessioned files are never indexed.
@@ -103,7 +105,7 @@ public class DestroyDatasetCommand extends AbstractVoidCommand {
             try {
                 if (idServiceBean.alreadyExists(doomed)) {
                     idServiceBean.deleteIdentifier(doomed);
-                    for (DataFile df : doomed.getFiles()) {
+                    for (DataFile df : filesOfDataset) {
                         idServiceBean.deleteIdentifier(df);
                     }
                 }

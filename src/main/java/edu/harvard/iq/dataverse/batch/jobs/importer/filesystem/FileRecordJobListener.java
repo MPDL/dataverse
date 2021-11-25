@@ -191,11 +191,14 @@ public class FileRecordJobListener implements ItemReadListener, StepListener, Jo
             if (mode.equalsIgnoreCase(ImportMode.REPLACE.name())) {
                 try {
                     DatasetVersion workingVersion = dataset.getEditVersion();
-                    List<FileMetadata> fileMetadataList = workingVersion.getFileMetadatas();
+                    //List<FileMetadata> fileMetadataList = workingVersion.getFileMetadatas();
                     jobLogger.log(Level.INFO, "Removing any existing file metadata since mode = REPLACE");
+                    dataFileServiceBean.deleteAllFileMetadataFromVersionByDatasetVersionId(workingVersion.getId());
+                    /*
                     for (FileMetadata fmd : fileMetadataList) {
                         dataFileServiceBean.deleteFromVersion(workingVersion, fmd.getDataFile());
                     }
+                    */
                 } catch (Exception e) {
                     jobLogger.log(Level.SEVERE, "Removing existing file metadata in REPLACE mode: " + e.getMessage());
                 }

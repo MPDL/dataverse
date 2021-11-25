@@ -40,11 +40,18 @@ public class PersistProvFreeFormCommand extends AbstractCommand<DataFile> {
 
             if (workingVersion.isDraft()) { 
                 if (dataset.isReleased()){
+                    FileMetadata fmw = ctxt.files().findFileMetadataByVersionIdAndFileId(workingVersion.getId(), dataFile.getId());
+                    if(fmw!=null)
+                    {
+                        fmw.setProvFreeForm(userInput);
+                    }
+                    /*
                     for (FileMetadata fmw : workingVersion.getFileMetadatas()) {
                         if (dataFile.equals(fmw.getDataFile())) {
-                            fmw.setProvFreeForm(userInput);
+
                         }
                     }
+                     */
                 } else {
                     dataFile.getFileMetadata().setProvFreeForm(userInput);
                 }

@@ -227,10 +227,13 @@ public class Dataverses extends AbstractApiBean {
             if (ds.getVersions().isEmpty()) {
                 return badRequest(BundleUtil.getStringFromBundle("dataverses.api.create.dataset.error.mustIncludeVersion"));
             }
-            
+
+            /*
             if (!ds.getFiles().isEmpty() && !u.isSuperuser()){
                 return badRequest(BundleUtil.getStringFromBundle("dataverses.api.create.dataset.error.superuserFiles"));
             }
+            */
+
 
             // clean possible version metadata
             DatasetVersion version = ds.getVersions().get(0);

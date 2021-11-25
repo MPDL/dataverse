@@ -16,6 +16,8 @@ import java.util.Date;
 import edu.harvard.iq.dataverse.GlobalIdServiceBean;
 import edu.harvard.iq.dataverse.batch.util.LoggingUtil;
 import java.io.IOException;
+import java.util.List;
+
 import org.apache.solr.client.solrj.SolrServerException;
 
 /**
@@ -92,7 +94,8 @@ public class RegisterDvObjectCommand extends AbstractVoidCommand {
                 ctxt.em().flush();
                 if (target.isInstanceofDataset() && target.isReleased() && !this.migrateHandle) {
                     Dataset dataset = (Dataset) target;
-                    for (DataFile df : dataset.getFiles()) {
+                    List<DataFile> dataFiles = ctxt.files().findByDatasetId(dataset.getId());
+                    for (DataFile df : dataFiles) {
                         if (df.getIdentifier() == null || df.getIdentifier().isEmpty()) {
                             df.setIdentifier(ctxt.files().generateDataFileIdentifier(df, idServiceBean));
                             if (df.getProtocol() == null || df.getProtocol().isEmpty()) {

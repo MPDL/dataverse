@@ -13,6 +13,8 @@ import edu.harvard.iq.dataverse.engine.command.exception.PermissionException;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+
 import edu.harvard.iq.dataverse.GlobalIdServiceBean;
 
 /**
@@ -43,7 +45,8 @@ public class UpdateDatasetTargetURLCommand extends AbstractVoidCommand  {
                 target.setGlobalIdCreateTime(new Timestamp(new Date().getTime()));
                 ctxt.em().merge(target);
                 ctxt.em().flush();
-                for (DataFile df : target.getFiles()) {
+                List<DataFile> files = ctxt.files().findByDatasetId(target.getId());
+                for (DataFile df : files) {
                     doiRetString = idServiceBean.modifyIdentifierTargetURL(df);
                     if (doiRetString != null && doiRetString.contains(df.getIdentifier())) {
                         df.setGlobalIdCreateTime(new Timestamp(new Date().getTime()));

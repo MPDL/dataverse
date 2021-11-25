@@ -19,14 +19,7 @@
 
 package edu.harvard.iq.dataverse.batch.jobs.importer.filesystem;
 
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.DataFileServiceBean;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetLock;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.EjbDataverseEngine;
-import edu.harvard.iq.dataverse.FileMetadata;
+import edu.harvard.iq.dataverse.*;
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.engine.command.Command;
@@ -58,7 +51,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
-import edu.harvard.iq.dataverse.GlobalIdServiceBean;
 
 @Named
 @Dependent
@@ -89,6 +81,10 @@ public class FileRecordWriter extends AbstractItemWriter {
     
     @EJB
     DataFileServiceBean dataFileServiceBean;
+
+    @EJB
+    DatasetVersionServiceBean dataVersionServiceBean;
+
 
     @EJB
     EjbDataverseEngine commandEngine;
@@ -138,7 +134,7 @@ public class FileRecordWriter extends AbstractItemWriter {
     public void writeItems(List list) {
         if (!list.isEmpty()) {
             if (FILE_MODE_INDIVIDUAL_FILES.equals(fileMode)) {
-                List<DataFile> datafiles = dataset.getFiles();
+                List<DataFile> datafiles = dataFileServiceBean.findByDatasetId(dataset.getId());
                 for (Object file : list) {
                     DataFile df = createDataFile((File) file);
                     if (df != null) {
@@ -146,12 +142,13 @@ public class FileRecordWriter extends AbstractItemWriter {
                         if (fileCount < 20000) {
                             getJobLogger().log(Level.INFO, "Creating DataFile for: " + ((File) file).getAbsolutePath());
                         }
-                        datafiles.add(df);
+                        //datafiles.add(df);
+                        dataFileServiceBean.save(df);
                     } else {
                         getJobLogger().log(Level.SEVERE, "Unable to create DataFile for: " + ((File) file).getAbsolutePath());
                     }
                 }
-                dataset.getLatestVersion().getDataset().setFiles(datafiles);
+                //dataset.getLatestVersion().getDataset().setFiles(datafiles);
             } else if (FILE_MODE_PACKAGE_FILE.equals(fileMode)) {
                 DataFile packageFile = createPackageDataFile(list);
                 if (packageFile == null) {
@@ -343,7 +340,8 @@ public class FileRecordWriter extends AbstractItemWriter {
         packageFile.setCreateDate(new Timestamp(new Date().getTime()));
         packageFile.setPermissionModificationTime(new Timestamp(new Date().getTime()));
         packageFile.setOwner(dataset);
-        dataset.getFiles().add(packageFile);
+        dataFileServiceBean.save(packageFile);
+        //dataset.getFiles().add(packageFile);
 
         packageFile.setIngestDone();
 
@@ -353,10 +351,13 @@ public class FileRecordWriter extends AbstractItemWriter {
         
         fmd.setDataFile(packageFile);
         packageFile.getFileMetadatas().add(fmd);
+        /*
         if (dataset.getLatestVersion().getFileMetadatas() == null) dataset.getLatestVersion().setFileMetadatas(new ArrayList<>());
-        
         dataset.getLatestVersion().getFileMetadatas().add(fmd);
+        */
+
         fmd.setDatasetVersion(dataset.getLatestVersion());
+        dataVersionServiceBean.save(fmd);
         
 	String isFilePIDsEnabled = commandEngine.getContext().settings().getValueForKey(SettingsServiceBean.Key.FilePIDsEnabled, "true"); //default value for file PIDs is 'true'
 	if ("true".contentEquals( isFilePIDsEnabled )) {
@@ -459,10 +460,9 @@ public class FileRecordWriter extends AbstractItemWriter {
         }
         fmd.setDataFile(datafile);
         datafile.getFileMetadatas().add(fmd);
-        if (version.getFileMetadatas() == null) version.setFileMetadatas(new ArrayList<>());
-        version.getFileMetadatas().add(fmd);
+        //if (version.getFileMetadatas() == null) version.setFileMetadatas(new ArrayList<>());
+        //version.getFileMetadatas().add(fmd);
         fmd.setDatasetVersion(version);
-
         datafile = dataFileServiceBean.save(datafile);
         return datafile;
     }

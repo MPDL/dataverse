@@ -34,13 +34,15 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
     private boolean validateLenient = false;
     private final DatasetVersion clone;
     private final FileMetadata fmVarMet;
-    
+    private List<DataFile> finalFileList = new ArrayList<>();
+
+
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest) {
         super(aRequest, theDataset);
         this.filesToDelete = new ArrayList<>();
         this.clone = null;
         this.fmVarMet = null;
-    }    
+    }
     
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> filesToDelete) {
         super(aRequest, theDataset);
@@ -49,11 +51,12 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
         this.fmVarMet = null;
     }
     
-    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> filesToDelete, DatasetVersion clone) {
+    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> filesToDelete, DatasetVersion clone, List<DataFile> finalFileList) {
         super(aRequest, theDataset);
         this.filesToDelete = filesToDelete;
         this.clone = clone;
         this.fmVarMet = null;
+        this.finalFileList = finalFileList;
     }
     
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, DataFile fileToDelete) {
@@ -63,12 +66,16 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
         this.filesToDelete = new ArrayList<>();
         this.clone = null;
         this.fmVarMet = null;
+
+        /*
         for (FileMetadata fmd : theDataset.getEditVersion().getFileMetadatas()) {
             if (fmd.getDataFile().equals(fileToDelete)) {
                 filesToDelete.add(fmd);
                 break;
             }
         }
+        */
+
     } 
     
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, DatasetVersion clone) {
@@ -114,7 +121,7 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
             }
             
             getDataset().getEditVersion(fmVarMet).setDatasetFields(getDataset().getEditVersion(fmVarMet).initDatasetFields());
-            validateOrDie(getDataset().getEditVersion(fmVarMet), isValidateLenient());
+            validateOrDie(getDataset().getEditVersion(fmVarMet), isValidateLenient(), ctxt);
 
             final DatasetVersion editVersion = getDataset().getEditVersion(fmVarMet);
             
@@ -133,12 +140,24 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
             	}
             }
 
-            for (DataFile dataFile : theDataset.getFiles()) {
+            for (DataFile dataFile : finalFileList) {
                 if (dataFile.getCreateDate() == null) {
                     dataFile.setCreateDate(getTimestamp());
                     dataFile.setCreator((AuthenticatedUser) getUser());
                 }
                 dataFile.setModificationTime(getTimestamp());
+
+                if (dataFile.getId() == null || dataFile.getId() == 0L) {
+                    ctxt.em().persist(dataFile);
+                } else {
+                    try {
+                        ctxt.em().merge(dataFile);
+                    } catch (ConstraintViolationException e) {
+                        logger.log(Level.SEVERE,"Exception: ");
+                        e.getConstraintViolations().forEach(err->logger.log(Level.SEVERE,err.toString()));
+                        throw e;
+                    }
+                }
             }
 
             // Remove / delete any files that were removed
@@ -218,7 +237,7 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
                     // remove the file
                     ctxt.engine().submit(new DeleteDataFileCommand(fmd.getDataFile(), getRequest()));
                     // and remove the file from the dataset's list
-                    theDataset.getFiles().remove(fmd.getDataFile());
+                    //theDataset.getFiles().remove(fmd.getDataFile());
                 } else {
                     // if we aren't removing the file, we need to explicitly remove the fmd from the
                     // context and then remove it from the datafile's list
@@ -228,15 +247,18 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
                 // In either case, to fully remove the fmd, we have to remove any other possible
                 // references
                 // From the datasetversion
-                FileMetadataUtil.removeFileMetadataFromList(theDataset.getEditVersion().getFileMetadatas(), fmd);
+                //FileMetadataUtil.removeFileMetadataFromList(theDataset.getEditVersion().getFileMetadatas(), fmd);
                 // and from the list associated with each category
                 for (DataFileCategory cat : theDataset.getCategories()) {
                     FileMetadataUtil.removeFileMetadataFromList(cat.getFileMetadatas(), fmd);
                 }
             }
+            /*
             for(FileMetadata fmd: theDataset.getEditVersion().getFileMetadatas()) {
                 logger.fine("FMD: " + fmd.getId() + " for file: " + fmd.getDataFile().getId() + "is in final draft version");    
             }
+            */
+
             
             if (recalculateUNF) {
                 ctxt.ingest().recalculateDatasetVersionUNF(theDataset.getEditVersion());

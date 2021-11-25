@@ -72,12 +72,20 @@ public class RestrictFileCommand extends AbstractVoidCommand {
                 // been deleted from an existing draft, so we want null unless this file's
                 // metadata can be found in the current version
                 draftFmd=null;
+                FileMetadata fmw = ctxt.files().findFileMetadataByVersionIdAndFileId(workingVersion.getId(), file.getId());
+                if(fmw!=null)
+                {
+                    draftFmd = fmw;
+                }
+                /*
                 for (FileMetadata fmw : workingVersion.getFileMetadatas()) {
                     if (file.equals(fmw.getDataFile())) {
                         draftFmd = fmw;
                         break;
                     }
                 }
+
+                 */
             }
             if (draftFmd != null) {
                 draftFmd.setRestricted(restrict);

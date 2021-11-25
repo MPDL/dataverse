@@ -188,7 +188,8 @@ public class PublishDatasetCommand extends AbstractPublishDatasetCommand<Publish
         }
 
         //MPDL-specific change: Only allow publish of datasets which have files attached
-        if(getDataset().getFiles()==null || getDataset().getFiles().isEmpty()) {
+        int countFiles = ctxt.files().countByDatasetId(getDataset().getId());
+        if(countFiles == 0) {
             throw new IllegalCommandException("At least one file is required to publish a dataset.", this);
         }
         
@@ -221,7 +222,8 @@ public class PublishDatasetCommand extends AbstractPublishDatasetCommand<Publish
                 throw new IllegalCommandException("Cannot publish as minor version. Re-try as major release.", this);
             }
 
-            if (minorRelease && !getDataset().getLatestVersion().isMinorUpdate()) {
+            boolean isMinorUpdate = ctxt.datasets().isMinorUpdate(getDataset().getLatestVersion());
+            if (minorRelease && !isMinorUpdate) {
                 throw new IllegalCommandException("Cannot release as minor version. Re-try as major release.", this);
             }
         }

@@ -7,20 +7,7 @@ package edu.harvard.iq.dataverse.api.imports;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import edu.harvard.iq.dataverse.DataFile;
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetField;
-import edu.harvard.iq.dataverse.DatasetFieldConstant;
-import edu.harvard.iq.dataverse.DatasetFieldServiceBean;
-import edu.harvard.iq.dataverse.DatasetFieldType;
-import edu.harvard.iq.dataverse.DatasetFieldValue;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.DataverseContact;
-import edu.harvard.iq.dataverse.DataverseServiceBean;
-import edu.harvard.iq.dataverse.EjbDataverseEngine;
-import edu.harvard.iq.dataverse.MetadataBlockServiceBean;
+import edu.harvard.iq.dataverse.*;
 import edu.harvard.iq.dataverse.api.dto.DatasetDTO;
 import edu.harvard.iq.dataverse.api.imports.ImportUtil.ImportType;
 import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
@@ -85,6 +72,10 @@ public class ImportServiceBean {
     protected EjbDataverseEngine engineSvc;
     @EJB
     DatasetServiceBean datasetService;
+    @EJB
+    DatasetVersionServiceBean datasetVersionService;
+    @EJB
+    DataFileServiceBean dataFileService;
     @EJB
     DataverseServiceBean dataverseService;
     @EJB
@@ -291,7 +282,7 @@ public class ImportServiceBean {
             // Check data against validation constraints
             // If we are migrating and "scrub migration data" is true we attempt to fix invalid data
             // if the fix fails stop processing of this file by throwing exception
-            Set<ConstraintViolation> invalidViolations = ds.getVersions().get(0).validate();
+            Set<ConstraintViolation> invalidViolations = datasetVersionService.validate(ds.getVersions().get(0));
             ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
             Validator validator = factory.getValidator();
             if (!invalidViolations.isEmpty()) {
@@ -354,15 +345,20 @@ public class ImportServiceBean {
                 // files from harvested datasets are removed unceremoniously, 
                 // directly in the database. no need to bother calling the 
                 // DeleteFileCommand on them.
+
+                dataFileService.deleteByDatasetId(existingDs.getId());
+                /*
                 for (DataFile harvestedFile : existingDs.getFiles()) {
                     DataFile merged = em.merge(harvestedFile);
                     em.remove(merged);
                     harvestedFile = null; 
                 }
+                */
+
                 // TODO: 
                 // Verify what happens with the indexed files in SOLR? 
                 // are they going to be overwritten by the reindexing of the dataset?
-                existingDs.setFiles(null);
+                //existingDs.setFiles(null);
                 Dataset merged = em.merge(existingDs);
                 // harvested datasets don't have physical files - so no need to worry about that.
                 engineSvc.submit(new DestroyDatasetCommand(merged, dataverseRequest));
@@ -455,7 +451,7 @@ public class ImportServiceBean {
             // Check data against validation constraints
             // If we are migrating and "scrub migration data" is true we attempt to fix invalid data
             // if the fix fails stop processing of this file by throwing exception
-            Set<ConstraintViolation> invalidViolations = ds.getVersions().get(0).validate();
+            Set<ConstraintViolation> invalidViolations = datasetVersionService.validate(ds.getVersions().get(0));
             ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
             Validator validator = factory.getValidator();
             if (!invalidViolations.isEmpty()) {

@@ -1369,7 +1369,7 @@ public class Datasets extends AbstractApiBean {
         
         embargo.setReason(json.getString("reason"));
 
-        List<DataFile> datasetFiles = dataset.getFiles();
+        List<DataFile> datasetFiles = fileService.findByDatasetId(dataset.getId());
         List<DataFile> filesToEmbargo = new LinkedList<>();
 
         // extract fileIds from json, find datafiles and add to list
@@ -1488,7 +1488,7 @@ public class Datasets extends AbstractApiBean {
         StringReader rdr = new StringReader(jsonBody);
         JsonObject json = Json.createReader(rdr).readObject();
 
-        List<DataFile> datasetFiles = dataset.getFiles();
+        List<DataFile> datasetFiles = fileService.findByDatasetId(dataset.getId());
         List<DataFile> embargoFilesToUnset = new LinkedList<>();
 
         // extract fileIds from json, find datafiles and add to list

@@ -13,6 +13,7 @@ import edu.harvard.iq.dataverse.util.FileSortFieldAndOrder;
 import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1652,5 +1653,104 @@ public class DataFileServiceBean implements java.io.Serializable {
     public Embargo findEmbargo(Long id) {
         DataFile d = find(id);
         return d.getEmbargo();
+    }
+
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public List<DataFile> findByDatasetId(long datasetId, int limit, int offset) {
+        String qr = "select o from DataFile o where o.owner.id = :identifier order by o.id";
+        List<DataFile> result = em.createNativeQuery(qr).setParameter("identifier", datasetId).setMaxResults(limit).setFirstResult(offset).getResultList();
+        return result;
+    }
+
+
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public void deleteByDatasetId(long datasetId) {
+        int result = em.createNativeQuery("DELETE FROM DataFile o WHERE o.owner.id=:identifier").setParameter("identifier", datasetId).executeUpdate();
+    }
+
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public int countByDatasetId(long datasetId) {
+        Query query = em.createNativeQuery("SELECT count(*) FROM DataFile o WHERE o.owner.id=:identifier").setParameter("identifier", datasetId);
+        int count = ((BigInteger) query.getSingleResult()).intValue();
+        return count;
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public FileMetadata save(FileMetadata fmd) {
+        FileMetadata savedDataFile = em.merge(fmd);
+        return savedDataFile;
+    }
+
+
+    public void deleteAllFileMetadataFromVersionByDatasetVersionId( long datasetVersionId ) {
+        int result = em.createNativeQuery("DELETE FROM FileMetadata f WHERE f.datasetVersion.id=:identifier").setParameter("identifier", datasetVersionId).executeUpdate();
+    }
+
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public int countfileMetadataByVersionId(long versionId) {
+        Query query = em.createNativeQuery("SELECT count(*) FROM FileMetadata o WHERE o.datasetVersion.id=:identifier").setParameter("identifier", versionId);
+        int count = ((BigInteger) query.getSingleResult()).intValue();
+        return count;
+    }
+
+
+    public List<FileMetadata> findFileMetadataByVersionId(long versionId, int limit, int offset, String order) {
+        String qr = "select o from FileMetadata o where o.datasetVersion.id = :identifier order by o.id";
+        List<FileMetadata> result = em.createNativeQuery(qr).setParameter("identifier", versionId).setMaxResults(limit).setFirstResult(offset).getResultList();
+        return result;
+    }
+
+    public FileMetadata findFileMetadataByVersionIdAndFileId(long versionId, long dataFileId) {
+        String qr = "select o from FileMetadata o where o.datasetVersion.id = :datasetVersionId AND o.datafile.id= :dataFileId";
+        FileMetadata result = (FileMetadata) em.createNativeQuery(qr).setParameter("datasetVersionId", versionId).setParameter("dataFileId", dataFileId).getSingleResult();
+        return result;
+    }
+
+    public FileMetadata findFileMetadataByVersionIdAndStorageId(long versionId, String storageId) {
+        String qr = "select o from FileMetadata o where o.datasetVersion.id = :datasetVersionId AND o.datafile.storageIdentifier= :storageId";
+        FileMetadata result = (FileMetadata) em.createNativeQuery(qr).setParameter("datasetVersionId", versionId).setParameter("storageId", storageId).getSingleResult();
+        return result;
+    }
+
+    public List<FileMetadata> findAllFileMetadataByVersionId(long versionId) {
+        return findFileMetadataByVersionId(versionId, Integer.MAX_VALUE, 0, "id");
+    }
+
+    public List<FileMetadata> findFileMetadatasSortedByLabel() {
+
+    }
+
+    public List<FileMetadata> getFileMetadatasSortedByLabelAndFolder() {
+        ArrayList<FileMetadata> fileMetadatasCopy = new ArrayList<>();
+        fileMetadatasCopy.addAll(fileMetadatas);
+        Collections.sort(fileMetadatasCopy, FileMetadata.compareByLabelAndFolder);
+        return fileMetadatasCopy;
+    }
+
+    public List<FileMetadata> getFileMetadatasFolderListing(String folderName) {
+        ArrayList<FileMetadata> fileMetadatasCopy = new ArrayList<>();
+        HashSet<String> subFolders = new HashSet<>();
+
+        for (FileMetadata fileMetadata : fileMetadatas) {
+            String thisFolder = fileMetadata.getDirectoryLabel() == null ? "" : fileMetadata.getDirectoryLabel();
+
+            if (folderName.equals(thisFolder)) {
+                fileMetadatasCopy.add(fileMetadata);
+            } else if (thisFolder.startsWith(folderName)) {
+                String subFolder = "".equals(folderName) ? thisFolder : thisFolder.substring(folderName.length() + 1);
+                if (subFolder.indexOf('/') > 0) {
+                    subFolder = subFolder.substring(0, subFolder.indexOf('/'));
+                }
+
+                if (!subFolders.contains(subFolder)) {
+                    fileMetadatasCopy.add(fileMetadata);
+                    subFolders.add(subFolder);
+                }
+
+            }
+        }
+        Collections.sort(fileMetadatasCopy, FileMetadata.compareByFullPath);
+
+        return fileMetadatasCopy;
     }
 }

@@ -43,15 +43,17 @@ public class CreateDatasetVersionCommand extends AbstractDatasetCommand<DatasetV
             }
         }
         
-        prepareDatasetAndVersion();
-        
-        List<FileMetadata> newVersionMetadatum = new ArrayList<>(latest.getFileMetadatas().size());
-        for ( FileMetadata fmd : latest.getFileMetadatas() ) {
+        prepareDatasetAndVersion(ctxt);
+
+        List<FileMetadata> latestFileMds = ctxt.files().findAllFileMetadataByVersionId(latest.getVersion());
+        List<FileMetadata> newVersionMetadatum = new ArrayList<>();
+        for ( FileMetadata fmd : latestFileMds ) {
             FileMetadata fmdCopy = fmd.createCopy();
             fmdCopy.setDatasetVersion(newVersion);
             newVersionMetadatum.add( fmdCopy );
+            ctxt.em().persist(fmdCopy);
         }
-        newVersion.setFileMetadatas(newVersionMetadatum);
+        //newVersion.setFileMetadatas(newVersionMetadatum);
         
         // TODO make async
         // ctxt.index().indexDataset(dataset);
@@ -66,7 +68,7 @@ public class CreateDatasetVersionCommand extends AbstractDatasetCommand<DatasetV
      * 
      * @throws CommandException 
      */
-    public void prepareDatasetAndVersion() throws CommandException {
+    public void prepareDatasetAndVersion(CommandContext ctxt) throws CommandException {
         newVersion.setDataset(dataset);
         newVersion.setDatasetFields(newVersion.initDatasetFields());
         newVersion.setCreateTime(getTimestamp());
@@ -75,7 +77,7 @@ public class CreateDatasetVersionCommand extends AbstractDatasetCommand<DatasetV
         //originally missing/empty required fields were not
         //throwing constraint violations because they
         //had been stripped from the dataset fields prior to validation 
-        validateOrDie(newVersion, false);
+        validateOrDie(newVersion, false, ctxt);
         tidyUpFields(newVersion);
         
         final List<DatasetVersion> currentVersions = dataset.getVersions();

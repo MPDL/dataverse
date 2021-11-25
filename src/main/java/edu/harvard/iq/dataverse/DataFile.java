@@ -50,7 +50,9 @@ import org.hibernate.validator.constraints.NotBlank;
         @NamedQuery(name="DataFile.findDataFileByIdProtocolAuth", 
                 query="SELECT s FROM DataFile s WHERE s.identifier=:identifier AND s.protocol=:protocol AND s.authority=:authority"),
         @NamedQuery(name="DataFile.findDataFileThatReplacedId", 
-                query="SELECT s.id FROM DataFile s WHERE s.previousDataFileId=:identifier")
+                query="SELECT s.id FROM DataFile s WHERE s.previousDataFileId=:identifier"),
+        @NamedQuery(name="DataFile.findDataFileByDatasetId",
+                query="SELECT o FROM DataFile o WHERE o.owner.id=:identifier")
 })
 @Entity
 @Table(indexes = {@Index(columnList="ingeststatus")

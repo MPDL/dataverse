@@ -56,7 +56,7 @@ public class CuratePublishedDatasetVersionCommand extends AbstractDatasetCommand
         // Copy metadata from draft version to latest published version
         updateVersion.setDatasetFields(getDataset().getEditVersion().initDatasetFields());
 
-        validateOrDie(updateVersion, isValidateLenient());
+        validateOrDie(updateVersion, isValidateLenient(), ctxt);
 
         // final DatasetVersion editVersion = getDataset().getEditVersion();
         tidyUpFields(updateVersion);
@@ -87,9 +87,11 @@ public class CuratePublishedDatasetVersionCommand extends AbstractDatasetCommand
         Dataset tempDataset = ctxt.em().merge(getDataset());
 
         // Look for file metadata changes and update published metadata if needed
-        List<FileMetadata> pubFmds = updateVersion.getFileMetadatas();
+        List<FileMetadata> pubFmds = ctxt.files().findAllFileMetadataByVersionId(updateVersion.getId());
+        //List<FileMetadata> pubFmds = updateVersion.getFileMetadatas();
         int pubFileCount = pubFmds.size();
-        int newFileCount = tempDataset.getEditVersion().getFileMetadatas().size();
+        //int newFileCount = tempDataset.getEditVersion().getFileMetadatas().size();
+        int newFileCount = ctxt.files().countfileMetadataByVersionId(tempDataset.getEditVersion().getId());
         /* The policy for this command is that it should only be used when the change is a 'minor update' with no file changes.
          * Nominally we could call .isMinorUpdate() for that but we're making the same checks as we go through the update here. 
          */
@@ -153,7 +155,8 @@ public class CuratePublishedDatasetVersionCommand extends AbstractDatasetCommand
             ctxt.em().remove(mergedFmd);
             // including removing metadata from the list on the datafile
             draftFmd.getDataFile().getFileMetadatas().remove(draftFmd);
-            tempDataset.getEditVersion().getFileMetadatas().remove(draftFmd);
+            //tempDataset.getEditVersion().getFileMetadatas().remove(draftFmd);
+
             // And any references in the list held by categories
             for (DataFileCategory cat : tempDataset.getCategories()) {
                 cat.getFileMetadatas().remove(draftFmd);

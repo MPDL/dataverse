@@ -95,8 +95,8 @@ public abstract class AbstractDatasetCommand<T> extends AbstractCommand<T> {
      * @throws CommandException if and only if {@code lenient=false}, and field
      * validation failed.
      */
-    protected void validateOrDie(DatasetVersion dsv, Boolean lenient) throws CommandException {
-        Set<ConstraintViolation> constraintViolations = dsv.validate();
+    protected void validateOrDie(DatasetVersion dsv, Boolean lenient, CommandContext ctxt) throws CommandException {
+        Set<ConstraintViolation> constraintViolations = ctxt.datasets().validate(dsv);
         if (!constraintViolations.isEmpty()) {
             if (lenient) {
                 // populate invalid fields with N/A

@@ -1175,6 +1175,12 @@ public class AddReplaceFileHelper{
         DatasetVersion latestVersion = existingFile.getOwner().getLatestVersion();
         
         boolean fileInLatestVersion = false;
+        FileMetadata fm = fileService.findFileMetadataByVersionIdAndFileId(latestVersion.getId(), existingFile.getId());
+        if(fm!=null)
+        {
+            fileInLatestVersion = true;
+        }
+        /*
         for (FileMetadata fm : latestVersion.getFileMetadatas()){
             if (fm.getDataFile().getId() != null){
                 if (Objects.equals(existingFile.getId(),fm.getDataFile().getId())){
@@ -1182,6 +1188,7 @@ public class AddReplaceFileHelper{
                 }
             }
         }
+         */
         if (!fileInLatestVersion){
             addError(getBundleErr("existing_file_not_in_latest_published_version"));
             return false;                        
@@ -1198,7 +1205,8 @@ public class AddReplaceFileHelper{
 
         // Load the working version of the Dataset
         workingVersion = dataset.getEditVersion();
-        clone =   workingVersion.cloneDatasetVersion();
+        workingVersion = datasetService.cloneDatasetVersion(dataset.getEditVersion());
+        //clone =   workingVersion.cloneDatasetVersion();
         try {
             initialFileList = FileUtil.createDataFiles(workingVersion,
                     this.newFileInputStream,
@@ -1498,7 +1506,8 @@ public class AddReplaceFileHelper{
         // Iterate through checking for constraint violations
         //  Gather all error messages
         // -----------------------------------------------------------   
-        Set<ConstraintViolation> constraintViolations = workingVersion.validate();    
+        //Set<ConstraintViolation> constraintViolations = workingVersion.validate();
+        Set<ConstraintViolation> constraintViolations = datasetService.validate(workingVersion);
 
         // -----------------------------------------------------------   
         // No violations found
@@ -1618,9 +1627,9 @@ public class AddReplaceFileHelper{
             deleteFileId=fileToReplace.getId();
             }
             //Adding the file to the delete list for the command will delete this filemetadata and, if the file hasn't been released, the datafile itself. 
-            update_cmd = new UpdateDatasetVersionCommand(dataset, dvRequest, filesToDelete, clone);
+            update_cmd = new UpdateDatasetVersionCommand(dataset, dvRequest, filesToDelete, clone, finalFileList);
         } else {
-          update_cmd = new UpdateDatasetVersionCommand(dataset, dvRequest, clone);
+          update_cmd = new UpdateDatasetVersionCommand(dataset, dvRequest, clone, finalFileList);
         }
         ((UpdateDatasetVersionCommand) update_cmd).setValidateLenient(true);  
         
@@ -1693,7 +1702,8 @@ public class AddReplaceFileHelper{
      */
     private boolean removeUnSavedFilesFromWorkingVersion(){
         msgt("Clean up: removeUnSavedFilesFromWorkingVersion");
-        
+        //TODO MPDL Check if required, maybe validate on FileLevel
+        /*
         // -----------------------------------------------------------
         // (1) Remove all new FileMetadata objects
         // -----------------------------------------------------------                        
@@ -1717,6 +1727,8 @@ public class AddReplaceFileHelper{
                 dfIt.remove();
             }
         }
+
+         */
         return true;
         
     }
@@ -1793,12 +1805,19 @@ public class AddReplaceFileHelper{
         newlyAddedFileMetadatas = new ArrayList<>();
         
         // Loop of uglinesss...but expect 1 to 4 files in final file list
-        List<FileMetadata> latestFileMetadatas = dataset.getEditVersion().getFileMetadatas();
+        //List<FileMetadata> latestFileMetadatas = dataset.getEditVersion().getFileMetadatas();
         
         
         for (DataFile newlyAddedFile : finalFileList){
-            
-             for (FileMetadata fm : latestFileMetadatas){
+            FileMetadata fm = fileService.findFileMetadataByVersionIdAndStorageId(dataset.getEditVersion().getId(), newlyAddedFile.getStorageIdentifier());
+             if(fm!=null)
+             {
+                 newlyAddedFiles.add(fm.getDataFile());
+                 newlyAddedFileMetadatas.add(fm);
+             }
+
+        /*
+            for (FileMetadata fm : latestFileMetadatas){
                  if (newlyAddedFile.getChecksumValue().equals(fm.getDataFile().getChecksumValue())){
                     if (newlyAddedFile.getStorageIdentifier().equals(fm.getDataFile().getStorageIdentifier())){
                         newlyAddedFiles.add(fm.getDataFile());
@@ -1806,6 +1825,7 @@ public class AddReplaceFileHelper{
                     }
                 }
              }
+             */
         }
         /*
        
@@ -2128,9 +2148,12 @@ public class AddReplaceFileHelper{
 
                 dataset = datasetService.find(dataset.getId());
 
+                /*
                 List<DataFile> s = dataset.getFiles();
                 for (DataFile dataFile : s) {
                 }
+                */
+
                 //ingest job
                 ingestService.startIngestJobsForDataset(dataset, (AuthenticatedUser) authUser);
 

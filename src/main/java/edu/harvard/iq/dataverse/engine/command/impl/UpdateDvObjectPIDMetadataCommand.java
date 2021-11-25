@@ -16,6 +16,7 @@ import edu.harvard.iq.dataverse.util.BundleUtil;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -64,7 +65,8 @@ public class UpdateDvObjectPIDMetadataCommand extends AbstractVoidCommand {
                 // creating PIDs, that the protocol matches that of the dataset DOI if
                 // we're going to create a DEPENDENT file PID.
                 String protocol = target.getProtocol();
-                for (DataFile df : target.getFiles()) {
+                List<DataFile> files = ctxt.files().findByDatasetId(target.getId());
+                for (DataFile df : files) {
                     if (isFilePIDsEnabled && // using file PIDs and
                             (!(df.getIdentifier() == null || df.getIdentifier().isEmpty()) || // identifier exists, or
                                     currentGlobalIdProtocol.equals(protocol) || // right protocol to create dependent DOIs, or

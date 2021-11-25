@@ -121,10 +121,12 @@ public class DatasetVersion implements Serializable {
     @ManyToOne
     private Dataset dataset;
 
+    /*
     @OneToMany(mappedBy = "datasetVersion", cascade = {CascadeType.REMOVE, CascadeType.MERGE, CascadeType.PERSIST})
     @OrderBy("label") // this is not our preferred ordering, which is with the AlphaNumericComparator, but does allow the files to be grouped by category
     private List<FileMetadata> fileMetadatas = new ArrayList();
-    
+    */
+
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval=true)
     @JoinColumn(name = "termsOfUseAndAccess_id")
     private TermsOfUseAndAccess termsOfUseAndAccess;
@@ -200,7 +202,8 @@ public class DatasetVersion implements Serializable {
 
     public void setVersion(Long version) {
     }
-    
+
+    /*
     public List<FileMetadata> getFileMetadatas() {
         return fileMetadatas;
     }
@@ -247,6 +250,8 @@ public class DatasetVersion implements Serializable {
     public void setFileMetadatas(List<FileMetadata> fileMetadatas) {
         this.fileMetadatas = fileMetadatas;
     }
+    */
+
     
     public TermsOfUseAndAccess getTermsOfUseAndAccess() {
         return termsOfUseAndAccess;
@@ -506,52 +511,6 @@ public class DatasetVersion implements Serializable {
         return (versionState.equals(VersionState.ARCHIVED) || versionState.equals(VersionState.DEACCESSIONED));
     }
 
-    public boolean isMinorUpdate() {
-        if (this.dataset.getLatestVersion().isWorkingCopy()) {
-            if (this.dataset.getVersions().size() > 1 && this.dataset.getVersions().get(1) != null) {
-                if (this.dataset.getVersions().get(1).isDeaccessioned()) {
-                    return false;
-                }
-            }
-        }
-        if (this.getDataset().getReleasedVersion() != null) {
-            if (this.getFileMetadatas().size() != this.getDataset().getReleasedVersion().getFileMetadatas().size()){
-                return false;
-            } else {
-                List <DataFile> current = new ArrayList<>();
-                List <DataFile> previous = new ArrayList<>();
-                for (FileMetadata fmdc : this.getFileMetadatas()){
-                    current.add(fmdc.getDataFile());
-                }
-                for (FileMetadata fmdc : this.getDataset().getReleasedVersion().getFileMetadatas()){
-                    previous.add(fmdc.getDataFile());
-                }
-                for (DataFile fmd: current){
-                    previous.remove(fmd);
-                }
-                return previous.isEmpty();                
-            }           
-        }
-        return true;
-    }
-    
-    public boolean isHasPackageFile(){
-        if (this.fileMetadatas.isEmpty()){
-            return false;
-        }
-        if(this.fileMetadatas.size() > 1){
-            return false;
-        }
-        return this.fileMetadatas.get(0).getDataFile().getContentType().equals(DataFileServiceBean.MIME_TYPE_PACKAGE_FILE);
-    }
-
-    public boolean isHasNonPackageFile(){
-        if (this.fileMetadatas.isEmpty()){
-            return false;
-        }
-        // The presence of any non-package file means that HTTP Upload was used (no mixing allowed) so we just check the first file.
-        return !this.fileMetadatas.get(0).getDataFile().getContentType().equals(DataFileServiceBean.MIME_TYPE_PACKAGE_FILE);
-    }
 
     public void updateDefaultValuesFromTemplate(Template template) {
         if (!template.getDatasetFields().isEmpty()) {
@@ -570,55 +529,7 @@ public class DatasetVersion implements Serializable {
         }
     }
     
-    public DatasetVersion cloneDatasetVersion(){
-        DatasetVersion dsv = new DatasetVersion();
-        dsv.setVersionState(this.getPriorVersionState());
-        dsv.setFileMetadatas(new ArrayList<>());
-        
-           if (this.getUNF() != null){
-                dsv.setUNF(this.getUNF());
-            }
-            
-            if (this.getDatasetFields() != null && !this.getDatasetFields().isEmpty()) {
-                dsv.setDatasetFields(dsv.copyDatasetFields(this.getDatasetFields()));
-            }
-            
-            if (this.getTermsOfUseAndAccess()!= null){
-                dsv.setTermsOfUseAndAccess(this.getTermsOfUseAndAccess().copyTermsOfUseAndAccess());
-            } else {
-                TermsOfUseAndAccess terms = new TermsOfUseAndAccess();
-                terms.setDatasetVersion(dsv);
-                terms.setLicense(TermsOfUseAndAccess.License.CC0);
-                dsv.setTermsOfUseAndAccess(terms);
-            }
 
-            for (FileMetadata fm : this.getFileMetadatas()) {
-                FileMetadata newFm = new FileMetadata();
-                // TODO: 
-                // the "category" will be removed, shortly. 
-                // (replaced by multiple, tag-like categories of 
-                // type DataFileCategory) -- L.A. beta 10
-                //newFm.setCategory(fm.getCategory());
-                // yep, these are the new categories:
-                newFm.setCategories(fm.getCategories());
-                newFm.setDescription(fm.getDescription());
-                newFm.setLabel(fm.getLabel());
-                newFm.setDirectoryLabel(fm.getDirectoryLabel());
-                newFm.setRestricted(fm.isRestricted());
-                newFm.setDataFile(fm.getDataFile());
-                newFm.setDatasetVersion(dsv);
-                newFm.setProvFreeForm(fm.getProvFreeForm());
-                
-                dsv.getFileMetadatas().add(newFm);
-            }
-
-
-
-
-        dsv.setDataset(this.getDataset());
-        return dsv;
-        
-    }
 
     public void initDefaultValues() {
         //first clear then initialize - in case values were present 
@@ -1612,54 +1523,7 @@ public class DatasetVersion implements Serializable {
         }
         return returnListreturnList;
     }
-    
-    public Set<ConstraintViolation> validate() {
-        Set<ConstraintViolation> returnSet = new HashSet<>();
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-
-        for (DatasetField dsf : this.getFlatDatasetFields()) {
-            dsf.setValidationMessage(null); // clear out any existing validation message
-            Set<ConstraintViolation<DatasetField>> constraintViolations = validator.validate(dsf);
-            for (ConstraintViolation<DatasetField> constraintViolation : constraintViolations) {
-                dsf.setValidationMessage(constraintViolation.getMessage());
-                returnSet.add(constraintViolation);
-                break; // currently only support one message, so we can break out of the loop after the first constraint violation
-            }
-            for (DatasetFieldValue dsfv : dsf.getDatasetFieldValues()) {
-                dsfv.setValidationMessage(null); // clear out any existing validation message
-                Set<ConstraintViolation<DatasetFieldValue>> constraintViolations2 = validator.validate(dsfv);
-                for (ConstraintViolation<DatasetFieldValue> constraintViolation : constraintViolations2) {
-                    dsfv.setValidationMessage(constraintViolation.getMessage());
-                    returnSet.add(constraintViolation);
-                    break; // currently only support one message, so we can break out of the loop after the first constraint violation                    
-                }
-            }
-        }
-        List<FileMetadata> dsvfileMetadatas = this.getFileMetadatas();
-        if (dsvfileMetadatas != null) {
-            for (FileMetadata fileMetadata : dsvfileMetadatas) {
-                Set<ConstraintViolation<FileMetadata>> constraintViolations = validator.validate(fileMetadata);
-                if (constraintViolations.size() > 0) {
-                    // currently only support one message
-                    ConstraintViolation<FileMetadata> violation = constraintViolations.iterator().next();
-                    /**
-                     * @todo How can we expose this more detailed message
-                     * containing the invalid value to the user?
-                     */
-                    String message = "Constraint violation found in FileMetadata. "
-                            + violation.getMessage() + " "
-                            + "The invalid value is \"" + violation.getInvalidValue().toString() + "\".";
-                    logger.info(message);
-                    returnSet.add(violation);
-                    break; // currently only support one message, so we can break out of the loop after the first constraint violation
-                }
-            }
-        }
-
-        return returnSet;
-    }
     
     public List<WorkflowComment> getWorkflowComments() {
         return workflowComments;
@@ -1681,283 +1545,7 @@ public class DatasetVersion implements Serializable {
         return r;
     }
 
-    // TODO: Consider moving this comment into the Exporter code.
-    // The export subsystem assumes there is only
-    // one metadata export in a given format per dataset (it uses the current 
-    // released (published) version. This JSON fragment is generated for a 
-    // specific released version - and we can have multiple released versions. 
-    // So something will need to be modified to accommodate this. -- L.A.  
-    /**
-     * We call the export format "Schema.org JSON-LD" and extensive Javadoc can
-     * be found in {@link SchemaDotOrgExporter}.
-     */
-    public String getJsonLd() {
-        // We show published datasets only for "datePublished" field below.
-        if (!this.isPublished()) {
-            return "";
-        }
-        
-        if (jsonLd != null) {
-            return jsonLd;
-        }
-        JsonObjectBuilder job = Json.createObjectBuilder();
-        job.add("@context", "http://schema.org");
-        job.add("@type", "Dataset");
-        // Note that whenever you use "@id" you should also use "identifier" and vice versa.
-        job.add("@id", this.getDataset().getPersistentURL());
-        job.add("identifier", this.getDataset().getPersistentURL());
-        job.add("name", this.getTitle());
-        JsonArrayBuilder authors = Json.createArrayBuilder();
-        for (DatasetAuthor datasetAuthor : this.getDatasetAuthors()) {
-            JsonObjectBuilder author = Json.createObjectBuilder();
-            String name = datasetAuthor.getName().getDisplayValue();
-            DatasetField authorAffiliation = datasetAuthor.getAffiliation();
-            String affiliation = null;
-            if (authorAffiliation != null) {
-                affiliation = datasetAuthor.getAffiliation().getDisplayValue();
-            }
-            // We are aware of "givenName" and "familyName" but instead of a person it might be an organization such as "Gallup Organization".
-            //author.add("@type", "Person");
-            author.add("name", name);
-            // We are aware that the following error is thrown by https://search.google.com/structured-data/testing-tool
-            // "The property affiliation is not recognized by Google for an object of type Thing."
-            // Someone at Google has said this is ok.
-            // This logic could be moved into the `if (authorAffiliation != null)` block above.
-            if (!StringUtil.isEmpty(affiliation)) {
-                author.add("affiliation", affiliation);
-            }
-            String identifierAsUrl = datasetAuthor.getIdentifierAsUrl();
-            if (identifierAsUrl != null) {
-                // It would be valid to provide an array of identifiers for authors but we have decided to only provide one.
-                author.add("@id", identifierAsUrl);
-                author.add("identifier", identifierAsUrl);
-            }
-            authors.add(author);
-        }
-        JsonArray authorsArray = authors.build();
-        /**
-         * "creator" is being added along side "author" (below) as an
-         * experiment. We think Google Dataset Search might like "creator"
-         * better".
-         */
-        job.add("creator", authorsArray);
-        /**
-         * "author" is still here for backward compatibility. Depending on how
-         * the "creator" experiment above goes, we may deprecate it in the
-         * future.
-         */
-        job.add("author", authorsArray);
-        /**
-         * We are aware that there is a "datePublished" field but it means "Date
-         * of first broadcast/publication." This only makes sense for a 1.0
-         * version.
-         *
-         * TODO: Should we remove the comment above about a 1.0 version? We
-         * included this "datePublished" field in Dataverse 4.8.4.
-         */
-        String datePublished = this.getDataset().getPublicationDateFormattedYYYYMMDD();
-        if (datePublished != null) {
-            job.add("datePublished", datePublished);
-        }
-        
-         /**
-         * "dateModified" is more appropriate for a version: "The date on which
-         * the CreativeWork was most recently modified or when the item's entry
-         * was modified within a DataFeed."
-         */
-        job.add("dateModified", this.getPublicationDateAsString());
-        job.add("version", this.getVersionNumber().toString());
 
-        JsonArrayBuilder descriptionsArray = Json.createArrayBuilder();
-        List<String> descriptions = this.getDescriptionsPlainText();
-        for (String description : descriptions) {
-            descriptionsArray.add(description);
-        }
-        /**
-         * In Dataverse 4.8.4 "description" was a single string but now it's an
-         * array.
-         */
-        job.add("description", descriptionsArray);
-
-        /**
-         * "keywords" - contains subject(s), datasetkeyword(s) and topicclassification(s)
-         * metadata fields for the version. -- L.A. 
-         * (see #2243 for details/discussion/feedback from Google)
-         */
-        JsonArrayBuilder keywords = Json.createArrayBuilder();
-        
-        for (String subject : this.getDatasetSubjects()) {
-            keywords.add(subject);
-        }
-        
-        for (String topic : this.getTopicClassifications()) {
-            keywords.add(topic);
-        }
-        
-        for (String keyword : this.getKeywords()) {
-            keywords.add(keyword);
-        }
-        
-        job.add("keywords", keywords);
-        
-        /**
-         * citation: (multiple) related publication citation and URLs, if
-         * present.
-         *
-         * In Dataverse 4.8.4 "citation" was an array of strings but now it's an
-         * array of objects.
-         */
-        List<DatasetRelPublication> relatedPublications = getRelatedPublications();
-        if (!relatedPublications.isEmpty()) {
-            JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-            for (DatasetRelPublication relatedPub : relatedPublications) {
-                boolean addToArray = false;
-                String pubCitation = relatedPub.getText();
-                String pubUrl = relatedPub.getUrl();
-                if (pubCitation != null || pubUrl != null) {
-                    addToArray = true;
-                }
-                JsonObjectBuilder citationEntry = Json.createObjectBuilder();
-                citationEntry.add("@type", "CreativeWork");
-                if (pubCitation != null) {
-                    citationEntry.add("text", pubCitation);
-                }
-                if (pubUrl != null) {
-                    citationEntry.add("@id", pubUrl);
-                    citationEntry.add("identifier", pubUrl);
-                }
-                if (addToArray) {
-                    jsonArrayBuilder.add(citationEntry);
-                }
-            }
-            JsonArray jsonArray = jsonArrayBuilder.build();
-            if (!jsonArray.isEmpty()) {
-                job.add("citation", jsonArray);
-            }
-        }
-        
-        /**
-         * temporalCoverage:
-         * (if available)
-         */
-        
-        List<String> timePeriodsCovered = this.getTimePeriodsCovered();
-        if (timePeriodsCovered.size() > 0) {
-            JsonArrayBuilder temporalCoverage = Json.createArrayBuilder();
-            for (String timePeriod : timePeriodsCovered) {
-                temporalCoverage.add(timePeriod);
-            }
-            job.add("temporalCoverage", temporalCoverage);
-        }
-        
-        /**
-         * https://schema.org/version/3.4/ says, "Note that schema.org release
-         * numbers are not generally included when you use schema.org. In
-         * contexts (e.g. related standards work) when a particular release
-         * needs to be cited, this document provides the appropriate URL."
-         * 
-         * For the reason above we decided to take out schemaVersion but we're
-         * leaving this Javadoc in here to remind us that we made this decision.
-         * We used to include "https://schema.org/version/3.3" in the output for
-         * "schemaVersion".
-         */
-        TermsOfUseAndAccess terms = this.getTermsOfUseAndAccess();
-        if (terms != null) {
-            JsonObjectBuilder license = Json.createObjectBuilder().add("@type", "Dataset");
-            
-            if (TermsOfUseAndAccess.License.CC0.equals(terms.getLicense())) {
-                license.add("text", "CC0").add("url", TermsOfUseAndAccess.CC0_URI);
-            } else {
-                String termsOfUse = terms.getTermsOfUse();
-                // Terms of use can be null if you create the dataset with JSON.
-                if (termsOfUse != null) {
-                    license.add("text", termsOfUse);
-                }
-            }
-            
-            job.add("license",license);
-        }
-        
-        job.add("includedInDataCatalog", Json.createObjectBuilder()
-                .add("@type", "DataCatalog")
-                .add("name", BrandingUtil.getRootDataverseCollectionName())
-                .add("url", SystemConfig.getDataverseSiteUrlStatic())
-        );
-
-        String installationBrandName = BrandingUtil.getInstallationBrandName();
-        /**
-         * Both "publisher" and "provider" are included but they have the same
-         * values. Some services seem to prefer one over the other.
-         */
-        job.add("publisher", Json.createObjectBuilder()
-                .add("@type", "Organization")
-                .add("name", installationBrandName)
-        );
-        job.add("provider", Json.createObjectBuilder()
-                .add("@type", "Organization")
-                .add("name", installationBrandName)
-        );
-
-        List<String> funderNames = getFunders();
-        if (!funderNames.isEmpty()) {
-            JsonArrayBuilder funderArray = Json.createArrayBuilder();
-            for (String funderName : funderNames) {
-                JsonObjectBuilder funder = NullSafeJsonBuilder.jsonObjectBuilder();
-                funder.add("@type", "Organization");
-                funder.add("name", funderName);
-                funderArray.add(funder);
-            }
-            job.add("funder", funderArray);
-        }
-
-        boolean commaSeparated = true;
-        List<String> spatialCoverages = getSpatialCoverages(commaSeparated);
-        if (!spatialCoverages.isEmpty()) {
-            JsonArrayBuilder spatialArray = Json.createArrayBuilder();
-            for (String spatialCoverage : spatialCoverages) {
-                spatialArray.add(spatialCoverage);
-            }
-            job.add("spatialCoverage", spatialArray);
-        }
-
-        List<FileMetadata> fileMetadatasSorted = getFileMetadatasSorted();
-        if (fileMetadatasSorted != null && !fileMetadatasSorted.isEmpty()) {
-            JsonArrayBuilder fileArray = Json.createArrayBuilder();
-            String dataverseSiteUrl = SystemConfig.getDataverseSiteUrlStatic();
-            for (FileMetadata fileMetadata : fileMetadatasSorted) {
-                JsonObjectBuilder fileObject = NullSafeJsonBuilder.jsonObjectBuilder();
-                String filePidUrlAsString = null;
-                URL filePidUrl = fileMetadata.getDataFile().getGlobalId().toURL();
-                if (filePidUrl != null) {
-                    filePidUrlAsString = filePidUrl.toString();
-                }
-                fileObject.add("@type", "DataDownload");
-                fileObject.add("name", fileMetadata.getLabel());
-                fileObject.add("fileFormat", fileMetadata.getDataFile().getContentType());
-                fileObject.add("contentSize", fileMetadata.getDataFile().getFilesize());
-                fileObject.add("description", fileMetadata.getDescription());
-                fileObject.add("@id", filePidUrlAsString);
-                fileObject.add("identifier", filePidUrlAsString);
-                String hideFilesBoolean = System.getProperty(SystemConfig.FILES_HIDE_SCHEMA_DOT_ORG_DOWNLOAD_URLS);
-                if (hideFilesBoolean != null && hideFilesBoolean.equals("true")) {
-                    // no-op
-                } else {
-                    if (FileUtil.isPubliclyDownloadable(fileMetadata)) {
-                        String nullDownloadType = null;
-                        fileObject.add("contentUrl", dataverseSiteUrl + FileUtil.getFileDownloadUrlPath(nullDownloadType, fileMetadata.getDataFile().getId(), false, fileMetadata.getId()));
-                    }
-                }
-                fileArray.add(fileObject);
-            }
-            job.add("distribution", fileArray);
-        }
-        jsonLd = job.build().toString();
-        
-        //Most fields above should be stripped/sanitized but, since this is output in the dataset page as header metadata, do a final sanitize step to make sure
-        jsonLd = MarkupChecker.stripAllTags(jsonLd);
-        
-        return jsonLd;
-    }
 
     public String getLocaleLastUpdateTime() {
         return DateUtil.formatDate(new Timestamp(lastUpdateTime.getTime()));

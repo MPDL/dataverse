@@ -46,7 +46,9 @@ public class RequestRsyncScriptCommand extends AbstractCommand<ScriptRequestResp
         if (request == null) {
             throw new IllegalCommandException("DataverseRequest cannot be null.", this);
         }
-        if(!dataset.getFiles().isEmpty()){
+
+        int fileSize = ctxt.files().countByDatasetId(dataset.getId());
+        if(fileSize > 0){
             throw new IllegalCommandException("Cannot get script for a dataset that already has a file", this);
         }
         String dcmBaseUrl = ctxt.settings().getValueForKey(DataCaptureModuleUrl);

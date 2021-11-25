@@ -88,9 +88,11 @@ public class Dataset extends DvObjectContainer {
     public static final String TARGET_URL = "/citation?persistentId=";
     private static final long serialVersionUID = 1L;
 
+    /*
     @OneToMany(mappedBy = "owner", cascade = CascadeType.MERGE)
     @OrderBy("id")
     private List<DataFile> files = new ArrayList<>();
+    */
 
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date lastExportTime;
@@ -155,7 +157,7 @@ public class Dataset extends DvObjectContainer {
         DatasetVersion datasetVersion = new DatasetVersion();
         datasetVersion.setDataset(this);
         datasetVersion.setVersionState(DatasetVersion.VersionState.DRAFT);
-        datasetVersion.setFileMetadatas(new ArrayList<>());
+        //datasetVersion.setFileMetadatas(new ArrayList<>());
         datasetVersion.setVersionNumber((long) 1);
         datasetVersion.setMinorVersionNumber((long) 0);
         versions.add(datasetVersion);
@@ -244,7 +246,8 @@ public class Dataset extends DvObjectContainer {
     public String getPersistentURL() {
         return new GlobalId(this).toURL().toString();
     }
-    
+
+    /*
     public List<DataFile> getFiles() {
         return files;
     }
@@ -252,6 +255,8 @@ public class Dataset extends DvObjectContainer {
     public void setFiles(List<DataFile> files) {
         this.files = files;
     }
+    */
+
 
     public boolean isDeaccessioned() {
         // return true, if all published versions were deaccessioned
@@ -295,7 +300,8 @@ public class Dataset extends DvObjectContainer {
     private DatasetVersion createNewDatasetVersion(Template template, FileMetadata fmVarMet) {
         DatasetVersion dsv = new DatasetVersion();
         dsv.setVersionState(DatasetVersion.VersionState.DRAFT);
-        dsv.setFileMetadatas(new ArrayList<>());
+        //dsv.setFileMetadatas(new ArrayList<>());
+        //dsv.setFileMetadatas(new ArrayList<>());
         DatasetVersion latestVersion;
 
         //if the latest version has values get them copied over

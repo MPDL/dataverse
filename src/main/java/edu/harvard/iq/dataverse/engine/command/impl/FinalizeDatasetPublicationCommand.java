@@ -69,7 +69,7 @@ public class FinalizeDatasetPublicationCommand extends AbstractPublishDatasetCom
     @Override
     public Dataset execute(CommandContext ctxt) throws CommandException {
         Dataset theDataset = getDataset();
-        
+        List<DataFile> files = ctxt.files().findByDatasetId(theDataset.getId());
         logger.info("Finalizing publication of the dataset "+theDataset.getGlobalId().asString());
         
         // validate the physical files before we do anything else: 
@@ -81,7 +81,7 @@ public class FinalizeDatasetPublicationCommand extends AbstractPublishDatasetCom
             // some imported datasets may already be released.
 
             // validate the physical files (verify checksums):
-            validateDataFiles(theDataset, ctxt);
+            validateDataFiles(theDataset, files, ctxt);
             // (this will throw a CommandException if it fails)
         }
 
@@ -128,7 +128,7 @@ public class FinalizeDatasetPublicationCommand extends AbstractPublishDatasetCom
         theDataset.setFileAccessRequest(theDataset.getLatestVersion().getTermsOfUseAndAccess().isFileAccessRequest());
         
         //Use dataset pub date (which may not be the current date for migrated datasets)
-        updateFiles(new Timestamp(theDataset.getLatestVersion().getReleaseTime().getTime()), ctxt);
+        updateFiles(new Timestamp(theDataset.getLatestVersion().getReleaseTime().getTime()), files, ctxt);
         
         // 
         // TODO: Not sure if this .merge() is necessary here - ? 
@@ -177,7 +177,7 @@ public class FinalizeDatasetPublicationCommand extends AbstractPublishDatasetCom
             // some imported datasets may already be released.
 
             if (!datasetExternallyReleased) {
-                publicizeExternalIdentifier(theDataset, ctxt);
+                publicizeExternalIdentifier(theDataset, files, ctxt);
                 // Will throw a CommandException, unless successful.
                 // This will end the execution of the command, but the method 
                 // above takes proper care to "clean up after itself" in case of
@@ -315,14 +315,15 @@ public class FinalizeDatasetPublicationCommand extends AbstractPublishDatasetCom
         }
     }
 
-    private void validateDataFiles(Dataset dataset, CommandContext ctxt) throws CommandException {
+    private void validateDataFiles(Dataset dataset, List<DataFile> files, CommandContext ctxt) throws CommandException {
         try {
             long maxDatasetSize = ctxt.systemConfig().getDatasetValidationSizeLimit();
             long maxFileSize = ctxt.systemConfig().getFileValidationSizeLimit();
 
             long datasetSize = DatasetUtil.getDownloadSizeNumeric(dataset.getLatestVersion(), false);
             if (maxDatasetSize == -1 || datasetSize < maxDatasetSize) {
-                for (DataFile dataFile : dataset.getFiles()) {
+
+                for (DataFile dataFile : files) {
                     // TODO: Should we validate all the files in the dataset, or only
                     // the files that haven't been published previously?
                     // (the decision was made to validate all the files on every
@@ -362,7 +363,7 @@ public class FinalizeDatasetPublicationCommand extends AbstractPublishDatasetCom
         }
     }
     
-    private void publicizeExternalIdentifier(Dataset dataset, CommandContext ctxt) throws CommandException {
+    private void publicizeExternalIdentifier(Dataset dataset, List<DataFile> files, CommandContext ctxt) throws CommandException {
         String protocol = getDataset().getProtocol();
         String authority = getDataset().getAuthority();
         GlobalIdServiceBean idServiceBean = GlobalIdServiceBean.getBean(protocol, ctxt);
@@ -389,7 +390,7 @@ public class FinalizeDatasetPublicationCommand extends AbstractPublishDatasetCom
                         && dataset.getLatestVersion().getMinorVersionNumber() != null
                         && dataset.getLatestVersion().getMinorVersionNumber().equals((long) 0)) {
                     //A false return value indicates a failure in calling the service
-                    for (DataFile df : dataset.getFiles()) {
+                    for (DataFile df : files) {
                         logger.log(Level.FINE, "registering global id for file {0}", df.getId());
                         //A false return value indicates a failure in calling the service
                         if (!idServiceBean.publicizeIdentifier(df)) {
@@ -416,8 +417,8 @@ public class FinalizeDatasetPublicationCommand extends AbstractPublishDatasetCom
         }
     }
     
-    private void updateFiles(Timestamp updateTime, CommandContext ctxt) throws CommandException {
-        for (DataFile dataFile : getDataset().getFiles()) {
+    private void updateFiles(Timestamp updateTime, List<DataFile> files, CommandContext ctxt) throws CommandException {
+        for (DataFile dataFile : files) {
             if (dataFile.getPublicationDate() == null) {
                 // this is a new, previously unpublished file, so publish by setting date
                 dataFile.setPublicationDate(updateTime);
