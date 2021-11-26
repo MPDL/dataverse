@@ -45,6 +45,8 @@ import edu.harvard.iq.dataverse.settings.Setting;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -161,6 +163,9 @@ public class Admin extends AbstractApiBean {
 	// Make the session available
 	@Inject
 	DataverseSession session;
+
+	@PersistenceContext(unitName = "VDCNet-ejbPU")
+	protected EntityManager em;
 
 	public static final String listUsersPartialAPIPath = "list-users";
 	public static final String listUsersFullAPIPath = "/api/admin/" + listUsersPartialAPIPath;
@@ -2062,5 +2067,13 @@ public class Admin extends AbstractApiBean {
                 .collect(toJsonArray()));
 
     }
+
+	@GET
+	@Path("/invalidateJpaCache")
+	public Response invalidateCache() throws WrappedResponse {
+		em.getEntityManagerFactory().getCache().evictAll();
+		return ok("JPA cache invalidated");
+
+	}
     
 }

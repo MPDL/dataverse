@@ -619,6 +619,7 @@ public class DatasetPage implements java.io.Serializable {
     }
 
     private List<FileMetadata> selectFileMetadatasForDisplay() {
+
         Set<Long> searchResultsIdSet = null;
 
         if (isIndexedVersion()) {
@@ -2181,13 +2182,14 @@ public class DatasetPage implements java.io.Serializable {
     private TreeNode filesTreeRoot = null;
 
     public TreeNode getFilesTreeRoot() {
-        if (filesTreeRoot == null) {
+        if (filesTreeRoot == null && isFileDisplayTree()) {
             initFilesTree();
         }
         return filesTreeRoot;
     }
 
     private void initFilesTree() {
+        logger.info("Initializing File Tree");
         filesTreeRoot = createFolderTreeNode("root", null);
         TreeNode currentNode = filesTreeRoot;
         // this is a temporary map, that we keep while we are building
