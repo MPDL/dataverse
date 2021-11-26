@@ -56,7 +56,7 @@
                                            <p:ajax update="touFragment" oncomplete="javascript:bind_bsui_components();" />
                                        </p:selectOneListbox>
                                </ui:fragment>
-                               <div class="text-right">
+                               <div class="#{!empty editMode?'text-right':''}">
                                    <ui:fragment rendered="#{termsOfUseAndAccess.license == 'CCBY'}">
                                        <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.CCBY.txt']}" escape="false"/></p> <p><img src="/resources/images/ccby.png" alt="#{bundle['file.ccby.icon.alttxt']}" class="waiver-CC0-inline"/></p>
                                    </ui:fragment>

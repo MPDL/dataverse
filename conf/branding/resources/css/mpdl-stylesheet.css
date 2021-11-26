@@ -107,9 +107,7 @@ body {
 	div#topNavBar.navbar-collapse.collapsing {
 		background-color: #f8f8f8;	
 	}
-	div#topNavBar.navbar-collapse.collapsing {
-		background-color: #f8f8f8;
-	}
+
 }
 
 ul.nav.navbar-nav.navbar-right li:nth-last-child(2) {
@@ -294,6 +292,11 @@ input[type=checkbox]:checked:before {
 	background: transparent;
 }
 
+/* Hide the dataverse advanced search panel for dataverses */
+#advancedSearchForm > div.panel:nth-of-type(2) {
+	display:none;
+}
+
 /* Hide the "Dataverse" search facet */
 #facetType > div.clearfix:first-of-type {
 	display:none;
@@ -302,6 +305,11 @@ input[type=checkbox]:checked:before {
 /* Hide the dataverse selection on top of the page when creating or editing a dataset */
 #datasetForm > div.form-group:nth-of-type(2) {
 	display:none;
+}
+
+/* Hide on Terms of Use all fields after Waiver */
+#datasetForm\:tabView\:touFragment .form-group:not(first-of-type) {
+	display: none;
 }
 
 div[data-fieldtype-name="authorAffiliation2.parent"] {
@@ -316,11 +324,6 @@ div[data-fieldtype-name="authorAffiliationDepartment.parent"],
 div[data-fieldtype-name="authorAffiliation2Department.parent"],
 div[data-fieldtype-name="authorIdentifier.parent"]{
 	margin-bottom: 20px !important;
-}
-
-/* Hide the dataverse advanced search panel for dataverses */
-#advancedSearchForm > div.panel:nth-of-type(2) {
-	display:none;
 }
 
 /* Make the autosuggest for affiliations scrollable */
