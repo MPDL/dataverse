@@ -1655,27 +1655,32 @@ public class DataFileServiceBean implements java.io.Serializable {
         return d.getEmbargo();
     }
 
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+
     public List<DataFile> findByDatasetId(long datasetId, int limit, int offset) {
         String qr = "select o from DataFile o where o.owner.id = :identifier order by o.id";
         List<DataFile> result = em.createNativeQuery(qr).setParameter("identifier", datasetId).setMaxResults(limit).setFirstResult(offset).getResultList();
         return result;
     }
 
+    public List<DataFile> findByDatasetIdAndIngestStatus(long datasetId, char ingestStatus) {
+        String qr = "select o from DataFile o where o.owner.id = :identifier AND ingeststatus = :ingestStatus order by o.id";
+        List<DataFile> result = em.createNativeQuery(qr).setParameter("identifier", datasetId).setParameter("ingestStatus", ingestStatus).getResultList();
+        return result;
+    }
 
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+
+
     public void deleteByDatasetId(long datasetId) {
         int result = em.createNativeQuery("DELETE FROM DataFile o WHERE o.owner.id=:identifier").setParameter("identifier", datasetId).executeUpdate();
     }
 
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+
     public int countByDatasetId(long datasetId) {
         Query query = em.createNativeQuery("SELECT count(*) FROM DataFile o WHERE o.owner.id=:identifier").setParameter("identifier", datasetId);
         int count = ((BigInteger) query.getSingleResult()).intValue();
         return count;
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public FileMetadata save(FileMetadata fmd) {
         FileMetadata savedDataFile = em.merge(fmd);
         return savedDataFile;
@@ -1699,6 +1704,8 @@ public class DataFileServiceBean implements java.io.Serializable {
         List<FileMetadata> result = em.createNativeQuery(qr).setParameter("identifier", versionId).setMaxResults(limit).setFirstResult(offset).getResultList();
         return result;
     }
+
+
 
     public FileMetadata findFileMetadataByVersionIdAndFileId(long versionId, long dataFileId) {
         String qr = "select o from FileMetadata o where o.datasetVersion.id = :datasetVersionId AND o.datafile.id= :dataFileId";

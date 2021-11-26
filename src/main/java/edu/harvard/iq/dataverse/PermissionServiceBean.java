@@ -76,6 +76,9 @@ public class PermissionServiceBean {
 
     @EJB
     DataverseServiceBean dataverseService;
+
+    @EJB
+    DataFileServiceBean dataFileService;
     
     @EJB
     DvObjectServiceBean dvObjectServiceBean;
@@ -449,6 +452,12 @@ public class PermissionServiceBean {
 
             if (!df.isRestricted()) {
                 if (df.getOwner().getReleasedVersion() != null) {
+                    FileMetadata fmd = dataFileService.findFileMetadataByVersionIdAndFileId(df.getOwner().getReleasedVersion().getId(), df.getId());
+                    if(fmd!=null)
+                    {
+                        return true;
+                    }
+                    /*
                     if (df.getOwner().getReleasedVersion().getFileMetadatas() != null) {
                         for (FileMetadata fm : df.getOwner().getReleasedVersion().getFileMetadatas()) {
                             if (df.equals(fm.getDataFile())) {
@@ -456,6 +465,8 @@ public class PermissionServiceBean {
                             }
                         }
                     }
+                    */
+
                 }
             }
         }

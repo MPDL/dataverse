@@ -377,9 +377,9 @@ public class IngestServiceBean {
 					if (dataFile.getOwner() == null) {
 						dataFile.setOwner(dataset);
 
-						version.getFileMetadatas().add(dataFile.getFileMetadata());
+						//version.getFileMetadatas().add(dataFile.getFileMetadata());
 						dataFile.getFileMetadata().setDatasetVersion(version);
-						dataset.getFiles().add(dataFile);
+						//dataset.getFiles().add(dataFile);
 
 						if (dataFile.getFileMetadata().getCategories() != null) {
 							ListIterator<DataFileCategory> dfcIt = dataFile.getFileMetadata().getCategories()
@@ -445,8 +445,9 @@ public class IngestServiceBean {
     // datasetversion as the argument. 
     // -- L.A. 4.6
     public void startIngestJobsForDataset(Dataset dataset, AuthenticatedUser user) {
-        List<DataFile> scheduledFiles = new ArrayList<>();
-                
+        List<DataFile> scheduledFiles = fileService.findByDatasetIdAndIngestStatus(dataset.getId(),DataFile.INGEST_STATUS_SCHEDULED);
+
+              /*
         for (DataFile dataFile : dataset.getFiles()) {
             if (dataFile.isIngestScheduled()) {
                 // todo: investigate why when calling save with the file object
@@ -456,6 +457,8 @@ public class IngestServiceBean {
                 scheduledFiles.add(dataFile);
             }
         }
+
+        */
 
         startIngestJobs(scheduledFiles, user);
     }

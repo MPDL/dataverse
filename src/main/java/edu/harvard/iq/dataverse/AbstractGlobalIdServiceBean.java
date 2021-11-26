@@ -306,10 +306,11 @@ public abstract class AbstractGlobalIdServiceBean implements GlobalIdServiceBean
         StringBuilder sb = new StringBuilder();
         if (dvObject.isInstanceofDataset()) {
             Dataset dataset = (Dataset) dvObject;
-            if (!dataset.getFiles().isEmpty() && !(dataset.getFiles().get(0).getIdentifier() == null)) {
-
+            List<DataFile> dataFiles = datafileService.findByDatasetId(dataset.getId(),1,0);
+            if (!dataFiles.isEmpty() && !(dataFiles.get(0).getIdentifier() == null)) {
+                dataFiles = datafileService.findByDatasetId(dataset.getId());
                 datafileIdentifiers = new ArrayList<>();
-                for (DataFile dataFile : dataset.getFiles()) {
+                for (DataFile dataFile : dataFiles) {
                     if (!dataFile.getGlobalId().asString().isEmpty()) {
                         if (sb.toString().isEmpty()) {
                             sb.append("<relatedIdentifiers>");
@@ -337,10 +338,12 @@ public abstract class AbstractGlobalIdServiceBean implements GlobalIdServiceBean
         if (dvObject.isInstanceofDataset()) {
             Dataset dataset = (Dataset) dvObject;
 
-            if (!dataset.getFiles().isEmpty() && !(dataset.getFiles().get(0).getIdentifier() == null)) {
+            List<DataFile> dataFiles = datafileService.findByDatasetId(dataset.getId(),1,0);
+            if (!dataFiles.isEmpty() && !(dataFiles.get(0).getIdentifier() == null)) {
+                dataFiles = datafileService.findByDatasetId(dataset.getId());
 
                 datafileIdentifiers = new ArrayList<>();
-                for (DataFile dataFile : dataset.getFiles()) {
+                for (DataFile dataFile : dataFiles) {
                     datafileIdentifiers.add(dataFile.getIdentifier());
                     int x = xmlMetadata.indexOf("</relatedIdentifiers>") - 1;
                     xmlMetadata = xmlMetadata.replace("{relatedIdentifier}", dataFile.getIdentifier());

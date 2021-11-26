@@ -78,11 +78,12 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
 
     } 
     
-    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, DatasetVersion clone) {
+    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, DatasetVersion clone, List<DataFile> finalFileList) {
         super(aRequest, theDataset);
         this.filesToDelete = new ArrayList<>();
         this.clone = clone;
         this.fmVarMet = null;
+        this.finalFileList = finalFileList;
     }
 
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, FileMetadata fm) {
@@ -225,7 +226,8 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
                     logger.fine("Edit ver: " + theDataset.getEditVersion().getId());
                     logger.fine("fmd ver: " + fmd.getDatasetVersion().getId());
                     if (!theDataset.getEditVersion().equals(fmd.getDatasetVersion())) {
-                        fmd = FileMetadataUtil.getFmdForFileInEditVersion(fmd, theDataset.getEditVersion());
+                        fmd = ctxt.files().findFileMetadata(fmd.getId());
+                        //fmd = FileMetadataUtil.getFmdForFileInEditVersion(fmd, theDataset.getEditVersion());
                     }
                 } 
                 fmd = ctxt.em().merge(fmd);

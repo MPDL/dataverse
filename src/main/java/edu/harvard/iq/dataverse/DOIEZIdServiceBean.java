@@ -194,11 +194,17 @@ public class DOIEZIdServiceBean extends AbstractGlobalIdServiceBean {
                 modifyIdentifierTargetURL(dvObject);
                 if (dvObject instanceof Dataset) {
                     Dataset dataset = (Dataset) dvObject;
-                    for (DataFile df : dataset.getFiles()) {
-                        metadata = new HashMap<>();
-                        metadata.put("_target", "http://ezid.cdlib.org/id/" + df.getProtocol() + ":" + df.getAuthority()
-                                + "/" + df.getIdentifier());
-                                        modifyIdentifierTargetURL(df);
+
+                    List<DataFile> dataFiles = datafileService.findByDatasetId(dataset.getId(),1,0);
+                    if (!dataFiles.isEmpty() && !(dataFiles.get(0).getIdentifier() == null)) {
+                        dataFiles = datafileService.findByDatasetId(dataset.getId());
+
+                        for (DataFile df : dataFiles) {
+                            metadata = new HashMap<>();
+                            metadata.put("_target", "http://ezid.cdlib.org/id/" + df.getProtocol() + ":" + df.getAuthority()
+                                    + "/" + df.getIdentifier());
+                            modifyIdentifierTargetURL(df);
+                        }
                     }
                 }
 

@@ -139,7 +139,7 @@ public class DdiExportUtil {
 
     
     // "full" ddi, with the the "<fileDscr>"  and "<dataDscr>/<var>" sections: 
-    public static void datasetJson2ddi(JsonObject datasetDtoAsJson, DatasetVersion version, OutputStream outputStream) throws XMLStreamException {
+    public static void datasetJson2ddi(JsonObject datasetDtoAsJson, DatasetVersion version, List<FileMetadata> fileMetadatas, OutputStream outputStream) throws XMLStreamException {
         logger.fine(JsonUtil.prettyPrint(datasetDtoAsJson.toString()));
         Gson gson = new Gson();
         DatasetDTO datasetDto = gson.fromJson(datasetDtoAsJson.toString(), DatasetDTO.class);
@@ -154,9 +154,9 @@ public class DdiExportUtil {
             writeAttribute(xmlw, "xml:lang", datasetDto.getMetadataLanguage());
         }
         createStdyDscr(xmlw, datasetDto);
-        createFileDscr(xmlw, version);
-        createDataDscr(xmlw, version);
-        createOtherMatsFromFileMetadatas(xmlw, version.getFileMetadatas());
+        createFileDscr(xmlw, version, fileMetadatas);
+        createDataDscr(xmlw, version, fileMetadatas);
+        createOtherMatsFromFileMetadatas(xmlw, fileMetadatas);
         xmlw.writeEndElement(); // codeBook
         xmlw.flush();
     }
@@ -1511,9 +1511,9 @@ public class DdiExportUtil {
     // plus, the structure of file-level metadata is currently being re-designed, 
     // so we probably should not invest any time into it right now). -- L.A. 4.5
     
-    public static void createDataDscr(XMLStreamWriter xmlw, DatasetVersion datasetVersion) throws XMLStreamException {
+    public static void createDataDscr(XMLStreamWriter xmlw, DatasetVersion datasetVersion, List<FileMetadata> fileMetadatas) throws XMLStreamException {
 
-        if (datasetVersion.getFileMetadatas() == null || datasetVersion.getFileMetadatas().isEmpty()) {
+        if (fileMetadatas == null || fileMetadatas.isEmpty()) {
             return;
         }
 
@@ -1521,7 +1521,7 @@ public class DdiExportUtil {
 
         // we're not writing the opening <dataDscr> tag until we find an actual 
         // tabular datafile.
-        for (FileMetadata fileMetadata : datasetVersion.getFileMetadatas()) {
+        for (FileMetadata fileMetadata : fileMetadatas) {
             DataFile dataFile = fileMetadata.getDataFile();
 
             /**
@@ -1806,9 +1806,9 @@ public class DdiExportUtil {
 
     }
     
-    private static void createFileDscr(XMLStreamWriter xmlw, DatasetVersion datasetVersion) throws XMLStreamException {
+    private static void createFileDscr(XMLStreamWriter xmlw, DatasetVersion datasetVersion, List<FileMetadata> fileMetadatas) throws XMLStreamException {
         String dataverseUrl = getDataverseSiteUrl();
-        for (FileMetadata fileMetadata : datasetVersion.getFileMetadatas()) {
+        for (FileMetadata fileMetadata : fileMetadatas) {
             DataFile dataFile = fileMetadata.getDataFile();
 
             if (dataFile != null && dataFile.isTabularData()) {
