@@ -1,5 +1,8 @@
 /* Add any CSS necessary for your custom content */
+/*
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300italic,400,200,200italic,300,600,400italic,600italic,700italic,700,900');
+*/
+@import url('/logos/fonts/fonts.css');
 
 html {
 	--mpdl-darkgreen: #04725d;
