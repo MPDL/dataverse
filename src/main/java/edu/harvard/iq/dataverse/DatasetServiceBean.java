@@ -17,6 +17,7 @@ import edu.harvard.iq.dataverse.engine.command.impl.DestroyDatasetCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.FinalizeDatasetPublicationCommand;
 import edu.harvard.iq.dataverse.engine.command.impl.GetDatasetStorageSizeCommand;
 import edu.harvard.iq.dataverse.export.ExportService;
+import edu.harvard.iq.dataverse.harvest.client.HarvestingClient;
 import edu.harvard.iq.dataverse.harvest.server.OAIRecordServiceBean;
 import edu.harvard.iq.dataverse.search.IndexServiceBean;
 import edu.harvard.iq.dataverse.settings.SettingsServiceBean;
@@ -1493,6 +1494,94 @@ public class DatasetServiceBean implements java.io.Serializable {
         }
 
         return returnSet;
+    }
+
+    public String getRemoteArchiveURL(Dataset dataset) {
+        if (isHarvested()) {
+            if (HarvestingClient.HARVEST_STYLE_DATAVERSE.equals(this.getHarvestedFrom().getHarvestStyle())) {
+                return this.getHarvestedFrom().getArchiveUrl() + "/dataset.xhtml?persistentId=" + getGlobalIdString();
+            } else if (HarvestingClient.HARVEST_STYLE_VDC.equals(this.getHarvestedFrom().getHarvestStyle())) {
+                String rootArchiveUrl = this.getHarvestedFrom().getHarvestingUrl();
+                int c = rootArchiveUrl.indexOf("/OAIHandler");
+                if (c > 0) {
+                    rootArchiveUrl = rootArchiveUrl.substring(0, c);
+                    return rootArchiveUrl + "/faces/study/StudyPage.xhtml?globalId=" + getGlobalIdString();
+                }
+            } else if (HarvestingClient.HARVEST_STYLE_ICPSR.equals(this.getHarvestedFrom().getHarvestStyle())) {
+                // For the ICPSR, it turns out that the best thing to do is to
+                // rely on the DOI to send the user to the right landing page for
+                // the study:
+                //String icpsrId = identifier;
+                //return this.getOwner().getHarvestingClient().getArchiveUrl() + "/icpsrweb/ICPSR/studies/"+icpsrId+"?q="+icpsrId+"&amp;searchSource=icpsr-landing";
+                return "http://doi.org/" + this.getAuthority() + "/" + this.getIdentifier();
+            } else if (HarvestingClient.HARVEST_STYLE_NESSTAR.equals(this.getHarvestedFrom().getHarvestStyle())) {
+                String nServerURL = this.getHarvestedFrom().getArchiveUrl();
+                // chop any trailing slashes in the server URL - or they will result
+                // in multiple slashes in the final URL pointing to the study
+                // on server of origin; Nesstar doesn't like it, apparently.
+                nServerURL = nServerURL.replaceAll("/*$", "");
+
+                String nServerURLencoded = nServerURL;
+
+                nServerURLencoded = nServerURLencoded.replace(":", "%3A").replace("/", "%2F");
+                //SEK 09/13/18
+                String NesstarWebviewPage = nServerURL
+                        + "/webview/?mode=documentation&submode=abstract&studydoc="
+                        + nServerURLencoded + "%2Fobj%2FfStudy%2F"
+                        + this.getIdentifier()
+                        + "&top=yes";
+
+                return NesstarWebviewPage;
+            } else if (HarvestingClient.HARVEST_STYLE_ROPER.equals(this.getHarvestedFrom().getHarvestStyle())) {
+                return this.getHarvestedFrom().getArchiveUrl() + "/CFIDE/cf/action/catalog/abstract.cfm?archno=" + this.getIdentifier();
+            } else if (HarvestingClient.HARVEST_STYLE_HGL.equals(this.getHarvestedFrom().getHarvestStyle())) {
+                // a bit of a hack, true.
+                // HGL documents, when turned into Dataverse studies/datasets
+                // all 1 datafile; the location ("storage identifier") of the file
+                // is the URL pointing back to the HGL GUI viewer. This is what
+                // we will display for the dataset URL.  -- L.A.
+                // TODO: create a 4.+ ticket for a cleaner solution.
+                List<DataFile> dataFiles = this.getFiles();
+                if (dataFiles != null && dataFiles.size() == 1) {
+                    if (dataFiles.get(0) != null) {
+                        String hglUrl = dataFiles.get(0).getStorageIdentifier();
+                        if (hglUrl != null && hglUrl.matches("^http.*")) {
+                            return hglUrl;
+                        }
+                    }
+                }
+                return this.getHarvestedFrom().getArchiveUrl();
+            } else if (HarvestingClient.HARVEST_STYLE_DEFAULT.equals(this.getHarvestedFrom().getHarvestStyle())) {
+                // This is a generic OAI archive.
+                // The metadata we harvested for this dataset is most likely a
+                // simple DC record that does not contain a URL pointing back at
+                // the specific location on the source archive. But, it probably
+                // has a global identifier, a DOI or a Handle - so we should be
+                // able to redirect to the proper global resolver.
+                // But since this is a harvested dataset, we will assume that
+                // there is a possibility tha this object does NOT have all the
+                // valid persistent identifier components.
+
+                if (StringUtil.nonEmpty(this.getProtocol())
+                        && StringUtil.nonEmpty(this.getAuthority())
+                        && StringUtil.nonEmpty(this.getIdentifier())) {
+                    return this.getPersistentURL();
+                }
+
+                // All we can do is redirect them to the top-level URL we have
+                // on file for this remote archive:
+                return this.getHarvestedFrom().getArchiveUrl();
+            } else {
+                // This is really not supposed to happen - this is a harvested
+                // dataset for which we don't have ANY information on the nature
+                // of the archive we got it from. So all we can do is redirect
+                // the user to the top-level URL we have on file for this remote
+                // archive:
+                return this.getHarvestedFrom().getArchiveUrl();
+            }
+        }
+
+        return null;
     }
 
 }

@@ -1127,7 +1127,7 @@ public class Admin extends AbstractApiBean {
                 os.write("{\"dataFiles\": [\n".getBytes());
                 
                 boolean wroteObject = false;
-				List<DataFile> datafiles =datasetService.getFiles(dataset.getId(), Integer.MAX_VALUE, 0);
+				List<DataFile> datafiles =fileService.findByDatasetId(dataset.getId());
                 for (DataFile dataFile : datafiles) {
                     // Potentially, there's a godzillion datasets in this Dataverse. 
                     // This is why we go through the list of ids here, and instantiate 

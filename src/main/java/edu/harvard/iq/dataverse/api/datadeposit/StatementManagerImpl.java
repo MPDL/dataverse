@@ -35,7 +35,7 @@ public class StatementManagerImpl implements StatementManager {
     @EJB
     DatasetServiceBean datasetService;
     @EJB
-    DatasetVersionServiceBean datasetVersionService;
+    DataFileServiceBean dataFileService;
     @EJB
     PermissionServiceBean permissionService;
     @Inject
@@ -87,7 +87,7 @@ public class StatementManagerImpl implements StatementManager {
             Statement statement = new AtomStatement(feedUri, author, title, datedUpdated);
             Map<String, String> states = new HashMap<>();
             states.put("latestVersionState", dataset.getLatestVersion().getVersionState().toString());
-            Boolean isMinorUpdate = datasetVersionService.isMinorUpdate(dataset.getLatestVersion());
+            Boolean isMinorUpdate = datasetService.isMinorUpdate(dataset.getLatestVersion());
             states.put("isMinorUpdate", isMinorUpdate.toString());
             
             if ( dataset.isLocked() ) {
@@ -100,7 +100,7 @@ public class StatementManagerImpl implements StatementManager {
             }
             
             statement.setStates(states);
-            List<FileMetadata> fileMetadatas = datasetVersionService.findAllFileMetadataByVersionId(dataset.getLatestVersion().getId());
+            List<FileMetadata> fileMetadatas = dataFileService.findAllFileMetadataByVersionId(dataset.getLatestVersion().getId());
             for (FileMetadata fileMetadata : fileMetadatas) {
                 DataFile dataFile = fileMetadata.getDataFile();
                 // We are exposing the filename for informational purposes. The file id is what you

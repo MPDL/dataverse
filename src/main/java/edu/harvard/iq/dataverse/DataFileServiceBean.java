@@ -568,6 +568,7 @@ public class DataFileServiceBean implements java.io.Serializable {
      * It is not guaranteed to adequately perform anywhere else. 
     */
 
+
     public void findFileMetadataOptimizedExperimental(Dataset owner, DatasetVersion version, AuthenticatedUser au) {
         List<DataFile> dataFiles = new ArrayList<>();
         List<DataTable> dataTables = new ArrayList<>();
@@ -820,6 +821,8 @@ public class DataFileServiceBean implements java.io.Serializable {
         logger.fine("Retrieved " + version.getFileMetadatas().size() + " filemetadatas for the version " + version.getId());
         owner.setFiles(dataFiles);
     }
+
+
     
     private List<FileMetadata> retrieveFileMetadataForVersion(Dataset dataset, DatasetVersion version, List<DataFile> dataFiles, Map<Long, Integer> filesMap, Map<Long, Integer> categoryMap) {
         List<FileMetadata> retList = new ArrayList<>();
@@ -1661,6 +1664,7 @@ public class DataFileServiceBean implements java.io.Serializable {
         List<DataFile> result = em.createNativeQuery(qr).setParameter("identifier", datasetId).setMaxResults(limit).setFirstResult(offset).getResultList();
         return result;
     }
+
 
     public List<DataFile> findByDatasetIdAndIngestStatus(long datasetId, char ingestStatus) {
         String qr = "select o from DataFile o where o.owner.id = :identifier AND ingeststatus = :ingestStatus order by o.id";

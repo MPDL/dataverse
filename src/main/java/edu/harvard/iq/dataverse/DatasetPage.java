@@ -590,6 +590,8 @@ public class DatasetPage implements java.io.Serializable {
 
     private List<FileMetadata> fileMetadatasSearch;
 
+    private Map<Long, FileMetadata> allFileMetadatas = new HashMap<>();
+
     public List<FileMetadata> getFileMetadatasSearch() {
         return fileMetadatasSearch;
     }
@@ -604,7 +606,7 @@ public class DatasetPage implements java.io.Serializable {
 
     }
 
-        private Long numberOfFilesToShow = (long) 25;
+    private Long numberOfFilesToShow = (long) 25;
 
     public Long getNumberOfFilesToShow() {
         return numberOfFilesToShow;
@@ -1856,7 +1858,7 @@ public class DatasetPage implements java.io.Serializable {
             if (dataset.isHarvested()) {
                 // if so, we'll simply forward to the remote URL for the original
                 // source of this harvested dataset:
-                String originalSourceURL = dataset.getRemoteArchiveURL();
+                String originalSourceURL = datasetService.getRemoteArchiveURL(dataset);
                 if (originalSourceURL != null && !originalSourceURL.equals("")) {
                     logger.fine("redirecting to "+originalSourceURL);
                     try {
@@ -4933,6 +4935,7 @@ public class DatasetPage implements java.io.Serializable {
         return false;
     }
 
+    /*
     private Boolean downloadButtonAllEnabled = null;
 
     public boolean isDownloadAllButtonEnabled() {
@@ -4948,6 +4951,8 @@ public class DatasetPage implements java.io.Serializable {
         }
         return downloadButtonAllEnabled;
     }
+    */
+
 
     public boolean isDownloadSelectedButtonEnabled(){
 
@@ -5413,7 +5418,8 @@ public class DatasetPage implements java.io.Serializable {
 
     public void selectAllFiles() {
         logger.fine("selectAllFiles called");
-        selectedFiles = workingVersion.getFileMetadatas();
+        selectedFiles = datafileService.findAllFileMetadataByVersionId(workingVersion.getId())
+        //selectedFiles = workingVersion.getFileMetadatas();
     }
 
     public void clearSelection() {
@@ -5738,8 +5744,10 @@ public class DatasetPage implements java.io.Serializable {
             if(selectionEmbargo!=null) {
                 selectionEmbargo = embargoService.merge(selectionEmbargo);
             }
-            for (FileMetadata fmd : workingVersion.getFileMetadatas()) {
+
+            //for (FileMetadata fmd : workingVersion.getFileMetadatas()) {
                 for (FileMetadata fm : embargoFMs) {
+                    FileMetadata fmd = datafileService.findFileMetadataByVersionIdAndFileId(workingVersion.getId(), fm.getDataFile().getId());
                     if (fm.getDataFile().equals(fmd.getDataFile()) && (isSuperUser()||!fmd.getDataFile().isReleased())) {
                         Embargo emb = fmd.getDataFile().getEmbargo();
                         if (emb != null) {
@@ -5753,7 +5761,7 @@ public class DatasetPage implements java.io.Serializable {
                         fmd.getDataFile().setEmbargo(selectionEmbargo);
                     }
                 }
-            }
+            //}
         }
         if (selectionEmbargo != null) {
             embargoService.save(selectionEmbargo, ((AuthenticatedUser) session.getUser()).getIdentifier());
@@ -5815,4 +5823,7 @@ public class DatasetPage implements java.io.Serializable {
         }
         return true;
     }
+
+
+
 }

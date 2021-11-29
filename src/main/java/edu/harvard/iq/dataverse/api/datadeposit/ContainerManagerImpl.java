@@ -313,7 +313,7 @@ public class ContainerManagerImpl implements ContainerManager {
                         Dataverse dvThatOwnsDataset = dataset.getOwner();
                         boolean doMinorVersionBump = false;
                         // if dataset is unreleased, major version; if released, then check if can be minor
-                        if (dataset.isReleased() && dataset.getLatestVersion().isMinorUpdate()) {
+                        if (dataset.isReleased() && datasetService.isMinorUpdate(dataset.getLatestVersion())) {
                             doMinorVersionBump = true;
                         }
                         PublishDatasetCommand publishDatasetCommand = new PublishDatasetCommand(dataset, dvRequest, doMinorVersionBump);

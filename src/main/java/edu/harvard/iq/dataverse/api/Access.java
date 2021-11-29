@@ -648,7 +648,7 @@ public class Access extends AbstractApiBean {
                 // is that we know that guest never has the Permission.ViewUnpublishedDataset. 
                 final DatasetVersion draft = versionService.getDatasetVersionById(retrieved.getId(), DatasetVersion.VersionState.DRAFT.toString());
                 if (draft != null && permissionService.requestOn(req, retrieved).has(Permission.ViewUnpublishedDataset)) {                    
-                    String fileIds = getFileIdsAsCommaSeparated(draft.getFileMetadatas());
+                    String fileIds = getFileIdsAsCommaSeparated(fileService.findAllFileMetadataByVersionId(draft.getId()));
                     // We don't want downloads from Draft versions to be counted, 
                     // so we are setting the gbrecs (aka "do not write guestbook response") 
                     // variable accordingly:
@@ -672,7 +672,7 @@ public class Access extends AbstractApiBean {
                 //throw new NotFoundException();
             }
             
-            String fileIds = getFileIdsAsCommaSeparated(latest.getFileMetadatas());
+            String fileIds = getFileIdsAsCommaSeparated(fileService.findAllFileMetadataByVersionId(latest.getId()));
             return downloadDatafiles(fileIds, gbrecs, apiTokenParam, uriInfo, headers, response);
         } catch (WrappedResponse wr) {
             return wr.getResponse();
@@ -715,7 +715,7 @@ public class Access extends AbstractApiBean {
                 // -- L.A.)
                 return error(BAD_REQUEST, BundleUtil.getStringFromBundle("access.api.exception.version.not.found"));
             }
-            String fileIds = getFileIdsAsCommaSeparated(dsv.getFileMetadatas());
+            String fileIds = getFileIdsAsCommaSeparated(fileService.findAllFileMetadataByVersionId(dsv.getId()));
             // We don't want downloads from Draft versions to be counted, 
             // so we are setting the gbrecs (aka "do not write guestbook response") 
             // variable accordingly:

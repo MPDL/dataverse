@@ -222,6 +222,7 @@ public class OREMap {
         JsonArrayBuilder aggResArrayBuilder = Json.createArrayBuilder();
         if (!aggregationOnly) {
 
+            fileSe
             for (FileMetadata fmd : version.getFileMetadatas()) {
                 DataFile df = fmd.getDataFile();
                 JsonObjectBuilder aggRes = Json.createObjectBuilder();
