@@ -311,7 +311,7 @@ input[type=checkbox]:checked:before {
 }
 
 /* Hide on Terms of Use all fields after Waiver */
-#datasetForm\:tabView\:touFragment .form-group:not(first-of-type) {
+#datasetForm\:tabView\:touFragment .form-group:not(:first-of-type) {
 	display: none;
 }
 
