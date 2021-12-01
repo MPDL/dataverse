@@ -143,7 +143,7 @@ public class MoveDatasetCommand extends AbstractVoidCommand {
 
         try {
             boolean doNormalSolrDocCleanUp = true;
-            ctxt.index().indexDataset(moved, doNormalSolrDocCleanUp);
+            ctxt.index().indexDataset(moved, doNormalSolrDocCleanUp, new ArrayList<>());
 
         } catch (Exception e) { // RuntimeException e ) {
             logger.log(Level.WARNING, "Exception while indexing:" + e.getMessage()); //, e);
