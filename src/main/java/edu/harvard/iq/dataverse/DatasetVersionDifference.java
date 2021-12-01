@@ -115,11 +115,13 @@ public final class DatasetVersionDifference {
         // way (sorting both lists, then goint through them in parallel, at the 
         // cost of (N+M) max.? 
         // -- 4.6 Nov. 2016
-        
+
+
+        /*
         for (FileMetadata fmdo : originalVersion.getFileMetadatas()) {
             boolean deleted = true;
             for (FileMetadata fmdn : newVersion.getFileMetadatas()) {
-                if (fmdo.getDataFile().equals(fmdn.getDataFile())) {
+                if (fmdo.getDataFile().getId().equals(fmdn.getDataFile().getId())) {
                     deleted = false;
                     if (!compareFileMetadatas(fmdo, fmdn)) {
                         changedFileMetadata.add(fmdo);
@@ -139,7 +141,7 @@ public final class DatasetVersionDifference {
         for (FileMetadata fmdn : newVersion.getFileMetadatas()) {
             boolean added = true;
             for (FileMetadata fmdo : originalVersion.getFileMetadatas()) {
-                if (fmdo.getDataFile().equals(fmdn.getDataFile())) {
+                if (fmdo.getDataFile().getId().equals(fmdn.getDataFile().getId())) {
                     added = false;
                     break;
                 }
@@ -150,6 +152,8 @@ public final class DatasetVersionDifference {
         }        
         getReplacedFiles();
         initDatasetFilesDifferencesList();
+        */
+
 
         //Sort within blocks by datasetfieldtype dispaly order then....
         //sort via metadatablock order - citation first...

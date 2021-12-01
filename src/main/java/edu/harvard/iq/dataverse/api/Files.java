@@ -146,7 +146,9 @@ public class Files extends AbstractApiBean {
 
         // update the dataset
         try {
-            engineSvc.submit(new UpdateDatasetVersionCommand(dataFile.getOwner(), dataverseRequest));
+            List<FileMetadata> filesChanged = new ArrayList<>();
+            filesChanged.add(dataFile.getLatestFileMetadata());
+            engineSvc.submit(new UpdateDatasetVersionCommand(dataFile.getOwner(), dataverseRequest, filesChanged));
         } catch (CommandException ex) {
             return error(BAD_REQUEST, "Problem saving datafile " + dataFile.getDisplayName() + ": " + ex.getLocalizedMessage());
         }
@@ -420,7 +422,7 @@ public class Files extends AbstractApiBean {
 
                 optionalFileParams.addOptionalParams(upFmd);
 
-                Dataset upDS = execCommand(new UpdateDatasetVersionCommand(upFmd.getDataFile().getOwner(), req));
+                Dataset upDS = execCommand(new UpdateDatasetVersionCommand(upFmd.getDataFile().getOwner(), req, fmdList));
 
             } catch (Exception e) {
                 logger.log(Level.WARNING, "Dataset publication finalization: exception while exporting:{0}", e);

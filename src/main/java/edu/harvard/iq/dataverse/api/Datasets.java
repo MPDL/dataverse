@@ -1013,7 +1013,7 @@ public class Datasets extends AbstractApiBean {
             DatasetVersion managedVersion;
 
             if (updateDraft) {
-                managedVersion = execCommand(new UpdateDatasetVersionCommand(ds, req)).getEditVersion();
+                managedVersion = execCommand(new UpdateDatasetVersionCommand(ds, req, dsv.getFileMetadatas())).getEditVersion();
             } else {
                 managedVersion = execCommand(new CreateDatasetVersionCommand(req, ds, dsv));
             }
