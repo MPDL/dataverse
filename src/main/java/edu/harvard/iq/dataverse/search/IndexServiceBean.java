@@ -345,10 +345,27 @@ public class IndexServiceBean {
         return null;
     }
 
+    /**
+     * Indexes or reindex a dataset with all its files
+     * @param dataset
+     * @param doNormalSolrDocCleanUp
+     * @return
+     * @throws SolrServerException
+     * @throws IOException
+     */
     public Future<String> indexDataset(Dataset dataset, boolean doNormalSolrDocCleanUp) throws SolrServerException, IOException {
         return indexDataset(dataset, doNormalSolrDocCleanUp, dataset.getFiles());
     }
 
+    /**
+     * Indexes or reindex a dataset and the given files only
+     * @param dataset
+     * @param doNormalSolrDocCleanUp
+     * @param changedFileList
+     * @return
+     * @throws SolrServerException
+     * @throws IOException
+     */
     public Future<String> indexDataset(Dataset dataset, boolean doNormalSolrDocCleanUp, List<DataFile> changedFileList) throws  SolrServerException, IOException {
         logger.fine("indexing dataset " + dataset.getId());
 
@@ -791,10 +808,12 @@ public class IndexServiceBean {
 
         DatasetVersion datasetVersion = indexableDataset.getDatasetVersion();
         String parentDatasetTitle = "TBD";
+        String citation = null;
         if (datasetVersion != null) {
 
+            citation = datasetVersion.getCitation(false);
             solrInputDocument.addField(SearchFields.DATASET_VERSION_ID, datasetVersion.getId());
-            solrInputDocument.addField(SearchFields.DATASET_CITATION, datasetVersion.getCitation(false));
+            solrInputDocument.addField(SearchFields.DATASET_CITATION, citation);
             solrInputDocument.addField(SearchFields.DATASET_CITATION_HTML, datasetVersion.getCitation(true));
 
             if (datasetVersion.isInReview()) {
@@ -1237,7 +1256,7 @@ public class IndexServiceBean {
                     // dataFile.getDataset().getTitle());
                     datafileSolrInputDocument.addField(SearchFields.PARENT_ID, fileMetadata.getDataFile().getOwner().getId());
                     datafileSolrInputDocument.addField(SearchFields.PARENT_IDENTIFIER, fileMetadata.getDataFile().getOwner().getGlobalId().toString());
-                    datafileSolrInputDocument.addField(SearchFields.PARENT_CITATION, fileMetadata.getDataFile().getOwner().getCitation());
+                    datafileSolrInputDocument.addField(SearchFields.PARENT_CITATION, citation);
 
                     datafileSolrInputDocument.addField(SearchFields.PARENT_NAME, parentDatasetTitle);
 
