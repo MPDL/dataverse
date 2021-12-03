@@ -210,10 +210,10 @@
             "multiple": true,
             "typeClass": "controlledVocabulary",
             "value": [
-              "Agricultural Sciences",
-              "Business and Management",
-              "Engineering",
-              "Law"
+              "Agriculture, Forestry and Veterinary Medicine",
+              "Social and Behavioural Sciences",
+              "Materials Science and Engineering",
+              "Humanities"
             ]
           },
           {
