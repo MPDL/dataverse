@@ -64,7 +64,7 @@ body {
 }
 
 #dataverse-header-block {
-	padding-top: 77px;
+	padding-top: 67px;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -78,12 +78,12 @@ body {
 }
 
 .navbar-default {
-	background: linear-gradient(white 0 83%, transparent 83% 100%);
+	/* background: linear-gradient(white 0 83%, transparent 83% 100%); */
 	border: none;
 	box-shadow: none;
 	margin-left: auto;
 	margin-right: auto;
-	height: 92px;
+	height: 72px;
 }
 
 @media(min-width:768px){
