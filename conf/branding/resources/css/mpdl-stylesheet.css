@@ -310,8 +310,8 @@ input[type=checkbox]:checked:before {
 	display:none;
 }
 
-/* Hide on Terms of Use all fields after Waiver */
-#datasetForm\:tabView\:touFragment .form-group:not(:first-of-type) {
+/* Hides on Terms tab the following panels: Restricted Files + Terms of Access and Guestbook */
+#datasetForm\:tabView\:termsTab .panel-group .panel.panel-default:not(:first-of-type) {
 	display: none;
 }
 

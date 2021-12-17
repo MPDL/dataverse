@@ -100,7 +100,7 @@
                        </div>
 
                        <!-- Additional Information -->
-                        <ui:fragment rendered="#{empty editMode}">
+                        <ui:fragment rendered="false">
                             <div class="form-group" jsf:rendered="#{!empty termsOfUseAndAccess.confidentialityDeclaration}">
                                 <label for="confidentialityDeclaration" class="col-sm-3 control-label">
                                     #{bundle['file.dataFilesTab.terms.list.termsOfUse.addInfo.declaration']}
@@ -172,7 +172,7 @@
                                 </div>
                             </div>
                         </ui:fragment>
-                        <ui:fragment rendered="#{!empty editMode}">
+                        <ui:fragment rendered="false">
                             <div class="form-group">
                                 <label for="confidentialityDeclaration" class="col-sm-3 control-label">
                                     #{bundle['file.dataFilesTab.terms.list.termsOfUse.addInfo.declaration']}
