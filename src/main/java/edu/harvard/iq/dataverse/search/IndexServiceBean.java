@@ -2,6 +2,7 @@ package edu.harvard.iq.dataverse.search;
 
 import edu.harvard.iq.dataverse.ControlledVocabularyValue;
 import edu.harvard.iq.dataverse.DataFile;
+import edu.harvard.iq.dataverse.DataFileServiceBean;
 import edu.harvard.iq.dataverse.DataFileTag;
 import edu.harvard.iq.dataverse.Dataset;
 import edu.harvard.iq.dataverse.DatasetField;
@@ -38,7 +39,17 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.logging.Logger;
@@ -110,6 +121,8 @@ public class IndexServiceBean {
     SettingsServiceBean settingsService;
     @EJB
     SolrClientService solrClientService;
+    @EJB
+    DataFileServiceBean dataFileService;
 
     @EJB
     VariableServiceBean variableService;
@@ -322,6 +335,15 @@ public class IndexServiceBean {
         return ret;
     }
 
+    @TransactionAttribute(REQUIRES_NEW)
+    public Future<String> indexDatasetObjectInNewTransaction(Dataset dataset) throws  SolrServerException, IOException{ //Dataset dataset) {
+        boolean doNormalSolrDocCleanUp = false;
+        // return indexDataset(dataset, doNormalSolrDocCleanUp);
+        Future<String> ret = indexDataset(dataset, doNormalSolrDocCleanUp);
+        dataset = null;
+        return ret;
+    }
+
     @Asynchronous
     public Future<String> asyncIndexDataset(Dataset dataset, boolean doNormalSolrDocCleanUp) throws  SolrServerException, IOException {
         return indexDataset(dataset, doNormalSolrDocCleanUp, dataset.getFiles());
@@ -357,19 +379,9 @@ public class IndexServiceBean {
         return indexDataset(dataset, doNormalSolrDocCleanUp, dataset.getFiles());
     }
 
-    /**
-     * Indexes or reindex a dataset and the given files only
-     * @param dataset
-     * @param doNormalSolrDocCleanUp
-     * @param changedFileList
-     * @return
-     * @throws SolrServerException
-     * @throws IOException
-     */
+
     public Future<String> indexDataset(Dataset dataset, boolean doNormalSolrDocCleanUp, List<DataFile> changedFileList) throws  SolrServerException, IOException {
         logger.fine("indexing dataset " + dataset.getId());
-
-
         /**
          * @todo should we use solrDocIdentifierDataset or
          * IndexableObject.IndexableTypes.DATASET.getName() + "_" ?
@@ -428,6 +440,70 @@ public class IndexServiceBean {
             //for (FileMetadata fileMetadata : fileMetadatas) {
 
 
+            //try {
+            /**
+             * Preemptively delete *all* Solr documents for files associated
+             * with the dataset based on a Solr query.
+             *
+             * We must query Solr for this information because the file has
+             * been deleted from the database ( perhaps when Solr was down,
+             * as reported in https://github.com/IQSS/dataverse/issues/2086
+             * ) so the database doesn't even know about the file. It's an
+             * orphan.
+             *
+             * @todo This Solr query should make the iteration above based
+             * on the database unnecessary because it the Solr query should
+             * find all files for the dataset. We can probably remove the
+             * iteration above after an "index all" has been performed.
+             * Without an "index all" we won't be able to find files based
+             * on parentId because that field wasn't searchable in 4.0.
+             *
+             * @todo We should also delete the corresponding Solr
+             * "permission" documents for the files.
+             */
+                /*
+                List<String> allFilesForDataset = findFilesOfParentDataset(dataset.getId());
+                solrIdsOfFilesToDelete.addAll(allFilesForDataset);
+            } catch (SearchException | NullPointerException ex) {
+                logger.fine("could not run search of files to delete: " + ex);
+            }
+            */
+
+
+        /*
+        for (DatasetVersion datasetVersion : versions) {
+            Long versionDatabaseId = datasetVersion.getId();
+            String versionTitle = datasetVersion.getTitle();
+            String semanticVersion = datasetVersion.getSemanticVersion();
+            DatasetVersion.VersionState versionState = datasetVersion.getVersionState();
+            if (versionState.equals(DatasetVersion.VersionState.RELEASED)) {
+                numPublishedVersions += 1;
+            }
+            debug.append("version found with database id " + versionDatabaseId + "\n");
+            debug.append("- title: " + versionTitle + "\n");
+            debug.append("- semanticVersion-VersionState: " + semanticVersion + "-" + versionState + "\n");
+            List<FileMetadata> fileMetadatas = datasetVersion.getFileMetadatas();
+            List<String> fileInfo = new ArrayList<>();
+            for (FileMetadata fileMetadata : fileMetadatas) {
+                String solrIdOfPublishedFile = solrDocIdentifierFile + fileMetadata.getDataFile().getId();
+                */
+                /**
+                 * It sounds weird but the first thing we'll do is preemptively
+                 * delete the Solr documents of all published files. Don't
+                 * worry, published files will be re-indexed later along with
+                 * the dataset. We do this so users can delete files from
+                 * published versions of datasets and then re-publish a new
+                 * version without fear that their old published files (now
+                 * deleted from the latest published version) will be
+                 * searchable. See also
+                 * https://github.com/IQSS/dataverse/issues/762
+                 */
+                /*
+                solrIdsOfFilesToDelete.add(solrIdOfPublishedFile);
+                fileInfo.add(fileMetadata.getDataFile().getId() + ":" + fileMetadata.getLabel());
+            }
+
+                 */
             //try {
                 /**
                  * Preemptively delete *all* Solr documents for files associated
@@ -656,15 +732,17 @@ public class IndexServiceBean {
                 for (FileMetadata fm : latestVersion.getFileMetadatas()) {
                     datafilesInDraftVersion.add(fm.getDataFile().getId());
                 }
-                String indexDraftResult = addOrUpdateDataset(indexableDraftVersion, changedFileMap);
-                results.append("The latest version is a working copy (latestVersionState: ")
-                        .append(latestVersionStateString).append(") and will be indexed as ")
-                        .append(solrIdDraftDataset).append(" (limited visibility). Result: ").append(indexDraftResult).append("\n");
+
 
                 desiredCards.put(DatasetVersion.VersionState.RELEASED, true);
                 IndexableDataset indexableReleasedVersion = new IndexableDataset(releasedVersion);
                 String indexReleasedVersionResult = addOrUpdateDataset(indexableReleasedVersion, datafilesInDraftVersion, changedFileMap);
                 results.append("There is a published version we will attempt to index. Result: ").append(indexReleasedVersionResult).append("\n");
+
+                String indexDraftResult = addOrUpdateDataset(indexableDraftVersion, changedFileMap);
+                results.append("The latest version is a working copy (latestVersionState: ")
+                        .append(latestVersionStateString).append(") and will be indexed as ")
+                        .append(solrIdDraftDataset).append(" (limited visibility). Result: ").append(indexDraftResult).append("\n");
 
                 desiredCards.put(DatasetVersion.VersionState.DEACCESSIONED, false);
                 if (doNormalSolrDocCleanUp) {
@@ -742,7 +820,6 @@ public class IndexServiceBean {
         Dataset dataset = indexableDataset.getDatasetVersion().getDataset();
         logger.fine("adding or updating Solr document for dataset id " + dataset.getId());
         Collection<SolrInputDocument> docs = new ArrayList<>();
-        
         SolrInputDocument solrInputDocument = new SolrInputDocument();
         String datasetSolrDocId = indexableDataset.getSolrDocId();
         solrInputDocument.addField(SearchFields.ID, datasetSolrDocId);
@@ -968,39 +1045,22 @@ public class IndexServiceBean {
         List<String> filesIndexed = new ArrayList<>();
         if (datasetVersion != null) {
             List<FileMetadata> fileMetadatas = datasetVersion.getFileMetadatas();
+            List<FileMetadata> releasedFileMetadatas = new ArrayList<>();
+            Map<Long, FileMetadata> fileMap = new HashMap<>();
             boolean checkForDuplicateMetadata = false;
             if (datasetVersion.isDraft() && dataset.isReleased() && dataset.getReleasedVersion() != null) {
                 checkForDuplicateMetadata = true;
+                releasedFileMetadatas = dataset.getReleasedVersion().getFileMetadatas();
+                for(FileMetadata released: releasedFileMetadatas){
+                    fileMap.put(released.getDataFile().getId(), released);
+                }
                 logger.fine(
                         "We are indexing a draft version of a dataset that has a released version. We'll be checking file metadatas if they are exact clones of the released versions.");
             }
             LocalDate embargoEndDate=null;
             LocalDate end = null;
-
-            for(FileMetadata fileMetadata : fileMetadatas) {
-            //for (DataFile dataFile : changedDataFiles) {
-
-                boolean indexThisMetadata = false;
-                if(changedDataFiles.containsKey(fileMetadata.getDataFile().getId())) {
-                    indexThisMetadata = true;
-                }
-
-            /*
-                FileMetadata fileMetadata = null;
-                for(FileMetadata fmd : dataFile.getFileMetadatas()) {
-                    if (fmd.getDatasetVersion().getId().equals(datasetVersion.getId())) {
-                        fileMetadata = fmd;
-                        break;
-                    }
-                }
-                //FileMetadata not in version - break
-                if (fileMetadata==null)
-                {
-                    break;
-                }
-                */
-
-
+            for (FileMetadata fileMetadata : fileMetadatas) {
+               
                 Embargo emb= fileMetadata.getDataFile().getEmbargo();
                 if(emb!=null) {
                     end = emb.getDateAvailable();
@@ -1009,15 +1069,17 @@ public class IndexServiceBean {
                     }
                 }
 
-
+                boolean indexThisMetadata = false;
+                if(changedDataFiles.containsKey(fileMetadata.getDataFile().getId())) {
+                    indexThisMetadata = true;
+                }
                 /*
                 if (checkForDuplicateMetadata) {
                     
                     logger.fine("Checking if this file metadata is a duplicate.");
                     for (FileMetadata releasedFileMetadata : dataset.getReleasedVersion().getFileMetadatas()) {
                         if (fileMetadata.getDataFile() != null && fileMetadata.getDataFile().equals(releasedFileMetadata.getDataFile())) {
-                        */
-
+                            */
                             /*
                              * Duplicate if metadata matches and, for full text indexing and the
                              * SearchFields.ACCESS field, if the restricted status of the file hasn't
@@ -1026,7 +1088,7 @@ public class IndexServiceBean {
                              * off, we need to check for the change in restricted status regardless of
                              * whether full text indexing is on now.
                              */
-                /*
+                             /*
                             if ((fileMetadata.getDataFile().isRestricted() == releasedFileMetadata.getDataFile().isRestricted())) {
                                 if (fileMetadata.contentEquals(releasedFileMetadata)
                                         && variableMetadataUtil.compareVariableMetadata(releasedFileMetadata,fileMetadata)
@@ -1042,11 +1104,8 @@ public class IndexServiceBean {
                             break;
                         }
                     }
-
-
                 }
-
-                 */
+                */
                 if (indexThisMetadata) {
                     
 
@@ -1335,7 +1394,7 @@ public class IndexServiceBean {
               solrInputDocument.addField(SearchFields.EMBARGO_END_DATE, embargoEndDate.toEpochDay());
             }
         }
-        
+
         try {
             solrClientService.getSolrClient().add(docs);
             solrClientService.getSolrClient().commit();
