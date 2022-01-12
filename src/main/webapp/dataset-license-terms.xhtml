@@ -56,7 +56,7 @@
                                            <p:ajax update="touFragment" oncomplete="javascript:bind_bsui_components();" />
                                        </p:selectOneListbox>
                                </ui:fragment>
-                               <div class="text-right">
+                               <div class="#{!empty editMode?'text-right':''}">
                                    <ui:fragment rendered="#{termsOfUseAndAccess.license == 'CCBY'}">
                                        <p><h:outputText value="#{bundle['file.dataFilesTab.terms.list.termsOfUse.waiver.CCBY.txt']}" escape="false"/></p> <p><img src="/resources/images/ccby.png" alt="#{bundle['file.ccby.icon.alttxt']}" class="waiver-CC0-inline"/></p>
                                    </ui:fragment>
@@ -100,7 +100,7 @@
                        </div>
 
                        <!-- Additional Information -->
-                        <ui:fragment rendered="#{empty editMode}">
+                        <ui:fragment rendered="false">
                             <div class="form-group" jsf:rendered="#{!empty termsOfUseAndAccess.confidentialityDeclaration}">
                                 <label for="confidentialityDeclaration" class="col-sm-3 control-label">
                                     #{bundle['file.dataFilesTab.terms.list.termsOfUse.addInfo.declaration']}
@@ -172,7 +172,7 @@
                                 </div>
                             </div>
                         </ui:fragment>
-                        <ui:fragment rendered="#{!empty editMode}">
+                        <ui:fragment rendered="false">
                             <div class="form-group">
                                 <label for="confidentialityDeclaration" class="col-sm-3 control-label">
                                     #{bundle['file.dataFilesTab.terms.list.termsOfUse.addInfo.declaration']}

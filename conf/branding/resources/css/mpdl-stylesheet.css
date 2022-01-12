@@ -1,12 +1,15 @@
 /* Add any CSS necessary for your custom content */
+/*
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300italic,400,200,200italic,300,600,400italic,600italic,700italic,700,900');
+*/
+@import url('/logos/fonts/fonts.css');
 
 html {
 	--mpdl-darkgreen: #04725d;
 	--mpdl-lightgreen: #06a385;
 	--mpdl-red: #b20005;
 	--mpdl-orange: #d45900;
-	--mpdl-darkgray: #333333;
+	--mpdl-darkgray: #222222;
 }
 
 body {
@@ -61,7 +64,7 @@ body {
 }
 
 #dataverse-header-block {
-	padding-top: 77px;
+	padding-top: 72px;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -75,12 +78,12 @@ body {
 }
 
 .navbar-default {
-	background: linear-gradient(white 0 83%, transparent 83% 100%);
+	/* background: linear-gradient(white 0 83%, transparent 83% 100%); */
 	border: none;
 	box-shadow: none;
 	margin-left: auto;
 	margin-right: auto;
-	height: 92px;
+	height: 72px;
 }
 
 @media(min-width:768px){
@@ -103,12 +106,17 @@ body {
 }
 
 @media(max-width:992px){
-	div#topNavBar.navbar-collapse.collapse.in {
+	div#topNavBar.navbar-collapse.collapse.in,
+	div#topNavBar.navbar-collapse.collapsing {
 		background-color: #f8f8f8;	
 	}
-	div#topNavBar.navbar-collapse.collapsing {
-		background-color: #f8f8f8;
-	}
+
+}
+
+ul.nav.navbar-nav.navbar-right li:nth-last-child(2) {
+	visibility: hidden;
+	width: 0;
+	height: 0;
 }
 
 #navbarFixed .navbar-brand.custom-logo {
@@ -176,10 +184,15 @@ div.panel-heading.text-info[data-toggle="collapse"] {
 	color: var(--mpdl-darkgreen);
 }
 
+.datasetResult {
+	color: #222222;
+	color: var(--mpdl-darkgray);
+}
+
 table[id$='resultsTable'] td > div.dataverseResult,
 table[id$='resultsTable'] td > div.datasetResult {
 	border-color: #04725d;
-	color: var(--mpdl-darkgreen);
+	border-color: var(--mpdl-darkgreen);
 }
 
 a {
@@ -253,7 +266,7 @@ input[type="checkbox"] {
  	height: 16px;
 	padding: 0;
 	margin: 4px 0 0 0;
-	color: #333333;
+	color: #222222;
 	color: var(--mpdl-darkgray);
 	background-color: rgb(230, 230, 230);
 	background-position: 0px -15px;
@@ -282,6 +295,11 @@ input[type=checkbox]:checked:before {
 	background: transparent;
 }
 
+/* Hide the dataverse advanced search panel for dataverses */
+#advancedSearchForm > div.panel:nth-of-type(2) {
+	display:none;
+}
+
 /* Hide the "Dataverse" search facet */
 #facetType > div.clearfix:first-of-type {
 	display:none;
@@ -290,6 +308,11 @@ input[type=checkbox]:checked:before {
 /* Hide the dataverse selection on top of the page when creating or editing a dataset */
 #datasetForm > div.form-group:nth-of-type(2) {
 	display:none;
+}
+
+/* Hides on Terms tab the following panels: Restricted Files + Terms of Access and Guestbook */
+#datasetForm\:tabView\:termsTab .panel-group .panel.panel-default:not(:first-of-type) {
+	display: none;
 }
 
 div[data-fieldtype-name="authorAffiliation2.parent"] {
@@ -304,11 +327,6 @@ div[data-fieldtype-name="authorAffiliationDepartment.parent"],
 div[data-fieldtype-name="authorAffiliation2Department.parent"],
 div[data-fieldtype-name="authorIdentifier.parent"]{
 	margin-bottom: 20px !important;
-}
-
-/* Hide the dataverse advanced search panel for dataverses */
-#advancedSearchForm > div.panel:nth-of-type(2) {
-	display:none;
 }
 
 /* Make the autosuggest for affiliations scrollable */
