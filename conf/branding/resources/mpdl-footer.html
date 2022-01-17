@@ -1,67 +1,17 @@
-    <style>
-    	/* Overwrite default footer styles to make room at the bottom of the browser page for our custom footer... */
-    	html, body {
-            height: 100%;
-        }
-
-        #footer {
-            margin-top:5px; padding-bottom:0px; bottom:-50px; position: relative; z-index:1;
-        }
-        
-        /* Place custom footer just above default footer at the bottom of the page... */
-        /* #content.container:after, */
-        #custom-footer .container {
-            background: white;
-            height: 100%;
-            padding: 15px 20px;
-        }
-
-        #custom-footer {
-            background: transparent; color: #a9a9a9; height: 110px; padding: 0; bottom: 45px; position: relative; 
-        }
-
-        #custom-footer p {
-            padding-left: 200px;
-            display: inline-block;
-        }
-
-        #footer p {
-            padding-left: 94px;
-            padding-top: 45px;
-        }
-
-        #custom-footer img#mpdl-logo {
-	        width: 188px;
-	        height: 64px;
-        }
-
-        #custom-footer img#re3data {
-	        width: 250px;
-	        height: auto;
-        }
-
-        @media only screen and (max-width: 992px) { 
-            #custom-footer p {
-                display: none;
-            }
-        }
-
-        @media only screen and (max-width: 768px) { 
-            .poweredbylogo {
-                display: none;
-            }
-        }
-    </style>
-
     <div id="custom-footer">
     	<div class="container">
-            <a href="http://mpdl.mpg.de" title="Max Planck Digital Library" target="_blank">
-                <img id="mpdl-logo" src="/logos/images/mpdl.mpg-logo.svg" alt="MPDL logo"/>
-            </a>
-            <p>We are <a href="http://doi.org/10.17616/R3N33V" target="_blank" rel="nofollow">registered within re3data.org</a>:<br/> 
-                <a href="http://doi.org/10.17616/R3N33V" target="_blank" rel="nofollow">
-                    <img id="re3data" src="/logos/images/mpdl_r3data.svg"/>
-                </a>
-            </p>
+            <div class="row">
+                <div class="col-sm-8">
+                    <a href="http://mpdl.mpg.de" title="Max Planck Digital Library" target="_blank">
+                        <img id="mpdl-logo" src="/logos/images/mpdl.mpg-logo.svg" alt="MPDL logo"/>
+                    </a>
+                    <span>
+                        We are registered within <a href="https://www.re3data.org/" target="_blank" rel="nofollow"><strong>re3data.org</strong></a>:<br/>
+                        <a href="http://doi.org/10.17616/R3N33V" target="_blank" rel="nofollow">
+                            <img id="re3data" src="/logos/images/mpdl_r3data.svg"/>
+                        </a>
+                    </span>
+                </div>
+            </div>
     	</div>
     </div>
