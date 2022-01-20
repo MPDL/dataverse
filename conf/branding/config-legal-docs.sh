@@ -8,10 +8,11 @@
 # PLEASE, TAKE A LOOK AT VARIABLES BEFORE RUN !!!
 #
 ############################################# !!!
-#projectHome=~/WorkSpace/MPDL/dataverse
 projectHome=../..
 
-destinationCustomLegalFiles=/var/www/html/edmond-dataverse
+destinationCustomLegalFiles="/srv/mpdl-dataverse/guides/"
+customLegalFilesURL="https://dev-edmond2.mpdl.mpg.de/guides" #Please, without last slash!!!
+apiURL="http://localhost:8080/api/admin/settings/"
 
 unblock="?unblock-key=blkAPI_dev_ed2"
 ############################################## !!!
@@ -134,26 +135,27 @@ else
   status+=1
 fi
 
+#asadmin deploy $projectHome/conf/branding/guides.war
+
 printf "\n\nSetting paths:\n\n" | tee -a $log
 
-curl -X PUT -d " Max Planck Digital Library" http://localhost:8080/api/admin/settings/:FooterCopyright$unblock -q | tee -a $log
+curl -X PUT -d " Max Planck Digital Library" $apiURL:FooterCopyright$unblock -q | tee -a $log
 printf "\n" | tee -a $log
 
-curl -X PUT -d "https://localhost/privacy.html" http://localhost:8080/api/admin/settings/:ApplicationPrivacyPolicyUrl$unblock -q | tee -a $log
+curl -X PUT -d "$customLegalFilesURL/privacy.html" $apiURL:ApplicationPrivacyPolicyUrl$unblock -q | tee -a $log
 printf "\n" | tee -a $log
 
-curl -X PUT -d "https://localhost/terms_of_use.html" http://localhost:8080/api/admin/settings/:ApplicationTermsOfUseUrl$unblock -q | tee -a $log
+curl -X PUT -d "$customLegalFilesURL/terms_of_use.html" $apiURL:ApplicationTermsOfUseUrl$unblock -q | tee -a $log
 printf "\n" | tee -a $log
 
-curl -X PUT -d "https://localhost/impressum.html" http://localhost:8080/api/admin/settings/:ApplicationDisclaimerUrl$unblock -q | tee -a $log
+curl -X PUT -d "$customLegalFilesURL/impressum.html" $apiURL:ApplicationDisclaimerUrl$unblock -q | tee -a $log
 printf "\n" | tee -a $log
 
-curl -X PUT -d "https://localhost/help.html" http://localhost:8080/api/admin/settings/:ApplicationFAQUrl$unblock -q | tee -a $log
+curl -X PUT -d "$customLegalFilesURL/help.html" $apiURL:ApplicationFAQUrl$unblock -q | tee -a $log
 printf "\n" | tee -a $log
 
-curl -X PUT -d@$projectHome/conf/branding/resources/mpdl-apptou-signup.html http://localhost:8080/api/admin/settings/:ApplicationTermsOfUse$unblock -q | tee -a $log
+curl -X PUT -d@$projectHome/conf/branding/resources/mpdl-apptou-signup.html $apiURL:ApplicationTermsOfUse$unblock -q | tee -a $log
 printf "\n" | tee -a $log
-
 if [ $status -eq 0 ]; then
   printf "\n... DONE!\n"
   exit 0
