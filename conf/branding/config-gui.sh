@@ -7,10 +7,12 @@
 # PLEASE, TAKE A LOOK AT VARIABLES BEFORE RUN !!!
 #
 ############################################# !!!
+#projectHome="../dataverse"
 projectHome=../..
 
-destinationDocroot="/srv/web/payara5/glassfish/domains/domain1/docroot"
+#destinationDocroot="/srv/web/payara5/glassfish/domains/domain1/docroot"
 #destinationDocroot="/usr/local/payara5/glassfish/domains/domain1/docroot"
+destinationDocroot="`whereis payara5 | awk '{print $2}'`/glassfish/domains/domain1/docroot"
 
 destinationCustomBrandingFiles="/srv/mpdl-dataverse/branding"
 

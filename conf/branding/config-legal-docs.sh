@@ -8,6 +8,7 @@
 # PLEASE, TAKE A LOOK AT VARIABLES BEFORE RUN !!!
 #
 ############################################# !!!
+#projectHome="../dataverse"
 projectHome=../..
 
 destinationCustomLegalFiles="/srv/mpdl-dataverse/guides/"
