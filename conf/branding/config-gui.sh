@@ -7,18 +7,16 @@
 # PLEASE, TAKE A LOOK AT VARIABLES BEFORE RUN !!!
 #
 ############################################# !!!
-#projectHome=~/WorkSpace/MPDL/dataverse
 projectHome=../..
 
 destinationDocroot="/srv/web/payara5/glassfish/domains/domain1/docroot"
 #destinationDocroot="/usr/local/payara5/glassfish/domains/domain1/docroot"
-#destinationDocroot="/Users/haarlae1/Servers/payara5/glassfish/domains/domain1/docroot"
 
-destinationCustomizationFiles="/srv/mpdl-dataverse-branding"
-#destinationCustomizationFiles=/var/www/dataverse/branding
-#destinationCustomizationFiles="/Users/haarlae1/Servers/mpdl-dataverse-branding"
+destinationCustomBrandingFiles="/srv/mpdl-dataverse/branding"
 
-unblock="?unblock-key=blkAPI_dev_ed2" 
+apiURL="http://localhost:8080/api/admin/settings/"
+
+unblock="?unblock-key=blkAPI_dev_ed2"
 ############################################## !!!
 usage="usage: $0 [-k|--key <unblock-key>]"
 if [[ $# -gt 0 ]]; then
@@ -87,17 +85,17 @@ else
   status+=0
 fi
 
-if [ ! -d "$destinationCustomizationFiles" ]; then
-  mkdir -p $destinationCustomizationFiles
+if [ ! -d "$destinationCustomBrandingFiles" ]; then
+  mkdir -p $destinationCustomBrandingFiles
   if [ $? -eq 0 ]; then
-    printf "\n$destinationCustomizationFiles could not be created!" | tee -a $log
+    printf "\n$destinationCustomBrandingFiles could not be created!" | tee -a $log
     status+=0
   else
-    printf "\n$destinationCustomizationFiles created" | tee -a $log
+    printf "\n$destinationCustomBrandingFiles created" | tee -a $log
     status+=1
   fi
 else
-  printf "\n$destinationCustomizationFiles already exists" | tee -a $log
+  printf "\n$destinationCustomBrandingFiles already exists" | tee -a $log
   status+=0
 fi
 
@@ -112,31 +110,31 @@ else
   status+=1
 fi
 
-cp $projectHome/conf/branding/resources/css/*.css $destinationCustomizationFiles
+cp $projectHome/conf/branding/resources/css/*.css $destinationCustomBrandingFiles
 if [ $? -eq 0 ]; then
-  printf "\n$projectHome/conf/branding/resources/css/*.css copied to $destinationCustomizationFiles" | tee -a $log
+  printf "\n$projectHome/conf/branding/resources/css/*.css copied to $destinationCustomBrandingFiles" | tee -a $log
   status+=0
 else
-  printf "\nsome problem copying $projectHome/conf/branding/resources/css/*.css to $destinationCustomizationFiles,this step failed!" | tee -a $log
+  printf "\nsome problem copying $projectHome/conf/branding/resources/css/*.css to $destinationCustomBrandingFiles,this step failed!" | tee -a $log
   status+=1
 fi
 
-cp $projectHome/conf/branding/resources/*.html $destinationCustomizationFiles
+cp $projectHome/conf/branding/resources/mpdl-footer.html $destinationCustomBrandingFiles
 if [ $? -eq 0 ]; then
-  printf "\n$projectHome/conf/branding/resources/assets/*.html copied to $destinationCustomizationFiles" | tee -a $log
+  printf "\n$projectHome/conf/branding/resources/assets/mpdl-footer.html copied to $destinationCustomBrandingFiles" | tee -a $log
   status+=0
 else
-  printf "\nsome problem copying $projectHome/conf/branding/resources/assets/*.html to $destinationCustomizationFiles,this step failed!" | tee -a $log
+  printf "\nsome problem copying $projectHome/conf/branding/resources/assets/mpdl-footer.html to $destinationCustomBrandingFiles,this step failed!" | tee -a $log
   status+=1
 fi
 
 printf "\n\nSetting paths:\n\n" | tee -a $log
 
-curl -X PUT -d "/logos/navbar/logo_for_bright.png" http://localhost:8080/api/admin/settings/:LogoCustomizationFile$unblock -q | tee -a $log
+curl -X PUT -d "/logos/navbar/logo_for_bright.png" $apiURL:LogoCustomizationFile$unblock -q | tee -a $log
 printf "\n" | tee -a $log
-curl -X PUT -d "$destinationCustomizationFiles/mpdl-footer.html" http://localhost:8080/api/admin/settings/:FooterCustomizationFile$unblock -q | tee -a $log
+curl -X PUT -d "$destinationCustomBrandingFiles/mpdl-footer.html" $apiURL:FooterCustomizationFile$unblock -q | tee -a $log
 printf "\n" | tee -a $log
-curl -X PUT -d "$destinationCustomizationFiles/mpdl-stylesheet.css" http://localhost:8080/api/admin/settings/:StyleCustomizationFile$unblock -q | tee -a $log
+curl -X PUT -d "$destinationCustomBrandingFiles/mpdl-stylesheet.css" $apiURL:StyleCustomizationFile$unblock -q | tee -a $log
 printf "\n" | tee -a $log
 
 if [ $status -eq 0 ]; then
