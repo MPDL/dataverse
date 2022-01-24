@@ -13,7 +13,6 @@ import edu.harvard.iq.dataverse.util.FileMetadataUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -31,10 +30,6 @@ import org.apache.solr.client.solrj.SolrServerException;
 @RequiredPermissions(Permission.EditDataset)
 public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset> {
 
-    public enum TYPE {
-        EDIT_FILES, ADD_FILES, DELETE_FILES
-    }
-
     private static final Logger logger = Logger.getLogger(UpdateDatasetVersionCommand.class.getCanonicalName());
     private final List<FileMetadata> filesToDelete;
     private boolean validateLenient = false;
@@ -42,9 +37,6 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
     private final FileMetadata fmVarMet;
     private List<FileMetadata> fileMetadatasChanged;
     private List<DataFile> changedFiles = new ArrayList<>();
-
-    private TYPE updateType = null;
-
 
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest) {
         super(aRequest, theDataset);
@@ -178,7 +170,6 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
             	}
             }
 
-
             //New files are always added at the end, so find them
             List<DataFile> newFiles = new ArrayList<>();
             //List<DataFile> changedFiles = new ArrayList<>();
@@ -200,8 +191,6 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
                     }
                 }
             }
-
-
 
             // Remove / delete any files that were removed
 
@@ -305,10 +294,6 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
                 ctxt.ingest().recalculateDatasetVersionUNF(theDataset.getEditVersion());
             }
 
-
-
-
-
             theDataset.getEditVersion().setLastUpdateTime(getTimestamp());
             theDataset.setModificationTime(getTimestamp());
 
@@ -350,7 +335,6 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
         Dataset dataset = (Dataset) r;
 
         try {
-
             Future<String> indexString = ctxt.index().indexDataset(dataset, true, changedFiles);
         } catch (IOException | SolrServerException e) {
             String failureLogText = "Post update dataset indexing failed. You can kickoff a re-index of this dataset with: \r\n curl http://localhost:8080/api/admin/index/datasets/" + dataset.getId().toString();
