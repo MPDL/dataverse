@@ -174,7 +174,7 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
             List<DataFile> newFiles = new ArrayList<>();
             List<Long> givenChangedFileIds = null;
             if(fileMetadatasChanged != null) {
-                fileMetadatasChanged.stream().map(i -> i.getDataFile().getId()).collect(Collectors.toList());
+                givenChangedFileIds = fileMetadatasChanged.stream().map(i -> i.getDataFile().getId()).collect(Collectors.toList());
             }
             for (int i = 0; i <theDataset.getFiles().size(); i++) {
                 DataFile dataFile = theDataset.getFiles().get(i);

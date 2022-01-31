@@ -3505,7 +3505,9 @@ public class DatasetPage implements java.io.Serializable {
                     deleteStorageLocations = datafileService.getPhysicalFilesToDelete(filesToBeDeleted);
                 }
 
-                changedFiles.add(fileMetadataForAction);
+                if (fileMetadataForAction != null) {
+                    changedFiles.add(fileMetadataForAction);
+                }
                 cmd = new UpdateDatasetVersionCommand(dataset, dvRequestService.getDataverseRequest(), changedFiles, filesToBeDeleted);
                 ((UpdateDatasetVersionCommand) cmd).setValidateLenient(true);
             }
