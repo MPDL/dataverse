@@ -1,22 +1,36 @@
 #!/bin/bash
 #
 # The purpose of this script is to deploy custom legal documents for Dataverse
-# issue-15 on github
+# issue-15 on github repository
 #
-############################################# !!!
-#
+#################################################
 # PLEASE, TAKE A LOOK AT VARIABLES BEFORE RUN !!!
+#################################################
 #
-############################################# !!!
-#projectHome="../dataverse"
-projectHome=../..
+set -x;
+readonly PROYECT_HOME="../.."
+PAYARA_HOME="/srv/web/payara5"
+readonly STATIC_PAGES="/srv/mpdl-dataverse/custom"
 
-destinationCustomLegalFiles="/srv/mpdl-dataverse/guides/"
-customLegalFilesURL="https://dev-edmond2.mpdl.mpg.de/guides" #Please, without last slash!!!
-apiURL="http://localhost:8080/api/admin/settings/"
+case $(hostname) in
+  vm97)
+    HOST_URL="dev-edmond2.mpdl.mpg.de"
+    ;;
+  vm64)
+    HOST_URL="prod-edmond2.mpdl.mpg.de"
+    ;;
+  *)
+    HOST_URL="localhost:8080"
+    PAYARA_HOME=$(whereis payara5 | awk '{print $2}')
+    ;;
+esac
 
-unblock="?unblock-key=blkAPI_dev_ed2"
-############################################## !!!
+STATIC_PAGES_URL="http://${HOST_URL}/guides"
+
+API_URL="http://${HOST_URL}/api/admin/settings/"
+UNBLOCK="?unblock-key=blkAPI_dev_ed2"
+#
+#################################################
 usage="usage: $0 [-k|--key <unblock-key>]"
 if [[ $# -gt 0 ]]; then
   key="$1"
@@ -36,163 +50,107 @@ if [[ $# -gt 0 ]]; then
   esac
 fi
 
-log="/tmp/`basename $0`.`date +"%s"`.log";
+LOG="/tmp/$(basename ${0}).$(date +'%s').log";
 
-printf "\n\Custom Legal Documents Installation (process output to -> $log)\n" | tee -a $log
+printf "\nLegal Documents Installation (process output to -> ${LOG})\n" | tee -a ${LOG}
 
-printf "\n\nPreparing destination folders:\n" | tee -a $log
+printf "\n\nPreparing destination folders:\n" | tee -a ${LOG}
 
-if [ ! -d "$destinationCustomLegalFiles/logos/navbar" ]; then
-  mkdir -p $destinationCustomLegalFiles/logos/navbar
+if [ ! -d "${STATIC_PAGES}/logos" ]; then
+  mkdir -p ${STATIC_PAGES}
   if [ $? -eq 0 ]; then
-    printf "\n$destinationCustomLegalFiles/logos/navbar created" | tee -a $log
-    status="0"
-  else
-    printf "\n$destinationCustomLegalFiles/logos/navbar could not be created!" | tee -a $log
-    status="1"
-  fi
-else
-  printf "\n$destinationCustomLegalFiles/logos/navbar already exists" | tee -a $log
-  status="0"
-fi
-
-if [ ! -d "$destinationCustomLegalFiles/logos/images" ]; then
-  mkdir -p $destinationCustomLegalFiles/logos/images
-  if [ $? -eq 0 ]; then
-    printf "\n$destinationCustomLegalFiles/logos/images created" | tee -a $log
+    printf "\n${STATIC_PAGES}/logos created" | tee -a ${LOG}
     status+=0
   else
-    printf "\n$destinationCustomLegalFiles/logos/images could not be created!" | tee -a $log
-    status+=1
+    printf "\n${STATIC_PAGES}/logos could not be created!" | tee -a ${LOG}
+    exit 1
   fi
 else
-  printf "\n$destinationCustomLegalFiles/logos/images already exists" | tee -a $log
+  printf "\n${STATIC_PAGES}/logos already exists" | tee -a ${LOG}
   status+=0
 fi
 
-if [ ! -d "$destinationCustomLegalFiles/logos/fonts" ]; then
-  mkdir -p $destinationCustomLegalFiles/logos/fonts
-  if [ $? -eq 0 ]; then
-    printf "\n$destinationCustomLegalFiles/logos/fonts created" | tee -a $log
-    status+=0
-  else
-    printf "\n$destinationCustomLegalFiles/logos/fonts could not be created!" | tee -a $log
-    status+=1
-  fi
-else
-  printf "\n$destinationCustomLegalFiles/logos/fonts already exists" | tee -a $log
-  status+=0
-fi
+printf "\n\nCopying resources to destination:\n" | tee -a ${LOG}
 
-if [ ! -d "$destinationCustomLegalFiles/css" ]; then
-  mkdir -p $destinationCustomLegalFiles/css
-  if [ $? -eq 0 ]; then
-    printf "\n$destinationCustomLegalFiles/css could not be created!" | tee -a $log
-    status+=0
-  else
-    printf "\n$destinationCustomLegalFiles/css created" | tee -a $log
-    status+=1
-  fi
-else
-  printf "\n$destinationCustomLegalFiles/css already exists" | tee -a $log
-  status+=0
-fi
-
-if [ ! -d "$destinationCustomLegalFiles/logos/bs/css" ]; then
-  mkdir -p $destinationCustomLegalFiles/css
-  if [ $? -eq 0 ]; then
-    printf "\n$destinationCustomLegalFiles/logs/bs/css could not be created!" | tee -a $log
-    status+=0
-  else
-    printf "\n$destinationCustomLegalFiles/logs/bs/css created" | tee -a $log
-    status+=1
-  fi
-else
-  printf "\n$destinationCustomLegalFiles/logs/bs/css already exists" | tee -a $log
-  status+=0
-fi
-
-printf "\n\nCopying resources to destination:\n" | tee -a $log
-
-ls $projectHome/conf/branding/resources/*.html | egrep -v 'mpdl-' | xargs -i cp {} $destinationCustomLegalFiles
+ls "${PROYECT_HOME}/conf/branding/resources/"*.html | egrep -v 'mpdl-' | xargs -i cp {} ${STATIC_PAGES}
 if [ $? -eq 0 ]; then
-  printf "\n`ls $projectHome/conf/branding/resources/*.html | egrep -v 'mpdl-'` copied to $destinationCustomLegalFiles\n" | tee -a $log
+  printf "\n$(ls ${PROYECT_HOME}/conf/branding/resources/*.html | egrep -v 'mpdl-') copied to ${STATIC_PAGES}\n" | tee -a ${LOG}
   status+=0
 else
-  printf "\nsome problem copying `ls $projectHome/conf/branding/resources/*.html | egrep -v 'mpdl-'` to $destinationCustomLegalFiles, this step failed!\n" | tee -a $log
+  printf "\nsome problem copying $(ls ${PROYECT_HOME}/conf/branding/resources/*.html | egrep -v 'mpdl-') to ${STATIC_PAGES}, this step failed!\n" | tee -a ${LOG}
   status+=1
 fi
 
-cp $projectHome/conf/branding/resources/css/*.css $destinationCustomLegalFiles
+cp -RT "${PROYECT_HOME}/conf/branding/resources/assets" "${STATIC_PAGES}/logos"
 if [ $? -eq 0 ]; then
-  printf "\n$projectHome/conf/branding/resources/css/*.css copied to $destinationCustomLegalFiles" | tee -a $log
+  printf "\n${PROYECT_HOME}/conf/branding/resources/assets/* copied to ${STATIC_PAGES}/logos" | tee -a ${LOG}
   status+=0
 else
-  printf "\nsome problem copying $projectHome/conf/branding/resources/css/*.css to $destinationCustomLegalFiles, this step failed!" | tee -a $log
+  printf "\nsome problem copying ${PROYECT_HOME}/conf/branding/resources/assets/* to ${STATIC_PAGES}/logos, this step failed!" | tee -a ${LOG}
   status+=1
 fi
 
-cp -R $projectHome/conf/branding/resources/assets/* $destinationCustomLegalFiles/logos/
+cp -R "${PROYECT_HOME}/src/main/webapp/resources/bs" "${STATIC_PAGES}/logos"
 if [ $? -eq 0 ]; then
-  printf "\n$projectHome/conf/branding/resources/assets/* copied to $destinationCustomLegalFiles/logos/" | tee -a $log
+  printf "\n${PROYECT_HOME}/src/main/webapp/resources/bs copied to ${STATIC_PAGES}/logos" | tee -a ${LOG}
   status+=0
 else
-  printf "\nsome problem copying $projectHome/conf/branding/resources/assets/* to $destinationCustomLegalFiles/logos/, this step failed!" | tee -a $log
+  printf "\nsome problem copying ${PROYECT_HOME}/src/main/webapp/resources/bs to ${STATIC_PAGES}/logos, this step failed!" | tee -a ${LOG}
   status+=1
 fi
 
-cp -R $projectHome/src/main/webapp/resources/bs/* $destinationCustomLegalFiles/logos/bs/
+cp "${PROYECT_HOME}/src/main/webapp/resources/css/structure.css" "${STATIC_PAGES}/css"
 if [ $? -eq 0 ]; then
-  printf "\n$projectHome/src/main/webapp/resources/bs/* copied to $destinationCustomLegalFiles/logos/bs/" | tee -a $log
+  printf "\n${PROYECT_HOME}/src/main/webapp/resources/css/structure.css copied to ${STATIC_PAGES}/css" | tee -a ${LOG}
   status+=0
 else
-  printf "\nsome problem copying $projectHome/src/main/webapp/resources/bs/* to $destinationCustomLegalFiles/logos/bs/, this step failed!" | tee -a $log
+  printf "\nsome problem copying ${PROYECT_HOME}/src/main/webapp/resources/css/structure.css to ${STATIC_PAGES}/css, this step failed!" | tee -a ${LOG}
   status+=1
 fi
 
-cp -R $projectHome/src/main/webapp/resources/css/structure.css $destinationCustomLegalFiles/css/
+cp "${PROYECT_HOME}/src/main/webapp/resources/images/"dataverse*logo.* "${STATIC_PAGES}/logos/images"
 if [ $? -eq 0 ]; then
-  printf "\n$projectHome/src/main/webapp/resources/css/structure.css copied to $destinationCustomLegalFiles/css/" | tee -a $log
+  printf "\n${PROYECT_HOME}/src/main/webapp/resources/images/dataverse*logo.* copied to ${STATIC_PAGES}/logos/images" | tee -a ${LOG}
   status+=0
 else
-  printf "\nsome problem copying $projectHome/src/main/webapp/resources/css/structure.css to $destinationCustomLegalFiles/css/, this step failed!" | tee -a $log
+  printf "\nsome problem copying ${PROYECT_HOME}/src/main/webapp/resources/images/dataverse*logo.* to ${STATIC_PAGES}/logos/images, this step failed!" | tee -a ${LOG}
   status+=1
 fi
 
-cp -R $projectHome/src/main/webapp/resources/images/dataverse*logo.* $destinationCustomLegalFiles/logos/images
-if [ $? -eq 0 ]; then
-  printf "\n$projectHome/src/main/webapp/resources/images/dataverse*logo.* copied to $destinationCustomLegalFiles/logos/images" | tee -a $log
-  status+=0
-else
-  printf "\nsome problem copying $projectHome/src/main/webapp/resources/images/dataverse*logo.* to $destinationCustomLegalFiles/logos/images, this step failed!" | tee -a $log
-  status+=1
+printf "\n\nDeploying static pages:\n\n" | tee -a ${LOG}
+
+${PAYARA_HOME}/glassfish/bin/asadmin list-applications | grep "guides"
+if [ $? -eq 1 ]; then
+  current = $(pwd)
+  cd ${PROYECT_HOME}/conf/branding/guides; jar cvf ../guides.war .
+  cd $current
+  ${PAYARA_HOME}/glassfish/bin/asadmin deploy ${PROYECT_HOME}/conf/branding/guides.war
 fi
 
-#asadmin deploy $projectHome/conf/branding/guides.war
+printf "\n\nSetting paths:\n\n" | tee -a ${LOG}
 
-printf "\n\nSetting paths:\n\n" | tee -a $log
+curl -X PUT -d " Max Planck Digital Library" ${API_URL}:FooterCopyright${UNBLOCK} -q | tee -a ${LOG}
+printf "\n" | tee -a ${LOG}
 
-curl -X PUT -d " Max Planck Digital Library" $apiURL:FooterCopyright$unblock -q | tee -a $log
-printf "\n" | tee -a $log
+curl -X PUT -d "${STATIC_PAGES_URL}/privacy.html" ${API_URL}:ApplicationPrivacyPolicyUrl${UNBLOCK} -q | tee -a ${LOG}
+printf "\n" | tee -a ${LOG}
 
-curl -X PUT -d "$customLegalFilesURL/privacy.html" $apiURL:ApplicationPrivacyPolicyUrl$unblock -q | tee -a $log
-printf "\n" | tee -a $log
+curl -X PUT -d "${STATIC_PAGES_URL}/terms_of_use.html" ${API_URL}:ApplicationTermsOfUseUrl${UNBLOCK} -q | tee -a ${LOG}
+printf "\n" | tee -a ${LOG}
 
-curl -X PUT -d "$customLegalFilesURL/terms_of_use.html" $apiURL:ApplicationTermsOfUseUrl$unblock -q | tee -a $log
-printf "\n" | tee -a $log
+curl -X PUT -d "${STATIC_PAGES_URL}/impressum.html" ${API_URL}:ApplicationDisclaimerUrl${UNBLOCK} -q | tee -a ${LOG}
+printf "\n" | tee -a ${LOG}
 
-curl -X PUT -d "$customLegalFilesURL/impressum.html" $apiURL:ApplicationDisclaimerUrl$unblock -q | tee -a $log
-printf "\n" | tee -a $log
+curl -X PUT -d "${STATIC_PAGES_URL}/help.html" ${API_URL}:NavbarGuidesUrl${UNBLOCK} -q | tee -a ${LOG}
+printf "\n" | tee -a ${LOG}
 
-curl -X PUT -d "$customLegalFilesURL/help.html" $apiURL:NavbarGuidesUrl$unblock -q | tee -a $log
-printf "\n" | tee -a $log
+curl -X PUT -d@${PROYECT_HOME}/conf/branding/resources/mpdl-apptou-signup.html ${API_URL}:ApplicationTermsOfUse${UNBLOCK} -q | tee -a ${LOG}
+printf "\n" | tee -a ${LOG}
 
-curl -X PUT -d@$projectHome/conf/branding/resources/mpdl-apptou-signup.html $apiURL:ApplicationTermsOfUse$unblock -q | tee -a $log
-printf "\n" | tee -a $log
-if [ $status -eq 0 ]; then
+if [ ${status} -eq 0 ]; then
   printf "\n... DONE!\n"
   exit 0
 else
-  printf "\n... sorry, some step fails!\nsome hints: $status... for more info see $log\n"
+  printf "\n... sorry, some step fails!\nsome hints: ${status}... for more info see ${LOG}\n"
   exit 2
 fi

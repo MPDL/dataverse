@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sun-web-app PUBLIC "-//Sun Microsystems, Inc.//DTD GlassFish Application Server 3.0 Servlet 3.0//EN" "http://www.sun.com/software/appserver/dtds/sun-web-app_3_0-0.dtd">
+<sun-web-app>
+    <!-- This element specifies the context path the static resources are served from -->
+    <context-root>/guides</context-root>
+    <!-- This element specifies the location on disk where the static resources are located -->
+    <property name="alternatedocroot_1" value="from=/* dir=/srv/mpdl-dataverse/custom"/>
+</sun-web-app>
