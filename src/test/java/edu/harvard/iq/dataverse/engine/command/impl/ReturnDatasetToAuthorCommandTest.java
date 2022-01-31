@@ -1,14 +1,6 @@
 package edu.harvard.iq.dataverse.engine.command.impl;
 
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.DatasetLock;
-import edu.harvard.iq.dataverse.DatasetServiceBean;
-import edu.harvard.iq.dataverse.DatasetVersion;
-import edu.harvard.iq.dataverse.DatasetVersionUser;
-import edu.harvard.iq.dataverse.DataverseRoleServiceBean;
-import edu.harvard.iq.dataverse.DvObject;
-import edu.harvard.iq.dataverse.PermissionServiceBean;
-import edu.harvard.iq.dataverse.RoleAssignment;
+import edu.harvard.iq.dataverse.*;
 import edu.harvard.iq.dataverse.authorization.AuthenticationServiceBean;
 import edu.harvard.iq.dataverse.authorization.DataverseRole;
 import edu.harvard.iq.dataverse.authorization.Permission;
@@ -64,7 +56,12 @@ public class ReturnDatasetToAuthorCommandTest {
                     public Future<String> indexDataset(Dataset dataset, boolean doNormalSolrDocCleanUp) {
                         return null;
                     }
+                    @Override
+                    public Future<String> indexDataset(Dataset dataset, boolean doNormalSolrDocCleanUp, List<DataFile> fileList){
+                        return null;
+                    }
                 };
+
             }
 
             @Override

@@ -172,8 +172,10 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
 
             //New files are always added at the end, so find them
             List<DataFile> newFiles = new ArrayList<>();
-            //List<DataFile> changedFiles = new ArrayList<>();
-            List<Long> givenChangedFileIds = fileMetadatasChanged.stream().map(i -> i.getDataFile().getId()).collect(Collectors.toList());
+            List<Long> givenChangedFileIds = null;
+            if(fileMetadatasChanged != null) {
+                fileMetadatasChanged.stream().map(i -> i.getDataFile().getId()).collect(Collectors.toList());
+            }
             for (int i = 0; i <theDataset.getFiles().size(); i++) {
                 DataFile dataFile = theDataset.getFiles().get(i);
                 //If it is a new file
@@ -185,7 +187,7 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
                 else
                 {
                     //if it is an existing file, only add to lists if it's a new version or something has changed
-                    if(newVersion || (givenChangedFileIds !=null && givenChangedFileIds.contains(dataFile.getId()))) {
+                    if(newVersion || (givenChangedFileIds != null && givenChangedFileIds.contains(dataFile.getId()))) {
                         dataFile.setModificationTime(getTimestamp());
                         changedFiles.add(dataFile);
                     }
