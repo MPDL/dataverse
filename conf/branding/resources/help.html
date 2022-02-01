@@ -22,7 +22,7 @@
   <nav id="navbarFixed" class="navbar navbar-default navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
-        <a href="http://localhost:8080">
+        <a href="" onclick="location.href=getUrlFor('/');return false;">
           <img src="logos/navbar/logo_for_bright.png" alt="Edmond homepage" class="navbar-brand custom-logo">
         </a>
       </div>
@@ -149,10 +149,9 @@
       <div class="col-sm-8 small">
         <p>© 2022 Max Planck Digital Library
           <span>
-                        <a href="https://dev-edmond2.mpdl.mpg.de/guides/impressum.html" rel="noopener" target="_blank">Impressum
-                        </a>&nbsp;|&nbsp; <a href="https://dev-edmond2.mpdl.mpg.de/guides/terms_of_use.html" rel="noopener" target="_blank">Terms of Use
-                        </a>&nbsp;|&nbsp; <a href="https://dev-edmond2.mpdl.mpg.de/guides/privacy.html" rel="noopener" target="_blank">Privacy Policy
-                        </a>&nbsp;|&nbsp; <a href="https://dev-edmond2.mpdl.mpg.de/guides/help.html" rel="noopener" target="_blank">Help
+                        <a href="" onclick="location.href=getUrlFor('/guides/impressum.html');return false;" rel="noopener" target="_blank">Impressum
+                        </a>&nbsp;|&nbsp; <a href="" onclick="location.href=getUrlFor('/guides/terms_of_use.html');return false;" rel="noopener" target="_blank">Terms of Use
+                        </a>&nbsp;|&nbsp; <a href="" onclick="location.href=getUrlFor('/guides/privacy.html');return false;" rel="noopener" target="_blank">Privacy Policy
                         </a>
                     </span>
         </p>
@@ -188,6 +187,11 @@
     </div>
   </div>
 </div>
+<script>
+  function getUrlFor (page) {
+    return window.location.href.replace(window.location.pathname, '').split('#')[0] + page;
+  }
+</script>
 
 </body>
 </html>

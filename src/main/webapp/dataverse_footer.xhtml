@@ -28,7 +28,6 @@
                             <ui:fragment rendered="#{!empty settingsWrapper.get(':ApplicationDisclaimerUrl')}"><h:outputLink value="#{settingsWrapper.get(':ApplicationDisclaimerUrl')}" target="_blank" rel="noopener">#{bundle['footer.disclaimer']}</h:outputLink></ui:fragment>
                             <ui:fragment rendered="#{!empty settingsWrapper.get(':ApplicationTermsOfUseUrl')}">&#160;|&#160; <h:outputLink value="#{settingsWrapper.get(':ApplicationTermsOfUseUrl')}" target="_blank" rel="noopener">#{bundle['footer.appTermsOfUse']}</h:outputLink></ui:fragment>
                             <ui:fragment rendered="#{!empty settingsWrapper.get(':ApplicationPrivacyPolicyUrl')}">&#160;|&#160; <h:outputLink value="#{settingsWrapper.get(':ApplicationPrivacyPolicyUrl')}" target="_blank" rel="noopener">#{bundle['footer.privacyPolicy']}</h:outputLink></ui:fragment>
-                            <ui:fragment rendered="#{!empty settingsWrapper.get(':ApplicationFAQUrl')}">&#160;|&#160; <h:outputLink value="#{settingsWrapper.get(':ApplicationFAQUrl')}" target="_blank" rel="noopener">#{bundle['footer.faq']}</h:outputLink></ui:fragment>
                         </span>
                     </p>
                 </div>
