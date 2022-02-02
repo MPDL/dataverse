@@ -1,18 +1,42 @@
 #!/bin/bash
 #
-# The purpose of this script is to apply custom branding
-# issue-7 on github repository
-# issue-15 on github repository
+#set -ev; #error fixing
+#set -xv; #debug
+#set -nv; #check syntax
 #
-#################################################
-# PLEASE, TAKE A LOOK AT VARIABLES BEFORE RUN !!!
-#################################################
-#
-#set -x;
-readonly PROYECT_HOME="../.."
-PAYARA_HOME="/srv/web/payara5"
-readonly STATIC_PAGES="/srv/mpdl-dataverse/custom"
+function help {
+   cat << EOF
 
+   The purpose of this script is to customize dataverse branding for MPDL.
+   For more info see:
+    https://github.com/MPDL/dataverse/issues/7
+    https://github.com/MPDL/dataverse/issues/15
+
+   Usage: $(basename "${BASH_SOURCE[0]}") [-h] [-k unblock-key] [-p proyect-home]
+   Available options:
+      -h        Print this Help.
+      -k key    API unblock-key.
+      -p path   Path to proyect files.
+
+EOF
+  exit
+}
+UNBLOCK="?unblock-key=blkAPI_dev_ed2"
+PROYECT_HOME=$(cd "../.."; pwd)
+while getopts ":hk:p:" option; do
+   case $option in
+      h) help
+         exit;;
+      k) UNBLOCK=$OPTARG;;
+      p) PROYECT_HOME=$OPTARG;;
+     \?) # Invalid option
+         echo "Invalid option (try option -h for help)"
+         exit;;
+   esac
+done
+
+PAYARA_HOME="/srv/web/payara5"
+export STATIC_PAGES="/srv/mpdl-dataverse/custom"
 case $(hostname) in
   vm97)
     HOST_URL="dev-edmond2.mpdl.mpg.de"
@@ -25,52 +49,25 @@ case $(hostname) in
     PAYARA_HOME=$(whereis payara5 | awk '{print $2}')
     ;;
 esac
-
 readonly DOCROOT="${PAYARA_HOME}/glassfish/domains/domain1/docroot"
 readonly STATIC_PAGES_URL="http://${HOST_URL}/guides"
-
 readonly API_URL="http://${HOST_URL}/api/admin/settings/"
-UNBLOCK="?unblock-key=blkAPI_dev_ed2"
-#
-#################################################
-
-usage="usage: $0 [-k|--key <unblock-key>]"
-if [[ ${#} -gt 0 ]]; then
-  key="$1"
-  case $key in
-    -k|--key)
-      if [[ ${#} -eq 2 ]]; then
-        UNBLOCK="?unblock-key=${2}"
-      else
-        printf "\n%s\n" "${usage}"
-        exit 1
-      fi
-      ;;
-    *)
-        printf "\n%s\n" "${usage}"
-      exit 1
-      ;;
-  esac
-fi
-
-LOG="/tmp/$(basename "${0}").$(date +'%s').log";
+export LOG="/tmp/$(basename "${0}").$(date +'%s').log";
 
 printf "\n\nBranding Installation (process output to -> %s)\n" "${LOG}" | tee -a "${LOG}"
 
-printf "\n\nPreparing destination folders:\n" | tee -a "${LOG}"
-
+printf "\n\n Preparing destination folders:\n" | tee -a "${LOG}"
 function create_dir {
   if [ ! -d "${1}" ]; then
-    mkdir -p "${1}"
-    if [ ${?} -eq 0 ]; then
-      printf "\n%screated" "${1}" | tee -a "${LOG}"
+    if mkdir -p "${1}"; then
+      printf "\n\t %s created" "${1}" | tee -a "${LOG}"
       status+=0
     else
-      printf "\n%s could not be created!" "${1}" | tee -a "${LOG}"
+      printf "\n\t %s could not be created!" "${1}" | tee -a "${LOG}"
       exit 1
     fi
   else
-    printf "\n%s already exists" "${1}" | tee -a "${LOG}"
+    printf "\n\t %s already exists" "${1}" | tee -a "${LOG}"
     status+=0
   fi
 }
@@ -80,70 +77,69 @@ create_dir "${STATIC_PAGES}"
 # issue-15
 create_dir "${STATIC_PAGES}/logos"
 
-printf "\n\nCopying resources to destination:\n" | tee -a "${LOG}"
-
+printf "\n\n Copying resources to destination:\n" | tee -a "${LOG}"
 function copy_from_to_with_flags {
-    cp  ${3} "${1}" "${2}"
-    if [ ${?} -eq 0 ]; then
-      printf "\n%s copied to %s" "${1}" "${2}" | tee -a "${LOG}"
+    if cp ${3} "${1}" "${2}";
+    then
+      printf "\n\t %s copied to %s" "${1}" "${2}" | tee -a "${LOG}"
       status+=0
     else
-      printf "\nsome problem copying %s to %s, this step failed!" "${1}" "${2}" | tee -a "${LOG}"
+      printf "\n\t some problem copying %s to %s, this step failed!" "${1}" "${2}" | tee -a "${LOG}"
       status+=1
     fi
 }
+export -f copy_from_to_with_flags
 # issue-7
 copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/assets" "${DOCROOT}/logos" "-RT"
 copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/css" ${STATIC_PAGES} "-R"
 copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/mpdl-footer.html" ${STATIC_PAGES}
 # issue-15
-for item in $(find ${PROYECT_HOME}/conf/branding/resources/*.html -type f \( ! -name 'mpdl-*' \))
-do
-  copy_from_to_with_flags ${item} ${STATIC_PAGES}
-done
+find "${PROYECT_HOME}/conf/branding/resources/"*.html -type f \( ! -name 'mpdl-*' \) -exec bash -c 'copy_from_to_with_flags ${1} ${STATIC_PAGES}' -- {} \;
 copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/assets" "${STATIC_PAGES}/logos" "-RT"
 copy_from_to_with_flags "${PROYECT_HOME}/src/main/webapp/resources/bs" "${STATIC_PAGES}/logos" "-R"
 copy_from_to_with_flags "${PROYECT_HOME}/src/main/webapp/resources/css/structure.css" "${STATIC_PAGES}/css"
-for item in $(find ${PROYECT_HOME}/src/main/webapp/resources/images/dataverse*logo.* -type f)
-do
-  copy_from_to_with_flags ${item} "${STATIC_PAGES}/logos/images"
-done
+find "${PROYECT_HOME}/src/main/webapp/resources/images/"dataverse*logo.* -type f -exec bash -c 'copy_from_to_with_flags ${1} ${STATIC_PAGES}/logos/images' -- {} \;
 
 # issue-15
-printf "\n\nStatic pages server status:\n\n" | tee -a "${LOG}"
-${PAYARA_HOME}/glassfish/bin/asadmin list-applications | grep "guides" | tee -a "${LOG}"
-if [ ${?} -eq 1 ]; then
-  printf "\nDeploying static pages:\n" | tee -a "${LOG}"
+printf "\n\n Static pages server status:\n\n\t" | tee -a "${LOG}"
+"${PAYARA_HOME}"/glassfish/bin/asadmin list-applications | grep "guides" | tee -a "${LOG}"
+if [ "${PIPESTATUS[0]}" -eq 1 ]; then
+  printf "\n\t Deploying static pages:\n" | tee -a "${LOG}"
   current=$(pwd)
-  cd ${PROYECT_HOME}/conf/branding/guides; jar cvf ../guides.war .
-  cd $current
-  ${PAYARA_HOME}/glassfish/bin/asadmin deploy ${PROYECT_HOME}/conf/branding/guides.war
+  cd "${PROYECT_HOME}/conf/branding/guides" || return; jar cvf ../guides.war . ; cd "${current}" || exit
+  "${PAYARA_HOME}"/bin/asadmin deploy "${PROYECT_HOME}/conf/branding/guides.war" | tee -a "${LOG}"
 else
-  printf "\nDeployed\n" | tee -a "${LOG}"
+  printf "\t Deployed\n" | tee -a "${LOG}"
 fi
 
-printf "\n\nSettings:\n\n" | tee -a "${LOG}"
+printf "\n\n Configuring Settings on Database:\n\n" | tee -a "${LOG}"
+function db_setting_to {
+  if [[ ! "${1}" =~ ^[:] ]]
+  then
+    setting=:"${1}"
+  else
+    setting="${1}"
+  fi
+  curl -X PUT -d "${2}" "${API_URL}${setting}${UNBLOCK}" --silent | jq '.' | tee -a "${LOG}"
+  if [ "${PIPESTATUS[0]}" -eq 0 ]; then
+    status+=0
+  else
+    status+=1
+  fi
+  printf "\n" | tee -a "${LOG}"
+}
 # issue-7
-curl -X PUT -d "/logos/navbar/logo_for_bright.png" ${API_URL}:LogoCustomizationFile"${UNBLOCK}" -q | tee -a "${LOG}"
-printf "\n" | tee -a "${LOG}"
-curl -X PUT -d "${STATIC_PAGES}/mpdl-footer.html" ${API_URL}:FooterCustomizationFile"${UNBLOCK}" -q | tee -a "${LOG}"
-printf "\n" | tee -a "${LOG}"
-curl -X PUT -d "${STATIC_PAGES}/css/mpdl-stylesheet.css" ${API_URL}:StyleCustomizationFile"${UNBLOCK}" -q | tee -a "${LOG}"
-printf "\n" | tee -a "${LOG}"
+db_setting_to ":LogoCustomizationFile" "/logos/navbar/logo_for_bright.png"
+db_setting_to ":FooterCustomizationFile" "${STATIC_PAGES}/mpdl-footer.html"
+db_setting_to ":StyleCustomizationFile" "${STATIC_PAGES}/css/mpdl-stylesheet.css"
 # issue-15
-curl -X PUT -d " Max Planck Digital Library" ${API_URL}:FooterCopyright"${UNBLOCK}" -q | tee -a "${LOG}"
-printf "\n" | tee -a "${LOG}"
-curl -X PUT -d "${STATIC_PAGES_URL}/privacy.html" ${API_URL}:ApplicationPrivacyPolicyUrl"${UNBLOCK}" -q | tee -a "${LOG}"
-printf "\n" | tee -a "${LOG}"
-curl -X PUT -d "${STATIC_PAGES_URL}/terms_of_use.html" ${API_URL}:ApplicationTermsOfUseUrl"${UNBLOCK}" -q | tee -a "${LOG}"
-printf "\n" | tee -a "${LOG}"
-curl -X PUT -d "${STATIC_PAGES_URL}/impressum.html" ${API_URL}:ApplicationDisclaimerUrl"${UNBLOCK}" -q | tee -a "${LOG}"
-printf "\n" | tee -a "${LOG}"
-curl -X PUT -d "${STATIC_PAGES_URL}/help.html" ${API_URL}:NavbarGuidesUrl"${UNBLOCK}" -q | tee -a "${LOG}"
-printf "\n" | tee -a "${LOG}"
-
-curl -X PUT -d@${PROYECT_HOME}/conf/branding/resources/mpdl-apptou-signup.html ${API_URL}:ApplicationTermsOfUse"${UNBLOCK}" -q | tee -a "${LOG}"
-printf "\n" | tee -a "${LOG}"
+db_setting_to ":FooterCopyright" " Max Planck Digital Library"
+db_setting_to ":ApplicationPrivacyPolicyUrl" "${STATIC_PAGES_URL}/privacy.html"
+db_setting_to ":ApplicationTermsOfUseUrl" "${STATIC_PAGES_URL}/terms_of_use.html"
+db_setting_to ":ApplicationDisclaimerUrl" "${STATIC_PAGES_URL}/impressum.html"
+db_setting_to ":NavbarGuidesUrl" "${STATIC_PAGES_URL}/help.html"
+db_setting_to ":ApplicationTermsOfUse" "@${PROYECT_HOME}/conf/branding/resources/mpdl-apptou-signup.html"
+#curl -X GET  ${API_URL}?unblock-key=blkAPI_dev_ed2  | jq '.'
 
 if [ ${status} -eq 0 ]; then
   printf "\n... DONE!\n"
