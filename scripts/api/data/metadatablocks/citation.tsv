@@ -22,22 +22,22 @@
 	authorAffiliation3Department	3. Department/Group	The department or group with which the author is affiliated within the organization.		text	18	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	https://schema.org/department
 	datasetContact	Contact	The contact(s) for this Dataset.		none	19		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation
 	datasetContactEmail	E-mail	The e-mail address(es) of the contact(s) for the Dataset. This will not be displayed.		email	20	#EMAIL	FALSE	FALSE	FALSE	FALSE	TRUE	TRUE	datasetContact	citation
-	dsDescription	Description	A summary describing the purpose, nature, and scope of the Dataset.		none	21		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	
-	dsDescriptionValue	Text	A summary describing the purpose, nature, and scope of the Dataset.		textbox	22	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	dsDescription	citation	http://purl.org/dc/terms/description
-	subject	Subject	Domain-specific Subject Categories that are topically relevant to the Dataset.		text	23		TRUE	TRUE	TRUE	TRUE	TRUE	FALSE		citation	http://purl.org/dc/terms/subject
-	keyword	Keyword	Key terms that describe important aspects of the Dataset.		none	24		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	https://schema.org/keywords
-	keywordValue	Term	Key terms that describe important aspects of the Dataset. Can be used for building keyword indexes and for classification and retrieval purposes. A controlled vocabulary can be employed. The vocab attribute is provided for specification of the controlled vocabulary in use, such as LCSH, MeSH, or others. The vocabURI attribute specifies the location for the full controlled vocabulary.		text	25	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	keyword	citation
-	keywordVocabulary	Vocabulary	For the specification of the keyword controlled vocabulary in use, such as LCSH, MeSH, or others.		text	26	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	keyword	citation
-	keywordVocabularyURI	Vocabulary URL	Keyword vocabulary URL points to the web presence that describes the keyword vocabulary, if appropriate. Enter an absolute URL where the keyword vocabulary web site is found, such as http://www.my.org.	Enter full URL, starting with http://	url	27	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	keyword	citation
-	topicClassification	Topic Classification	The classification field indicates the broad important topic(s) and subjects that the data cover. Library of Congress subject terms may be used here.  		none	28		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation
-	topicClassValue	Term	Topic or Subject term that is relevant to this Dataset.		text	29	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	topicClassification	citation
-	topicClassVocab	Vocabulary	Provided for specification of the controlled vocabulary in use, e.g., LCSH, MeSH, etc.		text	30	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	topicClassification	citation
-	topicClassVocabURI	Vocabulary URL	Specifies the URL location for the full controlled vocabulary.	Enter full URL, starting with http://	url	31	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	topicClassification	citation
+	dsDescription	Description	A summary describing the purpose, nature, and scope of the Dataset.		none	22		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	
+	dsDescriptionValue	Text	A summary describing the purpose, nature, and scope of the Dataset.		textbox	23	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	dsDescription	citation	http://purl.org/dc/terms/description
+	subject	Subject	Domain-specific Subject Categories that are topically relevant to the Dataset.		text	24		TRUE	TRUE	TRUE	TRUE	TRUE	FALSE		citation	http://purl.org/dc/terms/subject
+	keyword	Keyword	Key terms that describe important aspects of the Dataset.		none	25		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	https://schema.org/keywords
+	keywordValue	Term	Key terms that describe important aspects of the Dataset. Can be used for building keyword indexes and for classification and retrieval purposes. A controlled vocabulary can be employed. The vocab attribute is provided for specification of the controlled vocabulary in use, such as LCSH, MeSH, or others. The vocabURI attribute specifies the location for the full controlled vocabulary.		text	26	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	keyword	citation
+	keywordVocabulary	Vocabulary	For the specification of the keyword controlled vocabulary in use, such as LCSH, MeSH, or others.		text	27	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	keyword	citation
+	keywordVocabularyURI	Vocabulary URL	Keyword vocabulary URL points to the web presence that describes the keyword vocabulary, if appropriate. Enter an absolute URL where the keyword vocabulary web site is found, such as http://www.my.org.	Enter full URL, starting with http://	url	28	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	keyword	citation
+	topicClassification	Topic Classification	The classification field indicates the broad important topic(s) and subjects that the data cover. Library of Congress subject terms may be used here.  		none	29		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation
+	topicClassValue	Term	Topic or Subject term that is relevant to this Dataset.		text	30	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	topicClassification	citation
+	topicClassVocab	Vocabulary	Provided for specification of the controlled vocabulary in use, e.g., LCSH, MeSH, etc.		text	31	(#VALUE)	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	topicClassification	citation
+	topicClassVocabURI	Vocabulary URL	Specifies the URL location for the full controlled vocabulary.	Enter full URL, starting with http://	url	32	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	topicClassification	citation
 	publication	Related Publication	Publications that use the data from this Dataset. The full list of Related Publications will be displayed on the metadata tab.		none	74		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/isReferencedBy
 	publicationCitation	Publication Title	The full bibliographic citation for this related publication.		textbox	75	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	http://purl.org/dc/terms/bibliographicCitation
 	publicationURL	URL	Link to the publication web page (e.g., journal article page, archive record page, or other).	Enter full URL, starting with http://	url	76	<a href="#VALUE" target="_blank" rel="noopener">#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	publication	citation	https://schema.org/distribution
 	notesText	Notes	Additional important information about the Dataset.		textbox	35		FALSE	FALSE	FALSE	FALSE	TRUE	FALSE		citation
-	language	Language	Language of the Dataset		text	36		TRUE	TRUE	TRUE	TRUE	TRUE	FALSE		citation	http://purl.org/dc/terms/language
+	language	Language	Language of the Dataset		text	36		TRUE	TRUE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/language
 	producer	Producer	Person or organization with the financial or administrative responsibility over this Dataset		none	37		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation
 	producerName	Name	Producer name	FamilyName, GivenName or Organization	text	38	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	producer	citation
 	producerAffiliation	Affiliation	The organization with which the producer is affiliated.		text	39	(#VALUE)	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	producer	citation
@@ -50,7 +50,7 @@
 	contributorType	Type	The type of contributor of the  resource.  		text	46	#VALUE 	TRUE	TRUE	FALSE	TRUE	FALSE	FALSE	contributor	citation
 	contributorName	Name	The Family Name, Given Name or organization name of the contributor.	FamilyName, GivenName or Organization	text	47	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	contributor	citation
 	grantNumber	Grant Information	Grant Information		none	48	:	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	https://schema.org/fundedItem
-	grantNumberAgency	Grant Agency	Grant Agency		text	49	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	FALSE	grantNumber	citation	https://schema.org/sponsor
+	grantNumberAgency	Grant Agency	Grant Agency		text	49	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	grantNumber	citation	https://schema.org/sponsor
 	grantNumberValue	Grant Number	The grant or contract number of the project that  sponsored the effort.		text	50	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	grantNumber	citation
 	distributor	Distributor	The organization designated by the author or producer to generate copies of the particular work including any necessary editions or revisions.		none	51		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation
 	distributorName	Name	Distributor name	FamilyName, GivenName or Organization	text	52	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	distributor	citation
@@ -67,7 +67,7 @@
 	dateOfCollection	Date of Collection	Contains the date(s) when the data were collected.		none	63	;	FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation
 	dateOfCollectionStart	Start	Date when the data collection started.	YYYY-MM-DD	date	64	#NAME: #VALUE 	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	dateOfCollection	citation
 	dateOfCollectionEnd	End	Date when the data collection ended.	YYYY-MM-DD	date	65	#NAME: #VALUE 	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	dateOfCollection	citation
-	studyType	Study Type	Study Type		text	66	#VALUE	TRUE	TRUE	TRUE	TRUE	TRUE	TRUE		citation	
+	studyType	Study Type	Study Type		text	21	#VALUE	TRUE	TRUE	TRUE	TRUE	TRUE	TRUE		citation
 	kindOfData	Kind of Data	Type of data included in the file: survey data, census/enumeration data, aggregate data, clinical data, event/transaction data, program source code, machine-readable text, administrative records data, experimental data, psychological test, textual data, coded textual, coded documents, time budget diaries, observation data/ratings, process-produced data, or other.		text	67		TRUE	FALSE	TRUE	TRUE	FALSE	FALSE		citation	http://rdf-vocabulary.ddialliance.org/discovery#kindOfData
 	series	Series	Information about the Dataset series.		none	68	:	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation
 	seriesName	Name	Name of the dataset series to which the Dataset belongs.		text	69	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	series	citation
