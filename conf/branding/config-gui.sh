@@ -51,7 +51,7 @@ case $(hostname) in
 esac
 readonly DOCROOT="${PAYARA_HOME}/glassfish/domains/domain1/docroot"
 readonly STATIC_PAGES_URL="http://${HOST_URL}/guides"
-readonly API_URL="http://${HOST_URL}/api/admin/settings/"
+readonly API_URL="https://${HOST_URL}/api/admin/settings/"
 export LOG="/tmp/$(basename "${0}").$(date +'%s').log";
 
 printf "\n\nBranding Installation (process output to -> %s)\n" "${LOG}" | tee -a "${LOG}"
@@ -114,7 +114,7 @@ fi
 
 printf "\n\n Configuring Settings on Database:\n\n" | tee -a "${LOG}"
 function db_setting_to {
-  if [[ ! "${1}" =~ ^[:] ]]
+  if [[ ! "${1}" =~ [^:] ]]
   then
     setting=:"${1}"
   else
