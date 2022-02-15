@@ -1996,8 +1996,9 @@ public class DatasetPage implements java.io.Serializable {
             }
 
             if (settingsWrapper.isTrueForKey(SettingsServiceBean.Key.PublicInstall, false)){
-                JH.addMessage(FacesMessage.SEVERITY_WARN, BundleUtil.getStringFromBundle("dataset.message.label.fileAccess"),
-                        BundleUtil.getStringFromBundle("dataset.message.publicInstall"));
+                //MPDL-specific. Do not display this message, as we use public-install to disable file restrictions.
+                //JH.addMessage(FacesMessage.SEVERITY_WARN, BundleUtil.getStringFromBundle("dataset.message.label.fileAccess"),
+                //        BundleUtil.getStringFromBundle("dataset.message.publicInstall"));
             }
 
             resetVersionUI();
