@@ -607,7 +607,8 @@ public class EditDatafilesPage implements java.io.Serializable {
         }
         
         if (settingsService.isTrueForKey(SettingsServiceBean.Key.PublicInstall, false)){
-            JH.addMessage(FacesMessage.SEVERITY_WARN, getBundleString("dataset.message.publicInstall"));
+            //MPDL-specific. Do not display this message, as we use public-install to disable file restrictions.
+            //JH.addMessage(FacesMessage.SEVERITY_WARN, getBundleString("dataset.message.publicInstall"));
         }   
         
         return null;
