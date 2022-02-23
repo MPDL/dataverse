@@ -42,7 +42,7 @@ case $(hostname) in
     HOST_URL="dev-edmond2.mpdl.mpg.de"
     ;;
   vm64)
-    HOST_URL="prod-edmond2.mpdl.mpg.de"
+    HOST_URL="edmond.mpdl.mpg.de"
     ;;
   *)
     HOST_URL="localhost:8080"
