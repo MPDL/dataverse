@@ -417,3 +417,9 @@ div[data-fieldtype-name="authorIdentifier.parent"]{
 #fileDescriptionBlock > td {
 	white-space: pre-line;
 }
+
+/* Substitute text */
+#_2edmondImage {
+	height: 14px;
+	width: auto;
+}
