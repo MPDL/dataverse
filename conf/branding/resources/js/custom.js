@@ -5,3 +5,7 @@ function getUrlFor (page) {
 function _2edmond() {
     location.href = atob('bWFpbHRvOmVkbW9uZEBtcGRsLm1wZy5kZQ==');
 }
+
+function _2rdmo() {
+    location.href = atob('bWFpbHRvOnJkbUBtcGRsLm1wZy5kZQ==');
+}
