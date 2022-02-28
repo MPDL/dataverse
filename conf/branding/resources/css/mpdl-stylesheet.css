@@ -418,6 +418,11 @@ div[data-fieldtype-name="authorIdentifier.parent"]{
 	white-space: pre-line;
 }
 
+/* Yellow background for dismissible alerts on top of page */
+.alert.alert-dismissible.text-warning {
+	background-color: #F5DF19;
+}
+
 /* Substitute text */
 #_2edmondImage {
 	height: 14px;
