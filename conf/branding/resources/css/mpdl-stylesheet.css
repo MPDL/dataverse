@@ -417,3 +417,8 @@ div[data-fieldtype-name="authorIdentifier.parent"]{
 #fileDescriptionBlock > td {
 	white-space: pre-line;
 }
+
+/* Yellow background for dismissible alerts on top of page */
+.alert.alert-dismissible.text-warning {
+	background-color: #F5DF19;
+}
