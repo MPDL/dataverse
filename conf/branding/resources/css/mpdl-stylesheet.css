@@ -420,7 +420,7 @@ div[data-fieldtype-name="authorIdentifier.parent"]{
 
 /* Yellow background for dismissible alerts on top of page */
 .alert.alert-dismissible.text-warning {
-	background-color: #DADDBB;
+	background-color: #FCF8E3;
 }
 
 /* Substitute text */
