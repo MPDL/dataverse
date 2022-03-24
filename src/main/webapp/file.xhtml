@@ -44,11 +44,14 @@
                                     <span class="file-title-label">#{FilePage.fileMetadata.label}</span>
                                     
                                     <!-- FILE LEVEL MSGs -->
-                                    <div class="bg-warning text-warning text-center margin-bottom-half" jsf:rendered="#{FilePage.fileMetadata.dataFile.ingestProblem and FilePage.canUpdateDataset()}">
+                                    <div class="bg-info text-info text-center margin-bottom-half" jsf:rendered="#{FilePage.fileMetadata.dataFile.ingestProblem and FilePage.canUpdateDataset()}">
                                         <!-- Ingest failed -->
-                                        <span class="glyphicon glyphicon-warning-sign"/> #{bundle['file.ingestFailed.header']}&#160;
-                                        <span data-toggle="tooltip" data-trigger="hover" data-placement="top" data-title="#{bundle['file.ingestFailed.message']} #{FilePage.fileMetadata.dataFile.ingestReportMessage}">
-                                            <span class="glyphicon glyphicon-question-sign"/>
+                                        <span class="glyphicon glyphicon-info-sign"/>
+                                        <span> #{bundle['file.ingestFailed.header']}&#160;</span>
+                                        <span>
+                                            <a tabindex="0" role="button" class="glyphicon glyphicon-question-sign tooltip-icon"
+                                               data-toggle="popover" data-placement="auto top" data-trigger="focus" data-html="true"
+                                               data-content="#{FilePage.ingestMessage} #{FilePage.fileMetadata.dataFile.ingestReportMessage}"/>
                                         </span>
                                     </div>
                                     <!-- END: FILE LEVEL MSGs -->
@@ -344,6 +347,7 @@
                                         <ui:param name="popupContext" value="previewTab"/>
                                         <ui:param name="workingVersion" value="#{FilePage.fileMetadata.datasetVersion}"/>
                                         <ui:param name="downloadPopupRequired" value="#{FilePage.downloadPopupRequired}"/>
+                                        <ui:param name="hasRestrictedFile" value="#{FilePage.fileMetadata.restricted}"/>
                                         <ui:param name="guestbookResponse" value="#{FilePage.guestbookResponse}"/>
                                         <ui:param name="guestbookResponseService" value="#{FilePage.guestbookResponseService}"/>
                                         <ui:param name="fileDownloadService" value="#{FilePage.fileDownloadService}"/>
@@ -358,7 +362,7 @@
                                         <button type="button" id="selectTool" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                             <span class="glyphicon glyphicon-eye-open"/> #{bundle['file.previewTab.button.label']} <span class="caret"></span>
                                         </button>
-                                        <ul class="dropdown-menu" role="menu">
+                                        <ul class="dropdown-menu">
                                             <ui:repeat value="#{FilePage.toolsWithPreviews}" var="tool">
                                                 <li>
                                                     <h:commandLink action="#{FilePage.setSelectedTool(tool)}">
@@ -615,6 +619,7 @@
                             <ui:param name="popupContext" value="downloadFile"/>
                             <ui:param name="workingVersion" value="#{FilePage.fileMetadata.datasetVersion}"/>
                             <ui:param name="downloadPopupRequired" value="#{FilePage.downloadPopupRequired}"/>
+                            <ui:param name="hasRestrictedFile" value="#{FilePage.fileMetadata.restricted}"/>
                             <ui:param name="guestbookResponse" value="#{FilePage.guestbookResponse}"/>
                             <ui:param name="guestbookResponseService" value="#{FilePage.guestbookResponseService}"/>
                             <ui:param name="fileDownloadService" value="#{FilePage.fileDownloadService}"/>
