@@ -420,5 +420,11 @@ div[data-fieldtype-name="authorIdentifier.parent"]{
 
 /* Yellow background for dismissible alerts on top of page */
 .alert.alert-dismissible.text-warning {
-	background-color: #F5DF19;
+	background-color: #FCF8E3;
+}
+
+/* Substitute text */
+#_2edmondImage {
+	height: 14px;
+	width: auto;
 }
