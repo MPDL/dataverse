@@ -160,6 +160,7 @@
                                     <h:message for="metadata_TermsUse" styleClass="bg-danger text-danger"/>
                                 </div>
                             </div>
+                            <ui:fragment rendered="false">
                             <div class="form-group">
                                 <label for="datasetForm:tabView:confidentialityDeclaration" class="col-sm-3 control-label">
                                     #{bundle['file.dataFilesTab.terms.list.termsOfUse.addInfo.declaration']}
@@ -230,6 +231,7 @@
                                     <p:inputTextarea id="disclaimer" value="#{termsOfUseAndAccess.disclaimer}" rows="5" cols="60" styleClass="form-control" />
                                 </div>
                             </div>
+                            </ui:fragment>
                         </ui:fragment>
                        <!-- END: Additional Information -->
                    </div>
@@ -237,6 +239,7 @@
            </div>
        </div>
 
+        <ui:fragment rendered="false">
        <div class="panel panel-default" jsf:rendered="#{!empty editMode or empty editMode and (!empty termsOfUseAndAccess.termsOfAccess
                                                         or !empty termsOfUseAndAccess.dataAccessPlace 
                                         or !empty termsOfUseAndAccess.originalArchive or !empty termsOfUseAndAccess.availabilityStatus 
@@ -539,7 +542,8 @@
                    </div>
                </div>
            </div>
-       </div> 
+       </div>
+        </ui:fragment>
     </div>
     <!-- / TERMS -->
 
