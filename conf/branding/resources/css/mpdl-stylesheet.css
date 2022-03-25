@@ -297,7 +297,7 @@ html, body {
 	height: 100%;
 }
 */
-#footer {
+#dvfooter {
 	position: relative;
 	height: 135px;
 	bottom: -20px;
@@ -305,25 +305,25 @@ html, body {
     /*background: #ff7f5050;*/
 }
 
-#footer .container {
+#dvfooter .container {
 	background: white;
 	height: 100%;
 	padding-top: 50px;
 }
 
-#footer p {
+#dvfooter p {
 	padding-top: 45px;
 	padding-left: 5px;
 	margin: 0;
 	text-align: left;
 }
 
-#footer p span {
+#dvfooter p span {
 	float: right;
 	padding-right: 70px;
 }
 
-#footer .col-sm-4 {
+#dvfooter .col-sm-4 {
 	z-index: 9;
 }
 
@@ -366,7 +366,7 @@ html, body {
 }
 
 @media only screen and (max-width: 767px) {
-	#footer .poweredbylogo {
+	#dvfooter .poweredbylogo {
 		display: none;
 	}
 }
