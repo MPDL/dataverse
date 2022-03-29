@@ -595,6 +595,7 @@
   <copyField source="acronyms" dest="autosuggest"/>
   <copyField source="labels.label" dest="autosuggest"/>
   <copyField source="name" dest="autosuggest"/>
+  <copyField source="aliases" dest="autosuggest"/>
   <copyField source="relationships.type" dest="relationships.type_str" maxChars="256"/>
   <copyField source="types" dest="types_str" maxChars="256"/>
   <copyField source="acronyms" dest="acronyms_str" maxChars="256"/>

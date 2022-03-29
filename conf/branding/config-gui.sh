@@ -42,7 +42,7 @@ case $(hostname) in
     HOST_URL="dev-edmond2.mpdl.mpg.de"
     ;;
   vm64)
-    HOST_URL="prod-edmond2.mpdl.mpg.de"
+    HOST_URL="edmond.mpdl.mpg.de"
     ;;
   *)
     HOST_URL="localhost:8080"
@@ -51,7 +51,7 @@ case $(hostname) in
 esac
 readonly DOCROOT="${PAYARA_HOME}/glassfish/domains/domain1/docroot"
 readonly STATIC_PAGES_URL="http://${HOST_URL}/guides"
-readonly API_URL="https://${HOST_URL}/api/admin/settings/"
+readonly API_URL="http//${HOST_URL}/api/admin/settings/"
 export LOG="/tmp/$(basename "${0}").$(date +'%s').log";
 
 printf "\n\nBranding Installation (process output to -> %s)\n" "${LOG}" | tee -a "${LOG}"
@@ -96,8 +96,10 @@ copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/mpdl-footer.htm
 # issue-15
 find "${PROYECT_HOME}/conf/branding/resources/"*.html -type f \( ! -name 'mpdl-*' \) -exec bash -c 'copy_from_to_with_flags ${1} ${STATIC_PAGES}' -- {} \;
 copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/assets" "${STATIC_PAGES}/logos" "-RT"
+copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/js" ${STATIC_PAGES} "-R"
 copy_from_to_with_flags "${PROYECT_HOME}/src/main/webapp/resources/bs" "${STATIC_PAGES}/logos" "-R"
 copy_from_to_with_flags "${PROYECT_HOME}/src/main/webapp/resources/css/structure.css" "${STATIC_PAGES}/css"
+copy_from_to_with_flags "${PROYECT_HOME}/src/main/webapp/resources/images/fav/edmond_favicon_red.svg" "${STATIC_PAGES}/logos/images/fav" "-R"
 find "${PROYECT_HOME}/src/main/webapp/resources/images/"dataverse*logo.* -type f -exec bash -c 'copy_from_to_with_flags ${1} ${STATIC_PAGES}/logos/images' -- {} \;
 
 # issue-15

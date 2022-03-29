@@ -67,7 +67,7 @@
 	dateOfCollection	Date of Collection	Contains the date(s) when the data were collected.		none	63	;	FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation
 	dateOfCollectionStart	Start	Date when the data collection started.	YYYY-MM-DD	date	64	#NAME: #VALUE 	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	dateOfCollection	citation
 	dateOfCollectionEnd	End	Date when the data collection ended.	YYYY-MM-DD	date	65	#NAME: #VALUE 	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	dateOfCollection	citation
-	studyType	Study Type	Study Type		text	21	#VALUE	TRUE	TRUE	TRUE	TRUE	TRUE	TRUE		citation
+	studyType	Study Type	Study Type		text	21	#VALUE	TRUE	TRUE	TRUE	TRUE	TRUE	FALSE		citation
 	kindOfData	Kind of Data	Type of data included in the file: survey data, census/enumeration data, aggregate data, clinical data, event/transaction data, program source code, machine-readable text, administrative records data, experimental data, psychological test, textual data, coded textual, coded documents, time budget diaries, observation data/ratings, process-produced data, or other.		text	67		TRUE	FALSE	TRUE	TRUE	FALSE	FALSE		citation	http://rdf-vocabulary.ddialliance.org/discovery#kindOfData
 	series	Series	Information about the Dataset series.		none	68	:	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation
 	seriesName	Name	Name of the dataset series to which the Dataset belongs.		text	69	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	series	citation

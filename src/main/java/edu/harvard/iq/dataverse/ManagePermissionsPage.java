@@ -421,7 +421,7 @@ public class ManagePermissionsPage implements java.io.Serializable {
 
             } else if (dvObject instanceof DataFile) {
                 // only show roles that have File level permissions
-                // current the available roles for a file are gotten from its parent's parent
+                // current the available roles for a file are gotten from its parent's parent                
                 for (DataverseRole role : roleService.availableRoles(dvObject.getOwner().getOwner().getId())) {
                     for (Permission permission : role.permissions()) {
                         if (permission.appliesTo(DataFile.class)) {

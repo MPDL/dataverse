@@ -9,6 +9,7 @@ import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import edu.harvard.iq.dataverse.engine.command.RequiredPermissions;
 import edu.harvard.iq.dataverse.engine.command.exception.CommandException;
 import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
+import edu.harvard.iq.dataverse.util.DatasetFieldUtil;
 import edu.harvard.iq.dataverse.util.FileMetadataUtil;
 
 import java.io.IOException;
@@ -151,8 +152,8 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
             validateOrDie(getDataset().getEditVersion(fmVarMet), isValidateLenient());
 
             final DatasetVersion editVersion = getDataset().getEditVersion(fmVarMet);
-            
-            tidyUpFields(editVersion);
+
+            DatasetFieldUtil.tidyUpFields(editVersion.getDatasetFields(), true);
 
             boolean newVersion = false;
             // Merge the new version into out JPA context, if needed.
