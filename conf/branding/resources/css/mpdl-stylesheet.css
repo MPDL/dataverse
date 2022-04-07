@@ -386,6 +386,11 @@ html, body {
 	display:none;
 }
 
+/* Hide the dataverse checkbox on My Data facets */
+#dataverseUserForm\:dataRelatedToMeView\:myData #my_data_filter_column #div_dvobject_types .checkbox:first-of-type {
+	display:none;
+}
+
 /* Hides on Terms tab the following panels: Restricted Files + Terms of Access and Guestbook */
 #datasetForm\:tabView\:termsTab .panel-group .panel.panel-default:not(:first-of-type) {
 	display: none;
