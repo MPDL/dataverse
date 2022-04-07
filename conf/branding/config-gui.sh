@@ -21,13 +21,13 @@ function help {
 EOF
   exit
 }
-UNBLOCK="?unblock-key=blkAPI_dev_ed2"
+UNBLOCK=""
 PROYECT_HOME=$(cd "../.."; pwd)
 while getopts ":hk:p:" option; do
    case $option in
       h) help
          exit;;
-      k) UNBLOCK=$OPTARG;;
+      k) UNBLOCK="?unblock-key=${OPTARG}";;
       p) PROYECT_HOME=$OPTARG;;
      \?) # Invalid option
          echo "Invalid option (try option -h for help)"
@@ -39,20 +39,36 @@ PAYARA_HOME="/srv/web/payara5"
 export STATIC_PAGES="/srv/mpdl-dataverse/custom"
 case $(hostname) in
   vm97)
+    isPROD=false
     HOST_URL="dev-edmond2.mpdl.mpg.de"
+    API_PROTOCOL="https"
     ;;
   vm64)
+    isPROD=true
     HOST_URL="edmond.mpdl.mpg.de"
+    API_PROTOCOL="https"
     ;;
   *)
+    isPROD=false
     HOST_URL="localhost:8080"
+    API_PROTOCOL="http"
     PAYARA_HOME=$(whereis payara5 | awk '{print $2}')
     ;;
 esac
+
+if [ "${UNBLOCK}" == "" ]; then
+  if [ ${isPROD} == "true" ]; then
+    echo "Option -k key (API unblock-key) needed!"
+    exit 1
+  else
+    UNBLOCK="?unblock-key=blkAPI_dev_ed2"
+  fi
+fi
 readonly DOCROOT="${PAYARA_HOME}/glassfish/domains/domain1/docroot"
 readonly STATIC_PAGES_URL="http://${HOST_URL}/guides"
-readonly API_URL="http//${HOST_URL}/api/admin/settings/"
-export LOG="/tmp/$(basename "${0}").$(date +'%s').log";
+readonly API_URL="${API_PROTOCOL}://${HOST_URL}/api/admin/settings/"
+readonly LOG="/tmp/$(basename "${0}").$(date +'%s').log";
+export LOG;
 
 printf "\n\nBranding Installation (process output to -> %s)\n" "${LOG}" | tee -a "${LOG}"
 
