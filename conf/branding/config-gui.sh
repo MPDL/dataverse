@@ -123,8 +123,12 @@ printf "\n\n Static pages server status:\n\n\t" | tee -a "${LOG}"
 "${PAYARA_HOME}"/glassfish/bin/asadmin list-applications | grep "guides" | tee -a "${LOG}"
 if [ "${PIPESTATUS[0]}" -eq 1 ]; then
   printf "\n\t Deploying static pages:\n" | tee -a "${LOG}"
-  current=$(pwd)
-  cd "${PROYECT_HOME}/conf/branding/guides" || return; jar cvf ../guides.war . ; cd "${current}" || exit
+  if [ ! -f "${PROYECT_HOME}/conf/branding/guides.war" ]; then
+    current=$(pwd)
+    cd "${PROYECT_HOME}/conf/branding/guides"
+    jar cvf ../guides.war .
+    cd "${current}"
+  fi
   "${PAYARA_HOME}"/bin/asadmin deploy "${PROYECT_HOME}/conf/branding/guides.war" | tee -a "${LOG}"
 else
   printf "\t Deployed\n" | tee -a "${LOG}"
