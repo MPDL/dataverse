@@ -120,8 +120,9 @@ find "${PROYECT_HOME}/src/main/webapp/resources/images/"dataverse*logo.* -type f
 
 # issue-15
 printf "\n\n Static pages server status:\n\n\t" | tee -a "${LOG}"
-"${PAYARA_HOME}"/glassfish/bin/asadmin list-applications | grep "guides" | tee -a "${LOG}"
-if [ "${PIPESTATUS[0]}" -eq 1 ]; then
+if [ `"${PAYARA_HOME}"/glassfish/bin/asadmin list-applications | grep "guides" | wc -l` -eq 1 ]; then
+  printf "\t Deployed\n" | tee -a "${LOG}"
+else
   printf "\n\t Deploying static pages:\n" | tee -a "${LOG}"
   if [ ! -f "${PROYECT_HOME}/conf/branding/guides.war" ]; then
     current=$(pwd)
@@ -130,8 +131,6 @@ if [ "${PIPESTATUS[0]}" -eq 1 ]; then
     cd "${current}"
   fi
   "${PAYARA_HOME}"/bin/asadmin deploy "${PROYECT_HOME}/conf/branding/guides.war" | tee -a "${LOG}"
-else
-  printf "\t Deployed\n" | tee -a "${LOG}"
 fi
 
 printf "\n\n Configuring Settings on Database:\n\n" | tee -a "${LOG}"
