@@ -1,6 +1,7 @@
 package edu.harvard.iq.dataverse;
 
 import edu.harvard.iq.dataverse.util.MarkupChecker;
+import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.DatasetFieldType.FieldType;
 import edu.harvard.iq.dataverse.branding.BrandingUtil;
 import edu.harvard.iq.dataverse.dataset.DatasetUtil;
@@ -1715,7 +1716,7 @@ public class DatasetVersion implements Serializable {
                 affiliation = datasetAuthor.getAffiliation().getDisplayValue();
             }
             // We are aware of "givenName" and "familyName" but instead of a person it might be an organization such as "Gallup Organization".
-            //author.add("@type", "Person");
+            author.add("@type", "Person");
             author.add("name", name);
             // We are aware that the following error is thrown by https://search.google.com/structured-data/testing-tool
             // "The property affiliation is not recognized by Google for an object of type Thing."
