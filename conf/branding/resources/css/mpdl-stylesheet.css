@@ -112,11 +112,14 @@ body {
 	}
 
 }
-
-ul.nav.navbar-nav.navbar-right li:nth-last-child(2) {
+/*
+ul.nav.navbar-nav.navbar-right li:nth-last-child(2),
+ */
+ul.nav.navbar-nav.navbar-right li a[href*="CREATE"] {
 	visibility: hidden;
 	width: 0;
 	height: 0;
+	position:absolute;
 }
 
 #navbarFixed .navbar-brand.custom-logo {
