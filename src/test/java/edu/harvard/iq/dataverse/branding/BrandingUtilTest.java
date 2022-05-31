@@ -196,7 +196,9 @@ public class BrandingUtilTest {
     @Test
     public void testGetContactHeader() {
         Mockito.when(dataverseSvc.getRootDataverseName()).thenReturn(null);
-        assertEquals("Contact Support", BrandingUtil.getContactHeader(null));
+        assertEquals(BundleUtil.getStringFromBundle("contact.header",
+                Arrays.asList(BundleUtil.getStringFromBundle("contact.support"))),
+                BrandingUtil.getContactHeader(null));
     }
 
 }
