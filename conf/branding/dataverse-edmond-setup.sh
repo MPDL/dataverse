@@ -38,7 +38,7 @@ curl -X POST -H "Content-type:application/json" -T $ROR_DATA_NAME.json 'http://l
 
 ### DOI Settings ###
 DOI_PREFIX=10.15771
-DOI_SHOULDER='3./'
+DOI_SHOULDER='3.'
 
 # Set DOI prefix
 echo "Setting DOI prefix to $DOI_PREFIX"
