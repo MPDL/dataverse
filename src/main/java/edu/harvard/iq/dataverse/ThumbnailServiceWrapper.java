@@ -103,10 +103,10 @@ public class ThumbnailServiceWrapper implements java.io.Serializable  {
         if (result.isHarvested()) {
             return null; 
         }
-        
-        Long imageFileId = result.getEntity().getId();
 
-        if (imageFileId != null) {
+
+        if (result.getEntity()!=null && result.getEntity().getId() != null) {
+            Long imageFileId = result.getEntity().getId();
             if (this.dvobjectThumbnailsMap.containsKey(imageFileId)) {
                 // Yes, return previous answer
                 //logger.info("using cached result for ... "+datasetId);
