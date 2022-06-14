@@ -36,7 +36,6 @@ while getopts ":hk:p:" option; do
 done
 
 PAYARA_HOME="/srv/web/payara5"
-export STATIC_PAGES="/srv/mpdl-dataverse/custom"
 case $(hostname) in
   vm97)
     isPROD=false
@@ -65,6 +64,7 @@ if [ "${UNBLOCK}" == "" ]; then
   fi
 fi
 readonly DOCROOT="${PAYARA_HOME}/glassfish/domains/domain1/docroot"
+readonly STATIC_PAGES="${DOCROOT}/guides/"
 readonly STATIC_PAGES_URL="http://${HOST_URL}/guides"
 readonly API_URL="${API_PROTOCOL}://${HOST_URL}/api/admin/settings/"
 readonly LOG="/tmp/$(basename "${0}").$(date +'%s').log";
@@ -91,7 +91,7 @@ function create_dir {
 create_dir "${DOCROOT}/logos"
 create_dir "${STATIC_PAGES}"
 # issue-15
-create_dir "${STATIC_PAGES}/logos"
+#create_dir "${STATIC_PAGES}/logos"
 
 printf "\n\n Copying resources to destination:\n" | tee -a "${LOG}"
 function copy_from_to_with_flags {
@@ -107,31 +107,31 @@ function copy_from_to_with_flags {
 export -f copy_from_to_with_flags
 # issue-7
 copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/assets" "${DOCROOT}/logos" "-RT"
-copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/css" ${STATIC_PAGES} "-R"
+copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/css" "${STATIC_PAGES}/css" "-R"
 copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/mpdl-footer.html" ${STATIC_PAGES}
 # issue-15
 find "${PROYECT_HOME}/conf/branding/resources/"*.html -type f \( ! -name 'mpdl-*' \) -exec bash -c 'copy_from_to_with_flags ${1} ${STATIC_PAGES}' -- {} \;
-copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/assets" "${STATIC_PAGES}/logos" "-RT"
+#copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/assets" "${STATIC_PAGES}/logos" "-RT"
 copy_from_to_with_flags "${PROYECT_HOME}/conf/branding/resources/js" ${STATIC_PAGES} "-R"
-copy_from_to_with_flags "${PROYECT_HOME}/src/main/webapp/resources/bs" "${STATIC_PAGES}/logos" "-R"
-copy_from_to_with_flags "${PROYECT_HOME}/src/main/webapp/resources/css/structure.css" "${STATIC_PAGES}/css"
-copy_from_to_with_flags "${PROYECT_HOME}/src/main/webapp/resources/images/fav/edmond_favicon_red.svg" "${STATIC_PAGES}/logos/images/fav" "-R"
-find "${PROYECT_HOME}/src/main/webapp/resources/images/"dataverse*logo.* -type f -exec bash -c 'copy_from_to_with_flags ${1} ${STATIC_PAGES}/logos/images' -- {} \;
+#copy_from_to_with_flags "${PROYECT_HOME}/src/main/webapp/resources/bs" "${STATIC_PAGES}/logos" "-R"
+#copy_from_to_with_flags "${PROYECT_HOME}/src/main/webapp/resources/css/structure.css" "${STATIC_PAGES}/css"
+copy_from_to_with_flags "${PROYECT_HOME}/src/main/webapp/resources/images/fav/edmond_favicon_red.svg" "${DOCROOT}/logos/images/fav" "-R"
+find "${PROYECT_HOME}/src/main/webapp/resources/images/"dataverse*logo.* -type f -exec bash -c 'copy_from_to_with_flags ${1} ${DOCROOT}/logos/images' -- {} \;
 
 # issue-15
-printf "\n\n Static pages server status:\n\n\t" | tee -a "${LOG}"
-if [ `"${PAYARA_HOME}"/glassfish/bin/asadmin list-applications | grep "guides" | wc -l` -eq 1 ]; then
-  printf "\t Deployed\n" | tee -a "${LOG}"
-else
-  printf "\n\t Deploying static pages:\n" | tee -a "${LOG}"
-  if [ ! -f "${PROYECT_HOME}/conf/branding/guides.war" ]; then
-    current=$(pwd)
-    cd "${PROYECT_HOME}/conf/branding/guides"
-    jar cvf ../guides.war .
-    cd "${current}"
-  fi
-  "${PAYARA_HOME}"/bin/asadmin deploy "${PROYECT_HOME}/conf/branding/guides.war" | tee -a "${LOG}"
-fi
+#printf "\n\n Static pages server status:\n\n\t" | tee -a "${LOG}"
+#if [ `"${PAYARA_HOME}"/glassfish/bin/asadmin list-applications | grep "guides" | wc -l` -eq 1 ]; then
+#  printf "\t Deployed\n" | tee -a "${LOG}"
+#else
+#  printf "\n\t Deploying static pages:\n" | tee -a "${LOG}"
+#  if [ ! -f "${PROYECT_HOME}/conf/branding/guides.war" ]; then
+#    current=$(pwd)
+#    cd "${PROYECT_HOME}/conf/branding/guides"
+#    jar cvf ../guides.war .
+#    cd "${current}"
+#  fi
+#  "${PAYARA_HOME}"/bin/asadmin deploy "${PROYECT_HOME}/conf/branding/guides.war" | tee -a "${LOG}"
+#fi
 
 printf "\n\n Configuring Settings on Database:\n\n" | tee -a "${LOG}"
 function db_setting_to {
