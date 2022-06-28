@@ -67,6 +67,8 @@ import javax.inject.Named;
 import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -80,7 +82,6 @@ import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.CursorMarkParams;
 import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.io.IOUtils;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.sax.BodyContentHandler;
@@ -255,6 +256,10 @@ public class IndexServiceBean {
                 for(String locale: langs) {
                     solrInputDocument.addField(SearchFields.DATAVERSE_SUBJECT, dataverseSubject.getLocaleStrValue(locale));
                 }
+                if (langs.isEmpty()) {
+                    solrInputDocument.addField(SearchFields.DATAVERSE_SUBJECT, dataverseSubject.getStrValue());
+                }
+
                 // collapse into shared "subject" field used as a facet
                 solrInputDocument.addField(SearchFields.SUBJECT, subject);
             }
@@ -338,7 +343,7 @@ public class IndexServiceBean {
         dataset = null;
         return ret;
     }
-
+    
     @TransactionAttribute(REQUIRES_NEW)
     public Future<String> indexDatasetObjectInNewTransaction(Dataset dataset) throws  SolrServerException, IOException{ //Dataset dataset) {
         boolean doNormalSolrDocCleanUp = false;
@@ -747,7 +752,7 @@ public class IndexServiceBean {
                 results.append("The latest version is a working copy (latestVersionState: ")
                         .append(latestVersionStateString).append(") and will be indexed as ")
                         .append(solrIdDraftDataset).append(" (limited visibility). Result: ").append(indexDraftResult).append("\n");
-
+                
                 desiredCards.put(DatasetVersion.VersionState.DEACCESSIONED, false);
                 if (doNormalSolrDocCleanUp) {
                     String deleteDeaccessionedResult = removeDeaccessioned(dataset);
@@ -818,8 +823,8 @@ public class IndexServiceBean {
     private String addOrUpdateDataset(IndexableDataset indexableDataset, Map<Long, DataFile> changedDataFiles) throws  SolrServerException, IOException {
         return addOrUpdateDataset(indexableDataset, null, changedDataFiles);
     }
-    
-    private String addOrUpdateDataset(IndexableDataset indexableDataset, Set<Long> datafilesInDraftVersion, Map<Long, DataFile> changedDataFiles) throws  SolrServerException, IOException {
+
+    public SolrInputDocuments toSolrDocs(IndexableDataset indexableDataset, Set<Long> datafilesInDraftVersion, Map<Long, DataFile> changedDataFiles) throws  SolrServerException, IOException {
         IndexableDataset.DatasetState state = indexableDataset.getDatasetState();
         Dataset dataset = indexableDataset.getDatasetVersion().getDataset();
         logger.fine("adding or updating Solr document for dataset id " + dataset.getId());
@@ -992,10 +997,16 @@ public class IndexServiceBean {
                                 if (controlledVocabularyValue.getStrValue().equals(DatasetField.NA_VALUE)) {
                                     continue;
                                 }
+
                                 // Index in all used languages (display and metadata languages
-                                for(String locale: langs) {
-                                    solrInputDocument.addField(solrFieldSearchable, controlledVocabularyValue.getLocaleStrValue(locale));
+                                if (!dsfType.isAllowMultiples() || langs.isEmpty()) {
+                                    solrInputDocument.addField(solrFieldSearchable, controlledVocabularyValue.getStrValue());
+                                } else {
+                                    for(String locale: langs) {
+                                        solrInputDocument.addField(solrFieldSearchable, controlledVocabularyValue.getLocaleStrValue(locale));
+                                    }
                                 }
+
                                 if (dsfType.getSolrField().isFacetable()) {
                                     solrInputDocument.addField(solrFieldFacetable, controlledVocabularyValue.getStrValue());
                                 }
@@ -1058,7 +1069,7 @@ public class IndexServiceBean {
             boolean checkForDuplicateMetadata = false;
             if (datasetVersion.isDraft() && dataset.isReleased() && dataset.getReleasedVersion() != null) {
                 checkForDuplicateMetadata = true;
-                releasedFileMetadatas = dataset.getReleasedVersion().getFileMetadatas();
+                releasedFileMetadatas = dataset.getReleasedVersion().getFileMetadatas(); 
                 for(FileMetadata released: releasedFileMetadatas){
                     fileMap.put(released.getDataFile().getId(), released);
                 }
@@ -1083,7 +1094,7 @@ public class IndexServiceBean {
                 }
                 /*
                 if (checkForDuplicateMetadata) {
-                    
+
                     logger.fine("Checking if this file metadata is a duplicate.");
                     for (FileMetadata releasedFileMetadata : dataset.getReleasedVersion().getFileMetadatas()) {
                         if (fileMetadata.getDataFile() != null && fileMetadata.getDataFile().equals(releasedFileMetadata.getDataFile())) {
@@ -1115,7 +1126,6 @@ public class IndexServiceBean {
                 }
                 */
                 if (indexThisMetadata) {
-                    
 
                     SolrInputDocument datafileSolrInputDocument = new SolrInputDocument();
                     Long fileEntityId = fileMetadata.getDataFile().getId();
@@ -1402,9 +1412,16 @@ public class IndexServiceBean {
               solrInputDocument.addField(SearchFields.EMBARGO_END_DATE, embargoEndDate.toEpochDay());
             }
         }
+        Long datasetId = dataset.getId();
+        final String msg = "indexed dataset " + datasetId + " as " + datasetSolrDocId + ". filesIndexed: " + filesIndexed;
+        return new SolrInputDocuments(docs, msg, datasetId);
+    }
+
+    private String addOrUpdateDataset(IndexableDataset indexableDataset, Set<Long> datafilesInDraftVersion, Map<Long, DataFile> changedDataFiles) throws  SolrServerException, IOException {
+        final SolrInputDocuments docs = toSolrDocs(indexableDataset, datafilesInDraftVersion, changedDataFiles);
 
         try {
-            solrClientService.getSolrClient().add(docs);
+            solrClientService.getSolrClient().add(docs.getDocuments());
             solrClientService.getSolrClient().commit();
         } catch (SolrServerException | IOException ex) {
             if (ex.getCause() instanceof SolrServerException) {
@@ -1413,19 +1430,17 @@ public class IndexServiceBean {
                 throw new IOException(ex);
             }
         }
-
-        Long dsId = dataset.getId();
         /// Dataset updatedDataset =
         /// (Dataset)dvObjectService.updateContentIndexTime(dataset);
         /// updatedDataset = null;
         // instead of making a call to dvObjectService, let's try and
         // modify the index time stamp using the local EntityManager:
-        DvObject dvObjectToModify = em.find(DvObject.class, dsId);
+        DvObject dvObjectToModify = em.find(DvObject.class, docs.getDatasetId());
         dvObjectToModify.setIndexTime(new Timestamp(new Date().getTime()));
         dvObjectToModify = em.merge(dvObjectToModify);
         dvObjectToModify = null;
 
-        return "indexed dataset " + dsId + " as " + datasetSolrDocId + ". filesIndexed: " + filesIndexed;
+        return docs.getMessage();
     }
 
     /**
