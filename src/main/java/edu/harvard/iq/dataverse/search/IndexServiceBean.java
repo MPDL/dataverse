@@ -431,7 +431,7 @@ public class IndexServiceBean {
             solrIdsOfFilesToDelete.add(solrIdOfPublishedFile);
             solrIdsOfFilesToDelete.add(solrIdOfDraftFile);
             solrIdsOfFilesToDelete.add(solrIdOfDeaccessionizedFile);
-            fileInfo.add(dataFile.getId() + ":" + dataFile.getFileMetadata().getLabel());
+            fileInfo.add(dataFile.getId() + ":" + dataFile.getFileMetadata()!=null ? dataFile.getFileMetadata().getLabel() : "");
         }
         for (DatasetVersion datasetVersion : versions) {
             Long versionDatabaseId = datasetVersion.getId();
