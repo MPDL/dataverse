@@ -54,12 +54,12 @@ public class BundleUtilTest {
                 + "<a href=\"/dataverse/dvAlias\" title=\"DV Name\">DV Name</a>.",
                 BundleUtil.getStringFromBundle("dataverse.saved.search.success",
                         Arrays.asList("<a href=\"/dataverse/dvAlias\" title=\"DV Name\">DV Name</a>")));
-        assertEquals("Your institutional log in for TestShib Test IdP matches an email address already being used for a Edmond "
+        assertEquals("Your institutional log in for TestShib Test IdP matches an email address already being used for an Edmond "
                 + "account. By entering your current Edmond password below, your existing Edmond account can be "
                 + "converted to use your institutional log in. After converting, you will only need to use your institutional log in.",
                 BundleUtil.getStringFromBundle("shib.welcomeExistingUserMessage",
                         Arrays.asList("TestShib Test IdP")));
-        assertEquals("Your institutional log in for your institution matches an email address already being used for a Edmond "
+        assertEquals("Your institutional log in for your institution matches an email address already being used for an Edmond "
                 + "account. By entering your current Edmond password below, your existing Edmond account can be "
                 + "converted to use your institutional log in. After converting, you will only need to use your institutional log in.",
                 BundleUtil.getStringFromBundle("shib.welcomeExistingUserMessage",
