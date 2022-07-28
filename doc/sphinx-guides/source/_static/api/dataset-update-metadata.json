@@ -20,6 +20,12 @@
                 "multiple": false,
                 "typeClass": "primitive",
                 "value": "Spruce, Sabrina"
+              },
+              "authorAffiliation": {
+                "typeName": "authorAffiliation",
+                "multiple": false,
+                "typeClass": "primitive",
+                "value": "Max Planck Digital Library"
               }
             }
           ]
@@ -65,7 +71,7 @@
           "multiple": true,
           "typeClass": "controlledVocabulary",
           "value": [
-            "Other"
+            "Humanities"
           ]
         },
         {
