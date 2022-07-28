@@ -1119,10 +1119,12 @@ public class DatasetsIT {
         assertEquals(FORBIDDEN.getStatusCode(), tryToCreatePrivateUrlToPublishedVersion.getStatusCode());
 
         String newTitle = "I am changing the title";
-        Response updatedMetadataResponse = UtilIT.updateDatasetTitleViaSword(dataset1PersistentId, newTitle, apiToken);
-        updatedMetadataResponse.prettyPrint();
         //SWORD API does not work properly for Edmond (see SwordIT.java for details)
-        //assertEquals(OK.getStatusCode(), updatedMetadataResponse.getStatusCode());
+        //Response updatedMetadataResponse = UtilIT.updateDatasetTitleViaSword(dataset1PersistentId, newTitle, apiToken);
+        String jsonWithNewTitle = "{\"typeName\": \"title\", \"value\": \"" + newTitle + "\"}";
+        Response updatedMetadataResponse = UtilIT.updateFieldLevelDatasetMetadataViaNativeJsonString(dataset1PersistentId, jsonWithNewTitle, apiToken);
+        updatedMetadataResponse.prettyPrint();
+        assertEquals(OK.getStatusCode(), updatedMetadataResponse.getStatusCode());
 
         Response createPrivateUrlForPostVersionOneDraft = UtilIT.privateUrlCreate(datasetId, apiToken);
         createPrivateUrlForPostVersionOneDraft.prettyPrint();
@@ -1140,7 +1142,10 @@ public class DatasetsIT {
         assertEquals(false, privateUrlRoleAssignmentShouldBeGoneAfterDraftDeleted.body().asString().contains(privateUrlUser.getIdentifier()));
 
         String newTitleAgain = "I am changing the title again";
-        Response draftCreatedAgainPostPub = UtilIT.updateDatasetTitleViaSword(dataset1PersistentId, newTitleAgain, apiToken);
+        //SWORD API does not work properly for Edmond (see SwordIT.java for details)
+        //Response draftCreatedAgainPostPub = UtilIT.updateDatasetTitleViaSword(dataset1PersistentId, newTitleAgain, apiToken);
+        String jsonWithNewTitleAgain = "{\"typeName\": \"title\", \"value\": \"" + newTitleAgain + "\"}";
+        Response draftCreatedAgainPostPub = UtilIT.updateFieldLevelDatasetMetadataViaNativeJsonString(dataset1PersistentId, jsonWithNewTitleAgain, apiToken);
         draftCreatedAgainPostPub.prettyPrint();
         assertEquals(OK.getStatusCode(), draftCreatedAgainPostPub.getStatusCode());
 

@@ -541,6 +541,15 @@ public class UtilIT {
                 .put("/api/datasets/:persistentId/editMetadata/?persistentId=" + persistentId + "&replace=true");
         return response;
     }
+
+    static Response updateFieldLevelDatasetMetadataViaNativeJsonString(String persistentId, String jsonIn, String apiToken) {
+        Response response = given()
+                .header(API_TOKEN_HTTP_HEADER, apiToken)
+                .body(jsonIn)
+                .contentType("application/json")
+                .put("/api/datasets/:persistentId/editMetadata/?persistentId=" + persistentId + "&replace=true");
+        return response;
+    }
     
     static Response updateDatasetPIDMetadata(String persistentId,  String apiToken) {
         Response response = given()
