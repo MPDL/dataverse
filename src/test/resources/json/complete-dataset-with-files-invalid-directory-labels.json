@@ -38,7 +38,7 @@
                   "typeName": "authorIdentifier",
                   "multiple": false,
                   "typeClass": "primitive",
-                  "value": "0000-0002-6522-0835"
+                  "value": "https://orcid.org/0000-0002-6522-0835"
                 }
               }
             ]
@@ -90,8 +90,8 @@
             "multiple": true,
             "typeClass": "controlledVocabulary",
             "value": [
-              "Medicine, Health and Life Sciences",
-              "Other"
+              "Medicine",
+              "Physics"
             ]
           },
           {

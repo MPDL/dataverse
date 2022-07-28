@@ -28,17 +28,11 @@
                     "typeClass": "primitive",
                     "value": "Harvard Medical School"
                   },
-                  "authorIdentifierScheme": {
-                    "typeName": "authorIdentifierScheme",
-                    "multiple": false,
-                    "typeClass": "controlledVocabulary",
-                    "value": "ORCID"
-                  },
                   "authorIdentifier": {
                     "typeName": "authorIdentifier",
                     "multiple": false,
                     "typeClass": "primitive",
-                    "value": "0000-0002-6522-0835"
+                    "value": "https://orcid.org/0000-0002-6522-0835"
                   }
                 }
               ]
@@ -49,18 +43,6 @@
               "typeClass": "compound",
               "value": [
                 {
-                  "datasetContactName": {
-                    "typeName": "datasetContactName",
-                    "multiple": false,
-                    "typeClass": "primitive",
-                    "value": "Admin, Dataverse"
-                  },
-                  "datasetContactAffiliation": {
-                    "typeName": "datasetContactAffiliation",
-                    "multiple": false,
-                    "typeClass": "primitive",
-                    "value": "sbgrid.org / SBDG"
-                  },
                   "datasetContactEmail": {
                     "typeName": "datasetContactEmail",
                     "multiple": false,
@@ -90,8 +72,8 @@
               "multiple": true,
               "typeClass": "controlledVocabulary",
               "value": [
-                "Medicine, Health and Life Sciences",
-                "Other"
+                "Medicine",
+                "Physics"
               ]
             },
             {
@@ -100,19 +82,7 @@
               "typeClass": "compound",
               "value": [
                 {
-                  "publicationIDType": {
-                    "typeName": "publicationIDType",
-                    "multiple": false,
-                    "typeClass": "controlledVocabulary",
-                    "value": "doi"
-                  },
-                  "publicationIDNumber": {
-                    "typeName": "publicationIDNumber",
-                    "multiple": false,
-                    "typeClass": "primitive",
-                    "value": "10.1016/ j.cell.2011.10.020"
-                  },
-                  "publicationURL": {
+                 "publicationURL": {
                     "typeName": "publicationURL",
                     "multiple": false,
                     "typeClass": "primitive",
