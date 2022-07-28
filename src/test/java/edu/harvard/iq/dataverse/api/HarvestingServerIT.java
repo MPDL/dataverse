@@ -207,7 +207,7 @@ public class HarvestingServerIT {
         assertEquals(OK.getStatusCode(), publishDataverse.getStatusCode());
 
         // create dataset: 
-        Response createDatasetResponse = UtilIT.createRandomDatasetViaNativeApi(dataverseAlias, adminUserAPIKey);
+        Response createDatasetResponse = UtilIT.createRandomDatasetWithFileViaNativeApi(dataverseAlias, adminUserAPIKey);
         createDatasetResponse.prettyPrint();
         Integer datasetId = UtilIT.getDatasetIdFromResponse(createDatasetResponse);
 

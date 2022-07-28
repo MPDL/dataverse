@@ -63,7 +63,7 @@ public class SearchIT {
         assertEquals(201, createDataverse1Response.getStatusCode());
         String dataverseAlias = UtilIT.getAliasFromResponse(createDataverse1Response);
 
-        Response createDataset1Response = UtilIT.createRandomDatasetViaNativeApi(dataverseAlias, apiToken1);
+        Response createDataset1Response = UtilIT.createRandomDatasetWithFileViaNativeApi(dataverseAlias, apiToken1);
         createDataset1Response.prettyPrint();
         createDataset1Response.then().assertThat()
                 .statusCode(CREATED.getStatusCode());
@@ -214,7 +214,7 @@ public class SearchIT {
         createDataverseResponse.prettyPrint();
         String dataverseAlias = UtilIT.getAliasFromResponse(createDataverseResponse);
 
-        Response createDatasetResponse = UtilIT.createRandomDatasetViaNativeApi(dataverseAlias, apiToken);
+        Response createDatasetResponse = UtilIT.createRandomDatasetWithFileViaNativeApi(dataverseAlias, apiToken);
         createDatasetResponse.prettyPrint();
         Integer datasetId = UtilIT.getDatasetIdFromResponse(createDatasetResponse);
 
@@ -239,7 +239,7 @@ public class SearchIT {
         Response searchResponse = UtilIT.search("id:dataset_" + datasetId + "_draft", apiToken);
         searchResponse.prettyPrint();
         /*["Astronomy and Astrophysics"]*/
-        assertTrue(searchResponse.body().jsonPath().getString("data.items[0].subjects").contains("Astronomy and Astrophysics"));
+        assertTrue(searchResponse.body().jsonPath().getString("data.items[0].subjects").contains("Physics"));
         assertTrue(searchResponse.body().jsonPath().getString("data.items[0].versionState").equals("DRAFT"));
         /*                "versionState": "DRAFT",*/
 
@@ -257,7 +257,7 @@ public class SearchIT {
         searchResponse = UtilIT.search("id:dataset_" + datasetId, apiToken);
         searchResponse.prettyPrint();
         /*["Astronomy and Astrophysics"]*/
-        assertTrue(searchResponse.body().jsonPath().getString("data.items[0].subjects").contains("Astronomy and Astrophysics"));
+        assertTrue(searchResponse.body().jsonPath().getString("data.items[0].subjects").contains("Physics"));
         assertTrue(searchResponse.body().jsonPath().getString("data.items[0].versionState").equals("RELEASED"));
 
         assertTrue(searchResponse.body().jsonPath().getString("data.items[0].majorVersion").equals("1"));
@@ -265,7 +265,7 @@ public class SearchIT {
 
         assertTrue(searchResponse.body().jsonPath().getString("data.items[0].authors").contains("Spruce, Sabrina"));
 
-        assertTrue(searchResponse.body().jsonPath().getString("data.items[0].contacts[0].name").contains("Finch, Fiona"));
+        //assertTrue(searchResponse.body().jsonPath().getString("data.items[0].contacts[0].name").contains("Finch, Fiona"));
         assertTrue(searchResponse.body().jsonPath().getString("data.items[0].storageIdentifier").contains(identifier));
 
     }
@@ -730,7 +730,7 @@ public class SearchIT {
         createDataverseResponse.prettyPrint();
         String dataverseAlias = UtilIT.getAliasFromResponse(createDataverseResponse);
 
-        Response createDatasetResponse = UtilIT.createRandomDatasetViaNativeApi(dataverseAlias, apiToken);
+        Response createDatasetResponse = UtilIT.createRandomDatasetWithFileViaNativeApi(dataverseAlias, apiToken);
         createDatasetResponse.prettyPrint();
         Integer datasetId = UtilIT.getDatasetIdFromResponse(createDatasetResponse);
         System.out.println("id: " + datasetId);
@@ -848,7 +848,7 @@ public class SearchIT {
                 // TODO: investigate if this is a bug that nothing was found.
                 .body("data.total_count", CoreMatchers.equalTo(0));
         
-        Response createDatasetResponse = UtilIT.createRandomDatasetViaNativeApi(dataverseAlias2, apiToken);
+        Response createDatasetResponse = UtilIT.createRandomDatasetWithFileViaNativeApi(dataverseAlias2, apiToken);
         createDatasetResponse.prettyPrint();
         Integer datasetId = UtilIT.getDatasetIdFromResponse(createDatasetResponse);
         System.out.println("id: " + datasetId);
@@ -863,13 +863,13 @@ public class SearchIT {
         searchPublishedSubtreeWDS.prettyPrint();
         searchPublishedSubtreeWDS.then().assertThat()
                 .statusCode(OK.getStatusCode())
-                .body("data.total_count", CoreMatchers.equalTo(2));
+                .body("data.total_count", CoreMatchers.equalTo(3));
         
         Response searchPublishedSubtreeWDS2 = UtilIT.search(searchPart, apiToken, "&subtree="+dataverseAlias2);
         searchPublishedSubtreeWDS2.prettyPrint();
         searchPublishedSubtreeWDS2.then().assertThat()
                 .statusCode(OK.getStatusCode())
-                .body("data.total_count", CoreMatchers.equalTo(1));
+                .body("data.total_count", CoreMatchers.equalTo(2));
                 
     }
     
@@ -937,7 +937,7 @@ public class SearchIT {
         createDataverseResponse.prettyPrint();
         String dataverseAlias = UtilIT.getAliasFromResponse(createDataverseResponse);
 
-        Response createDatasetResponse = UtilIT.createRandomDatasetViaNativeApi(dataverseAlias, apiToken);
+        Response createDatasetResponse = UtilIT.createRandomDatasetWithFileViaNativeApi(dataverseAlias, apiToken);
         createDatasetResponse.prettyPrint();
         Integer datasetId = UtilIT.getDatasetIdFromResponse(createDatasetResponse);
         System.out.println("id: " + datasetId);
@@ -948,7 +948,7 @@ public class SearchIT {
         createDataverseResponse2.prettyPrint();
         String dataverseAlias2 = UtilIT.getAliasFromResponse(createDataverseResponse2);
 
-        Response createDatasetResponse2 = UtilIT.createRandomDatasetViaNativeApi(dataverseAlias2, apiToken);
+        Response createDatasetResponse2 = UtilIT.createRandomDatasetWithFileViaNativeApi(dataverseAlias2, apiToken);
         createDatasetResponse2.prettyPrint();
         Integer datasetId2 = UtilIT.getDatasetIdFromResponse(createDatasetResponse2);
         System.out.println("id: " + datasetId2);
@@ -982,7 +982,7 @@ public class SearchIT {
         searchUnpublishedSubtree.prettyPrint();
         searchUnpublishedSubtree.then().assertThat()
                 .statusCode(OK.getStatusCode())
-                .body("data.total_count", CoreMatchers.equalTo(1));
+                .body("data.total_count", CoreMatchers.equalTo(2));
         
         Response searchUnpublishedSubtreeNoAPI = UtilIT.search(searchPart, null, "&subtree="+dataverseAlias);
         searchUnpublishedSubtreeNoAPI.prettyPrint();
@@ -995,7 +995,7 @@ public class SearchIT {
         searchUnpublishedSubtrees.prettyPrint();
         searchUnpublishedSubtrees.then().assertThat()
                 .statusCode(OK.getStatusCode())
-                .body("data.total_count", CoreMatchers.equalTo(2));
+                .body("data.total_count", CoreMatchers.equalTo(4));
         
         Response searchUnpublishedSubtreesNoAPI = UtilIT.search(searchPart, null, "&subtree="+dataverseAlias +"&subtree="+dataverseAlias2);
         searchUnpublishedSubtreesNoAPI.prettyPrint();
@@ -1052,25 +1052,25 @@ public class SearchIT {
         searchPublishedSubtree.prettyPrint();
         searchPublishedSubtree.then().assertThat()
                 .statusCode(OK.getStatusCode())
-                .body("data.total_count", CoreMatchers.equalTo(1));
+                .body("data.total_count", CoreMatchers.equalTo(2));
         
         Response searchPublishedSubtreeNoAPI = UtilIT.search(searchPart, null, "&subtree="+dataverseAlias);
         searchPublishedSubtreeNoAPI.prettyPrint();
         searchPublishedSubtreeNoAPI.then().assertThat()
                 .statusCode(OK.getStatusCode())
-                .body("data.total_count", CoreMatchers.equalTo(1));
+                .body("data.total_count", CoreMatchers.equalTo(2));
         
         Response searchPublishedSubtrees = UtilIT.search(searchPart, apiToken, "&subtree="+dataverseAlias+"&subtree="+dataverseAlias2);
         searchPublishedSubtrees.prettyPrint();
         searchPublishedSubtrees.then().assertThat()
                 .statusCode(OK.getStatusCode())
-                .body("data.total_count", CoreMatchers.equalTo(2));
+                .body("data.total_count", CoreMatchers.equalTo(4));
         
         Response searchPublishedSubtreesNoAPI = UtilIT.search(searchPart, null, "&subtree="+dataverseAlias+"&subtree="+dataverseAlias2);
         searchPublishedSubtreesNoAPI.prettyPrint();
         searchPublishedSubtreesNoAPI.then().assertThat()
                 .statusCode(OK.getStatusCode())
-                .body("data.total_count", CoreMatchers.equalTo(2));
+                .body("data.total_count", CoreMatchers.equalTo(4));
         
         Response searchPublishedRootSubtreeForDataset = UtilIT.search(identifier.replace("FK2/", ""), apiToken, "&subtree=root");
         searchPublishedRootSubtreeForDataset.prettyPrint();

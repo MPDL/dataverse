@@ -48,7 +48,7 @@ public class LinkIT {
                 .statusCode(CREATED.getStatusCode());
         String dataverse1Alias = UtilIT.getAliasFromResponse(createDataverse1);
 
-        Response createDataset = UtilIT.createRandomDatasetViaNativeApi(dataverse1Alias, apiToken);
+        Response createDataset = UtilIT.createRandomDatasetWithFileViaNativeApi(dataverse1Alias, apiToken);
         createDataset.prettyPrint();
         createDataset.then().assertThat()
                 .statusCode(CREATED.getStatusCode());

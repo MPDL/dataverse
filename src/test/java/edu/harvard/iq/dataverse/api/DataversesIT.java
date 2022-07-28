@@ -511,14 +511,8 @@ public class DataversesIT {
         logger.info(importDDIPid.prettyPrint());
         assertEquals(201, importDDIPid.getStatusCode());
 
-        Response importDDIPidRel = UtilIT.importDatasetDDIViaNativeApi(apiToken, dataverseAlias, xml,  "doi:10.5072/FK2/ABCD22", "yes");
-        logger.info(importDDIPidRel.prettyPrint());
-        assertEquals(201, importDDIPidRel.getStatusCode());
-
-
-        Response importDDIRelease = UtilIT.importDatasetDDIViaNativeApi(apiToken, dataverseAlias, xml, null, "yes");
-        logger.info( importDDIRelease.prettyPrint());
-        assertEquals(201, importDDIRelease.getStatusCode());
+        //In Edmond a dataset must have at least on file to be published, but the DDI-API does not handle files related to the DDI file.
+        // => No Testcases for importDatasetDDIViaNativeApi with release=true
 
         //cleanup
 
@@ -529,14 +523,6 @@ public class DataversesIT {
         Integer datasetIdIntPid = JsonPath.from(importDDIPid.body().asString()).getInt("data.id");
         Response destroyDatasetResponsePid = UtilIT.destroyDataset(datasetIdIntPid, apiToken);
         assertEquals(200, destroyDatasetResponsePid.getStatusCode());
-
-        Integer datasetIdIntPidRel = JsonPath.from(importDDIPidRel.body().asString()).getInt("data.id");
-        Response destroyDatasetResponsePidRel = UtilIT.destroyDataset(datasetIdIntPidRel, apiToken);
-        assertEquals(200, destroyDatasetResponsePidRel.getStatusCode());
-
-        Integer datasetIdIntRelease = JsonPath.from(importDDIRelease.body().asString()).getInt("data.id");
-        Response destroyDatasetResponseRelease = UtilIT.destroyDataset(datasetIdIntRelease, apiToken);
-        assertEquals(200, destroyDatasetResponseRelease.getStatusCode());
 
         Response deleteDataverseResponse = UtilIT.deleteDataverse(dataverseAlias, apiToken);
         assertEquals(200, deleteDataverseResponse.getStatusCode());

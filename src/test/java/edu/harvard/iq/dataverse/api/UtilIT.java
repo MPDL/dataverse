@@ -385,6 +385,13 @@ public class UtilIT {
         return createDatasetResponse;
     }
 
+    static Response createRandomDatasetWithFileViaNativeApi(String dataverseAlias, String apiToken) {
+        Response createDatasetResponse = UtilIT.createRandomDatasetViaNativeApi(dataverseAlias, apiToken);
+        String datasetPersistentId = UtilIT.getDatasetPersistentIdFromResponse(createDatasetResponse);
+        UtilIT.uploadRandomFile(datasetPersistentId, apiToken);
+        return createDatasetResponse;
+    }
+
     private static String getDatasetJson() {
         File datasetVersionJson = new File("scripts/search/tests/data/dataset-finch1.json");
         try {
@@ -404,6 +411,13 @@ public class UtilIT {
                 .body(jsonIn)
                 .contentType("application/json")
                 .post("/api/dataverses/" + dataverseAlias + "/datasets");
+        return createDatasetResponse;
+    }
+
+    static Response createDatasetWithFileViaNativeApi(String dataverseAlias, String pathToJsonFile , String apiToken) {
+        Response createDatasetResponse = UtilIT.createDatasetViaNativeApi(dataverseAlias, pathToJsonFile, apiToken);
+        String datasetPersistentId = UtilIT.getDatasetPersistentIdFromResponse(createDatasetResponse);
+        UtilIT.uploadRandomFile(datasetPersistentId, apiToken);
         return createDatasetResponse;
     }
 

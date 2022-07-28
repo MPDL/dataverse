@@ -33,6 +33,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -45,6 +46,8 @@ import org.junit.Test;
  * is real. "grantRoleOnDataset" in UtilIT.java is not used despite being in
  * https://github.com/IQSS/dataverse/pull/3111
  */
+@Ignore
+// Edmond requires authorAffiliation to create a Dataset, which is not supported by the Dataverse-SWORD-Implementation
 public class SwordIT {
 
     private static final Logger logger = Logger.getLogger(SwordIT.class.getCanonicalName());
@@ -160,6 +163,7 @@ public class SwordIT {
                 .statusCode(FORBIDDEN.getStatusCode());
     }
 
+    @Ignore
     @Test
     public void testCreateDataverseCreateDatasetUploadFileDownloadFileEditTitle() {
 
@@ -375,6 +379,7 @@ public class SwordIT {
      * permitting both dataverse and datasets to be created in the root
      * dataverse (:authenticated-users gets fullContributor at root).
      */
+    @Ignore
     @Test
     public void testCreateAndDeleteDatasetInRoot() {
         Response createUser = UtilIT.createRandomUser();
@@ -518,6 +523,7 @@ public class SwordIT {
     /**
      * This test requires the root dataverse to have been published already.
      */
+    @Ignore
     @Test
     public void testCreateDatasetPublishDestroy() {
         Response createUser = UtilIT.createRandomUser();
@@ -649,7 +655,7 @@ public class SwordIT {
 
     }
 
-
+    @Ignore
     @Test
     public void testLicenses() {
 
@@ -696,6 +702,7 @@ public class SwordIT {
                 .body("data.latestVersion.termsOfUse", equalTo(null));
     }
 
+    @Ignore
     @Test
     public void testCustomTerms() {
 
@@ -741,6 +748,7 @@ public class SwordIT {
 
     }
 
+    @Ignore
     @Test
     public void testXmlExampleInGuides() throws IOException {
 
@@ -774,6 +782,7 @@ public class SwordIT {
      *
      * - https://github.com/IQSS/dataverse/issues/2464
      */
+    @Ignore
     @Test
     public void testDeleteFiles() {
         Response createUser = UtilIT.createRandomUser();
