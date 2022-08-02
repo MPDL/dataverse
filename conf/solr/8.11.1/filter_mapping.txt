@@ -1,0 +1,5 @@
+"Max Planck Institut f\u00fcr Chemie" => "Max Planck Institute for Chemistry"
+"Max-Planck-Institut f\u00fcr Chemie" => "Max Planck Institute for Chemistry"
+"Max-Planck-Institut f\u00fcr Kolloid- und Grenzfl\u00e4chenforschung" => "Max Planck Institute of Colloids and Interfaces"
+"MPI for" => "Max Planck Institute for"
+"MPI of" => "Max Planck Institute of"
