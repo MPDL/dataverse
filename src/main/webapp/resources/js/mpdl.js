@@ -119,32 +119,36 @@ function bindTaggleKeywordInput() {
 
 
     $("div[data-fieldtype-name='keyword']").each(function () {
-        console.log("Found keyword div" + this);
-        //let select = $(this).next("select");
-        //console.log("Found  select" + select);
-        //let divElement = this.get();
-        let hiddenInput = $(this).next("input");
-        let taggle = new Taggle(this, {
-            placeholder: $(hiddenInput).attr('placeholder'),
-            saveOnBlur: true,
-            preserveCase: true,
-            onTagAdd : function (event, tagText) {
-                console.log("Tag Added");
-                setTagValuesInInput(hiddenInput,taggle.getTagValues());
-                /*
-                select.attr("size", taggle.getTagValues().length);
-                select.append("<option selected='selected' value='" + tagText + "'>" + tagText + "</option>")
-                */
+        //console.log("Found keyword div" + this);
 
-            },
-            onTagRemove : function (event, tagText) {
-                setTagValuesInInput(hiddenInput,taggle.getTagValues());
-            }
+        //if taggle is not activated yet
+        if($(this).has('ul.taggle_list').length == 0)
+        {
+            let hiddenInput = $(this).next("input");
+
+            let taggle = new Taggle(this, {
+                placeholder: $(hiddenInput).attr('placeholder'),
+                saveOnBlur: true,
+                preserveCase: true,
+                onTagAdd : function (event, tagText) {
+                    //console.log("Tag Added");
+                    setTagValuesInInput(hiddenInput,taggle.getTagValues());
+                    /*
+                    select.attr("size", taggle.getTagValues().length);
+                    select.append("<option selected='selected' value='" + tagText + "'>" + tagText + "</option>")
+                    */
+
+                },
+                onTagRemove : function (event, tagText) {
+                    setTagValuesInInput(hiddenInput,taggle.getTagValues());
+                }
 
 
-        });
-        var currentValues = $(hiddenInput).val().split('||');
-        taggle.add(currentValues);
+            });
+            const currentValues = $(hiddenInput).val().split('||');
+            taggle.add(currentValues);
+        }
+
     });
 
     function setTagValuesInInput(textAreaElement, tagArray)
