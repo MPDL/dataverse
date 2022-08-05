@@ -6,6 +6,7 @@
 mkdir -p testdata/doc/sphinx-guides/source/_static/util/
 cp ../solr/8.11.1/schema*.xml testdata/
 cp ../solr/8.11.1/solrconfig.xml testdata/
+cp ../solr/8.11.1/filter_mapping.txt testdata/
 cp ../jhove/jhove.conf testdata/
 cp ../jhove/jhoveConfig.xsd testdata/
 cd ../../

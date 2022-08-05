@@ -15,6 +15,7 @@ RUN ln -s /usr/bin/python2 /usr/bin/python
 COPY dv /tmp/dv
 COPY testdata/schema*.xml /tmp/dv/
 COPY testdata/solrconfig.xml /tmp/dv
+COPY testdata/filter_mapping.txt /tmp/dv/
 
 # ITs need files
 COPY testdata/sushi_sample_logs.json /tmp/
@@ -37,6 +38,7 @@ RUN cp /tmp/dv/pg_hba.conf /var/lib/pgsql/13/data/
 RUN cp -r /opt/solr-8.11.1/server/solr/configsets/_default /opt/solr-8.11.1/server/solr/collection1
 RUN cp /tmp/dv/schema*.xml /opt/solr-8.11.1/server/solr/collection1/conf/
 RUN cp /tmp/dv/solrconfig.xml /opt/solr-8.11.1/server/solr/collection1/conf/solrconfig.xml
+RUN cp /tmp/dv/filter_mapping.txt /opt/solr-8.11.1/server/solr/collection1/conf/
 
 # skipping payara user and solr user (run both as root)
 
