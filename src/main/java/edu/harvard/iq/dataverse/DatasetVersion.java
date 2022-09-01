@@ -892,6 +892,21 @@ public class DatasetVersion implements Serializable {
                         if (subField.getDatasetFieldType().getName().equals(DatasetFieldConstant.authorAffiliation)) {
                             datasetAuthor.setAffiliation(subField);
                         }
+                        if (subField.getDatasetFieldType().getName().equals(DatasetFieldConstant.authorAffiliation2)) {
+                            datasetAuthor.setAffiliation2(subField);
+                        }
+                        if (subField.getDatasetFieldType().getName().equals(DatasetFieldConstant.authorAffiliation3)) {
+                            datasetAuthor.setAffiliation3(subField);
+                        }
+                        if (subField.getDatasetFieldType().getName().equals(DatasetFieldConstant.authorAffiliationId)) {
+                            datasetAuthor.setAffiliationId(subField);
+                        }
+                        if (subField.getDatasetFieldType().getName().equals(DatasetFieldConstant.authorAffiliation2Id)) {
+                            datasetAuthor.setAffiliation2Id(subField);
+                        }
+                        if (subField.getDatasetFieldType().getName().equals(DatasetFieldConstant.authorAffiliation3Id)) {
+                            datasetAuthor.setAffiliation3Id(subField);
+                        }
                         if (subField.getDatasetFieldType().getName().equals(DatasetFieldConstant.authorIdType)){
                              datasetAuthor.setIdType(subField.getRawValue());
                         }

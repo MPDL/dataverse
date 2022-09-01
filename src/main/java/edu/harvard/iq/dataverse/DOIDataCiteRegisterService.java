@@ -495,7 +495,28 @@ class DataCiteMetadataTemplate {
                     }
                 }
                 if (author.getAffiliation() != null && !author.getAffiliation().getDisplayValue().isEmpty()) {
-                    creatorsElement.append("<affiliation>" + author.getAffiliation().getDisplayValue() + "</affiliation>");
+                    creatorsElement.append("<affiliation");
+                    if(author.getAffiliationId() != null && !author.getAffiliationId().getDisplayValue().isEmpty()) {
+                        creatorsElement.append(" schemeURI=\"https://ror.org/\" affiliationIdentifierScheme=\"ROR\" affiliationIdentifier=\""+ author.getAffiliationId().getValue() +"\"");
+                    }
+                    creatorsElement.append(">" + author.getAffiliation().getDisplayValue() + "</affiliation>");
+
+                }
+                if (author.getAffiliation2() != null && !author.getAffiliation2().getDisplayValue().isEmpty()) {
+                    creatorsElement.append("<affiliation");
+                    if(author.getAffiliation2Id() != null && !author.getAffiliation2Id().getDisplayValue().isEmpty()) {
+                        creatorsElement.append(" schemeURI=\"https://ror.org/\" affiliationIdentifierScheme=\"ROR\" affiliationIdentifier=\""+ author.getAffiliation2Id().getValue() +"\"");
+                    }
+                    creatorsElement.append(">" + author.getAffiliation2().getDisplayValue() + "</affiliation>");
+
+                }
+                if (author.getAffiliation3() != null && !author.getAffiliation3().getDisplayValue().isEmpty()) {
+                    creatorsElement.append("<affiliation");
+                    if(author.getAffiliation3Id() != null && !author.getAffiliation3Id().getDisplayValue().isEmpty()) {
+                        creatorsElement.append(" schemeURI=\"https://ror.org/\" affiliationIdentifierScheme=\"ROR\" affiliationIdentifier=\""+ author.getAffiliation3Id().getValue() +"\"");
+                    }
+                    creatorsElement.append(">" + author.getAffiliation3().getDisplayValue() + "</affiliation>");
+
                 }
                 creatorsElement.append("</creator>");
             }
