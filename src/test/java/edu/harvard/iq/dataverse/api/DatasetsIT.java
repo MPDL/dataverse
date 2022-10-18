@@ -551,7 +551,7 @@ public class DatasetsIT {
         String dataverseAlias = UtilIT.getAliasFromResponse(createDataverseResponse);
 
         String pathToJsonFile = "scripts/api/data/dataset-create-new.json";
-        Response createDatasetResponse = UtilIT.createDatasetViaNativeApi(dataverseAlias, pathToJsonFile, apiToken);
+        Response createDatasetResponse = UtilIT.createDatasetWithFileViaNativeApi(dataverseAlias, pathToJsonFile, apiToken);
         createDatasetResponse.prettyPrint();
         Integer datasetId = JsonPath.from(createDatasetResponse.body().asString()).getInt("data.id");
 
@@ -2985,7 +2985,7 @@ createDataset = UtilIT.createRandomDatasetViaNativeApi(dataverse1Alias, apiToken
         createDataverseResponse.prettyPrint();
         String dataverseAlias = UtilIT.getAliasFromResponse(createDataverseResponse);
 
-        Response createDatasetResponse = UtilIT.createRandomDatasetViaNativeApi(dataverseAlias, apiToken);
+        Response createDatasetResponse = UtilIT.createRandomDatasetWithFileViaNativeApi(dataverseAlias, apiToken);
         createDatasetResponse.prettyPrint();
         Integer datasetId = JsonPath.from(createDatasetResponse.body().asString()).getInt("data.id");
 
@@ -3034,7 +3034,7 @@ createDataset = UtilIT.createRandomDatasetViaNativeApi(dataverse1Alias, apiToken
         }
         assertEquals(OK.getStatusCode(), status);
 
-        if (!UtilIT.sleepForReindex(datasetPersistentId, apiToken, 3000)) {
+        if (!UtilIT.sleepForReindex(datasetPersistentId, apiToken, 15)) {
             logger.info("Still indexing after 3 seconds");
         }
 

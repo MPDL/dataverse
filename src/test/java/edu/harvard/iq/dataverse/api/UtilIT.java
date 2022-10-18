@@ -2451,7 +2451,8 @@ public class UtilIT {
         return i <= duration;
 
     }
-    
+
+    //FIXME Rework this method (the duration parameter is NOT in milliseconds)
     static boolean sleepForReindex(String idOrPersistentId, String apiToken, int duration) {
         int i = 0;
         Response timestampResponse;

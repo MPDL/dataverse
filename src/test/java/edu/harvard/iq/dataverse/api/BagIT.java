@@ -47,7 +47,7 @@ public class BagIT {
         String dataverseAlias = UtilIT.getAliasFromResponse(createDataverse);
         Integer dataverseId = UtilIT.getDataverseIdFromResponse(createDataverse);
 
-        Response createDataset = UtilIT.createRandomDatasetViaNativeApi(dataverseAlias, apiToken);
+        Response createDataset = UtilIT.createRandomDatasetWithFileViaNativeApi(dataverseAlias, apiToken);
         createDataset.prettyPrint();
         createDataset.then().assertThat()
                 .statusCode(CREATED.getStatusCode());
