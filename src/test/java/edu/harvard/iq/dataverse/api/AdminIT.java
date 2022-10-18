@@ -761,7 +761,8 @@ public class AdminIT {
         Map<String, List<Map<String, String>>> data = JsonPath.from(body).getMap("data");
         assertEquals(1, data.size());
         List<Map<String, String>> addedElements = data.get("added");
-        assertEquals(309, addedElements.size());
+        //Note -test depends on the number of elements in the production citation block, so any changes to the # of elements there can break this test
+        assertEquals(310, addedElements.size());
 
         Map<String, Integer> statistics = new HashMap<>();
         for (Map<String, String> unit : addedElements) {
@@ -777,7 +778,7 @@ public class AdminIT {
         assertEquals(3, statistics.size());
         assertEquals(1, (int) statistics.get("MetadataBlock"));
         assertEquals(85, (int) statistics.get("DatasetField"));
-        assertEquals(223, (int) statistics.get("Controlled Vocabulary"));
+        assertEquals(224, (int) statistics.get("Controlled Vocabulary"));
     }
 
     @Test

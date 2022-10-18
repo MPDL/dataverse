@@ -16,9 +16,10 @@ sudo -u $SOLR_USER $SOLR_PATH/bin/solr create -c rordata
 echo "Copy ROR managed-schema to solr"
 cp conf/solr/8.8.1-rorData/managed-schema $SOLR_PATH/server/solr/rordata/conf
 
-echo "Copying schema.xml and solrconfig.xml to collection1 index core"
+echo "Copying schema.xml, solrconfig.xml and filter_mapping.txt to collection1 index core"
 cp ../solr/8.11.1/schema.xml $SOLR_PATH/server/solr/collection1/conf
 cp ../solr/8.11.1/solrconfig.xml $SOLR_PATH/server/solr/collection1/conf
+cp ../solr/8.11.1/filter_mapping.txt $SOLR_PATH/server/solr/collection1/conf
 
 echo "Reload dataverse collection1 core"
 curl "http://localhost:8983/solr/admin/cores?action=RELOAD&core=collection1"

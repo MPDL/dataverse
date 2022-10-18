@@ -53,6 +53,12 @@ public class DatasetFieldConstant implements java.io.Serializable  {
     public final static String datasetId = "datasetId";
     public final static String authorName ="authorName";
     public final static String authorAffiliation = "authorAffiliation";
+    public final static String authorAffiliationId = "authorAffiliationId";
+    public final static String authorAffiliation2 = "authorAffiliation2";
+    public final static String authorAffiliation2Id = "authorAffiliation2Id";
+    public final static String authorAffiliation3 = "authorAffiliation3";
+    public final static String authorAffiliation3Id = "authorAffiliation3Id";
+
     public final static String authorIdType = "authorIdentifierScheme";
     public final static String authorIdValue = "authorIdentifier";
     public final static String otherIdValue="otherIdValue";
