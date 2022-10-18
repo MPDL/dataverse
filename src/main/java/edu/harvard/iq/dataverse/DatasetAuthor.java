@@ -54,7 +54,45 @@ public class DatasetAuthor {
     public void setAffiliation(DatasetField affiliation) {
         this.affiliation = affiliation;
     }
-    
+
+    private DatasetField affiliationId;
+    public DatasetField getAffiliationId() {
+        return this.affiliationId;
+    }
+    public void setAffiliationId(DatasetField affiliationId) {
+        this.affiliationId = affiliationId;
+    }
+
+    private DatasetField affiliation2;
+    public DatasetField getAffiliation2() {
+        return this.affiliation2;
+    }
+    public void setAffiliation2(DatasetField affiliation2) {
+        this.affiliation2 = affiliation2;
+    }
+    private DatasetField affiliation2Id;
+    public DatasetField getAffiliation2Id() {
+        return this.affiliation2Id;
+    }
+    public void setAffiliation2Id(DatasetField affiliation2Id) {
+        this.affiliation2Id = affiliation2Id;
+    }
+
+    private DatasetField affiliation3;
+    public DatasetField getAffiliation3() {
+        return this.affiliation3;
+    }
+    public void setAffiliation3(DatasetField affiliation3) {
+        this.affiliation3 = affiliation3;
+    }
+    private DatasetField affiliation3Id;
+    public DatasetField getAffiliation3Id() {
+        return this.affiliation3Id;
+    }
+    public void setAffiliation3Id(DatasetField affiliation3Id) {
+        this.affiliation3Id = affiliation3Id;
+    }
+
     private String idType;
 
     public String getIdType() {
