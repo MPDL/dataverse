@@ -32,6 +32,8 @@ import edu.harvard.iq.dataverse.util.FileUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 import edu.harvard.iq.dataverse.util.file.CreateDataFileResult;
 import edu.harvard.iq.dataverse.util.json.JsonPrinter;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -1630,9 +1632,9 @@ public class AddReplaceFileHelper{
             deleteFileId=fileToReplace.getId();
             }
             //Adding the file to the delete list for the command will delete this filemetadata and, if the file hasn't been released, the datafile itself. 
-            update_cmd = new UpdateDatasetVersionCommand(dataset, dvRequest, filesToDelete, clone);
+            update_cmd = new UpdateDatasetVersionCommand(dataset, dvRequest, newlyAddedFileMetadatas, filesToDelete);
         } else {
-          update_cmd = new UpdateDatasetVersionCommand(dataset, dvRequest, clone);
+          update_cmd = new UpdateDatasetVersionCommand(dataset, dvRequest, newlyAddedFileMetadatas);
         }
         ((UpdateDatasetVersionCommand) update_cmd).setValidateLenient(true);  
         
@@ -2131,7 +2133,7 @@ public class AddReplaceFileHelper{
                 }
 
                 try {
-                    Command<Dataset> cmd = new UpdateDatasetVersionCommand(dataset, dvRequest);
+                    Command<Dataset> cmd = new UpdateDatasetVersionCommand(dataset, dvRequest, newlyAddedFileMetadatas);
                     ((UpdateDatasetVersionCommand) cmd).setValidateLenient(true);
                     commandEngine.submit(cmd);
                 } catch (CommandException ex) {

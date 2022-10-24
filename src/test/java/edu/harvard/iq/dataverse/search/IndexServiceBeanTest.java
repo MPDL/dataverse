@@ -52,7 +52,7 @@ public class IndexServiceBeanTest {
     @Test
     public void TestIndexing() throws SolrServerException, IOException {
         final IndexableDataset indexableDataset = createIndexableDataset();
-        final SolrInputDocuments docs = indexService.toSolrDocs(indexableDataset, null);
+        final SolrInputDocuments docs = indexService.toSolrDocs(indexableDataset, null, null);
         Set<String> indexedFields = docs.getDocuments().stream().flatMap(x -> x.getFieldNames().stream()).collect(Collectors.toSet());
 
         logger.info(docs.getMessage());

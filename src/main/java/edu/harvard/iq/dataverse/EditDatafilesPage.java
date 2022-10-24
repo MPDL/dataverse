@@ -1153,7 +1153,7 @@ public class EditDatafilesPage implements java.io.Serializable {
 
         Command<Dataset> cmd;
         try {
-            cmd = new UpdateDatasetVersionCommand(dataset, dvRequestService.getDataverseRequest(), filesToBeDeleted, clone);
+            cmd = new UpdateDatasetVersionCommand(dataset, dvRequestService.getDataverseRequest(), fileMetadatas, filesToBeDeleted);
             ((UpdateDatasetVersionCommand) cmd).setValidateLenient(true);
             dataset = commandEngine.submit(cmd);
 

@@ -14,6 +14,7 @@ import edu.harvard.iq.dataverse.engine.command.exception.CommandExecutionExcepti
 import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException;
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 import java.util.logging.Level;
@@ -80,6 +81,11 @@ public abstract class AbstractDatasetCommand<T> extends AbstractCommand<T> {
     protected void createDatasetUser(CommandContext ctxt) {
         DatasetVersionUser datasetDataverseUser = new DatasetVersionUser();
         datasetDataverseUser.setDatasetVersion(getDataset().getLatestVersion());
+        if(getDataset().getLatestVersion().getDatasetVersionUsers()==null)
+        {
+            getDataset().getLatestVersion().setUserDatasets(new ArrayList<>());
+        }
+        getDataset().getLatestVersion().getDatasetVersionUsers().add(datasetDataverseUser);
         datasetDataverseUser.setLastUpdateDate(getTimestamp());
         datasetDataverseUser.setAuthenticatedUser((AuthenticatedUser) getUser());
         ctxt.em().persist(datasetDataverseUser);

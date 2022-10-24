@@ -147,9 +147,11 @@ public class Files extends AbstractApiBean {
 
         // update the dataset
         try {
-            engineSvc.submit(new UpdateDatasetVersionCommand(dataFile.getOwner(), dataverseRequest));
+            List<FileMetadata> filesChanged = new ArrayList<>();
+            filesChanged.add(dataFile.getLatestFileMetadata());
+            engineSvc.submit(new UpdateDatasetVersionCommand(dataFile.getOwner(), dataverseRequest, filesChanged));
         } catch (IllegalCommandException ex) {
-            //special case where terms of use are out of compliance   
+            //special case where terms of use are out of compliance
             if (!TermsOfUseAndAccessValidator.isTOUAValid(dataFile.getOwner().getLatestVersion().getTermsOfUseAndAccess(), null)) {
                 return conflict(BundleUtil.getStringFromBundle("dataset.message.toua.invalid"));
             }
@@ -428,7 +430,7 @@ public class Files extends AbstractApiBean {
 
                 optionalFileParams.addOptionalParams(upFmd);
 
-                Dataset upDS = execCommand(new UpdateDatasetVersionCommand(upFmd.getDataFile().getOwner(), req));
+                Dataset upDS = execCommand(new UpdateDatasetVersionCommand(upFmd.getDataFile().getOwner(), req, fmdList));
 
             } catch (Exception e) {
                 logger.log(Level.WARNING, "Dataset publication finalization: exception while exporting:{0}", e);

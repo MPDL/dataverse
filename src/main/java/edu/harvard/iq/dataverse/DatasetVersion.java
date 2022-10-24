@@ -2018,7 +2018,9 @@ public class DatasetVersion implements Serializable {
         if (fileMetadatasSorted != null && !fileMetadatasSorted.isEmpty()) {
             JsonArrayBuilder fileArray = Json.createArrayBuilder();
             String dataverseSiteUrl = SystemConfig.getDataverseSiteUrlStatic();
+            int maxNumberOfFilesInJsonLD = 20;
             for (FileMetadata fileMetadata : fileMetadatasSorted) {
+                maxNumberOfFilesInJsonLD--;
                 JsonObjectBuilder fileObject = NullSafeJsonBuilder.jsonObjectBuilder();
                 String filePidUrlAsString = null;
                 URL filePidUrl = fileMetadata.getDataFile().getGlobalId().toURL();
@@ -2042,6 +2044,9 @@ public class DatasetVersion implements Serializable {
                     }
                 }
                 fileArray.add(fileObject);
+                if(maxNumberOfFilesInJsonLD == 0) {
+                    break;
+                }
             }
             job.add("distribution", fileArray);
         }

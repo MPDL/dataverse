@@ -19,6 +19,7 @@ import edu.harvard.iq.dataverse.util.SystemConfig;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -102,7 +103,7 @@ public class SetCurationStatusCommand extends AbstractDatasetCommand<Dataset> {
         Dataset dataset = (Dataset) r;
 
         try {
-            Future<String> indexString = ctxt.index().indexDataset(dataset, true);
+            Future<String> indexString = ctxt.index().indexDataset(dataset, true, new ArrayList<>());
         } catch (IOException | SolrServerException e) {
             String failureLogText = "Post submit for review indexing failed. You can kickoff a re-index of this dataset with: \r\n curl http://localhost:8080/api/admin/index/datasets/" + dataset.getId().toString();
             failureLogText += "\r\n" + e.getLocalizedMessage();

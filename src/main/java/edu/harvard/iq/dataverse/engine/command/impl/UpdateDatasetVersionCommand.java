@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
 
@@ -33,36 +34,65 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
     private static final Logger logger = Logger.getLogger(UpdateDatasetVersionCommand.class.getCanonicalName());
     private final List<FileMetadata> filesToDelete;
     private boolean validateLenient = false;
-    private final DatasetVersion clone;
+    //private final DatasetVersion clone;
     private final FileMetadata fmVarMet;
-    
+    private List<FileMetadata> fileMetadatasChanged;
+    private List<DataFile> changedFiles = new ArrayList<>();
+
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest) {
         super(aRequest, theDataset);
         this.filesToDelete = new ArrayList<>();
-        this.clone = null;
-        this.fmVarMet = null;
-    }    
-    
-    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> filesToDelete) {
-        super(aRequest, theDataset);
-        this.filesToDelete = filesToDelete;
-        this.clone = null;
+        //this.clone = null;
         this.fmVarMet = null;
     }
+
+    /*
+    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> filesChanged) {
+        super(aRequest, theDataset);
+        this.filesToDelete = new ArrayList<>();
+        //this.clone = null;
+        this.fmVarMet = null;
+        this.fileMetadatasChanged = filesChanged;
+    }
+
+     */
     
-    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> filesToDelete, DatasetVersion clone) {
+    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> fileMetadatasChanged, List<FileMetadata> fileMetadatasDelete) {
+        super(aRequest, theDataset);
+
+        this.fileMetadatasChanged = fileMetadatasChanged;
+        this.filesToDelete = fileMetadatasDelete;
+        //this.clone = null;
+        this.fmVarMet = null;
+
+    }
+
+    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> fileMetadatasChanged) {
+        super(aRequest, theDataset);
+
+        this.fileMetadatasChanged = fileMetadatasChanged;
+        this.filesToDelete = new ArrayList<>();
+        //this.clone = null;
+        this.fmVarMet = null;
+
+    }
+    /*
+    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> filesChanged, List<FileMetadata> filesToDelete) {
         super(aRequest, theDataset);
         this.filesToDelete = filesToDelete;
-        this.clone = clone;
+        //this.clone = clone;
         this.fmVarMet = null;
+        this.fileMetadatasChanged = filesChanged;
     }
+    */
+
     
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, DataFile fileToDelete) {
         super(aRequest, theDataset);
         
         // get the latest file metadata for the file; ensuring that it is a draft version
         this.filesToDelete = new ArrayList<>();
-        this.clone = null;
+        //this.clone = null;
         this.fmVarMet = null;
         for (FileMetadata fmd : theDataset.getEditVersion().getFileMetadatas()) {
             if (fmd.getDataFile().equals(fileToDelete)) {
@@ -71,18 +101,22 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
             }
         }
     } 
-    
-    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, DatasetVersion clone) {
+
+    /*
+    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, DatasetVersion clone, List<FileMetadata> filesChanged) {
         super(aRequest, theDataset);
         this.filesToDelete = new ArrayList<>();
         this.clone = clone;
         this.fmVarMet = null;
+        this.fileMetadatasChanged = filesChanged;
     }
+    */
+
 
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, FileMetadata fm) {
         super(aRequest, theDataset);
         this.filesToDelete = new ArrayList<>();
-        this.clone = null;
+        //this.clone = null;
         this.fmVarMet = fm;
     }
 
@@ -121,9 +155,12 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
 
             DatasetFieldUtil.tidyUpFields(editVersion.getDatasetFields(), true);
 
+            boolean newVersion = false;
             // Merge the new version into out JPA context, if needed.
             if (editVersion.getId() == null || editVersion.getId() == 0L) {
                 ctxt.em().persist(editVersion);
+                newVersion = true;
+                //New version - reindex all
             } else {
             	try {
             		ctxt.em().merge(editVersion);
@@ -134,12 +171,28 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
             	}
             }
 
-            for (DataFile dataFile : theDataset.getFiles()) {
-                if (dataFile.getCreateDate() == null) {
+            //New files are always added at the end, so find them
+            List<DataFile> newFiles = new ArrayList<>();
+            List<Long> givenChangedFileIds = null;
+            if(fileMetadatasChanged != null) {
+                givenChangedFileIds = fileMetadatasChanged.stream().map(i -> i.getDataFile().getId()).collect(Collectors.toList());
+            }
+            for (int i = 0; i <theDataset.getFiles().size(); i++) {
+                DataFile dataFile = theDataset.getFiles().get(i);
+                //If it is a new file
+                if(dataFile.getCreateDate() == null) {
                     dataFile.setCreateDate(getTimestamp());
                     dataFile.setCreator((AuthenticatedUser) getUser());
+                    newFiles.add(dataFile);
                 }
-                dataFile.setModificationTime(getTimestamp());
+                else
+                {
+                    //if it is an existing file, only add to lists if it's a new version or something has changed
+                    if(newVersion || (givenChangedFileIds != null && givenChangedFileIds.contains(dataFile.getId()))) {
+                        dataFile.setModificationTime(getTimestamp());
+                        changedFiles.add(dataFile);
+                    }
+                }
             }
 
             // Remove / delete any files that were removed
@@ -234,6 +287,7 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
                 for (DataFileCategory cat : theDataset.getCategories()) {
                     FileMetadataUtil.removeFileMetadataFromList(cat.getFileMetadatas(), fmd);
                 }
+                changedFiles.add(fmd.getDataFile());
             }
             for(FileMetadata fmd: theDataset.getEditVersion().getFileMetadatas()) {
                 logger.fine("FMD: " + fmd.getId() + " for file: " + fmd.getDataFile().getId() + "is in final draft version");    
@@ -250,11 +304,20 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
             ctxt.em().flush();
 
             updateDatasetUser(ctxt);
+
+            //Add newly added files (now there are identifiers available after flush)  to changed file list.
+
+            changedFiles.addAll(savedDataset.getFiles().subList(savedDataset.getFiles().size() - newFiles.size(), savedDataset.getFiles().size()));
+
+
+            /*
             if (clone != null) {
                 DatasetVersionDifference dvd = new DatasetVersionDifference(editVersion, clone);
                 AuthenticatedUser au = (AuthenticatedUser) getUser();
                 ctxt.datasetVersion().writeEditVersionLog(dvd, au);
             }
+            */
+
         } finally {
             // We're done making changes - remove the lock...
             //Failures above may occur before savedDataset is set, in which case we need to remove the lock on theDataset instead
@@ -275,7 +338,7 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
         Dataset dataset = (Dataset) r;
 
         try {
-            Future<String> indexString = ctxt.index().indexDataset(dataset, true);
+            Future<String> indexString = ctxt.index().indexDataset(dataset, true, changedFiles);
         } catch (IOException | SolrServerException e) {
             String failureLogText = "Post update dataset indexing failed. You can kickoff a re-index of this dataset with: \r\n curl http://localhost:8080/api/admin/index/datasets/" + dataset.getId().toString();
             failureLogText += "\r\n" + e.getLocalizedMessage();

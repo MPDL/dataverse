@@ -143,6 +143,8 @@ import edu.harvard.iq.dataverse.search.SearchUtil;
 import edu.harvard.iq.dataverse.search.SolrClientService;
 import edu.harvard.iq.dataverse.util.FileMetadataUtil;
 import java.util.Comparator;
+import java.util.stream.Collectors;
+
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -3585,6 +3587,8 @@ public class DatasetPage implements java.io.Serializable {
         Command<Dataset> cmd;
         Map<Long, String> deleteStorageLocations = null;
 
+        List<FileMetadata> changedFiles = new ArrayList<>();
+
         try {
             if (editMode == EditMode.CREATE) {
                 //Lock the metadataLanguage once created
@@ -3615,7 +3619,11 @@ public class DatasetPage implements java.io.Serializable {
                 if (!filesToBeDeleted.isEmpty()) {
                     deleteStorageLocations = datafileService.getPhysicalFilesToDelete(filesToBeDeleted);
                 }
-                cmd = new UpdateDatasetVersionCommand(dataset, dvRequestService.getDataverseRequest(), filesToBeDeleted, clone );
+
+                if (fileMetadataForAction != null) {
+                    changedFiles.add(fileMetadataForAction);
+                }
+                cmd = new UpdateDatasetVersionCommand(dataset, dvRequestService.getDataverseRequest(), changedFiles, filesToBeDeleted);
                 ((UpdateDatasetVersionCommand) cmd).setValidateLenient(true);
             }
             dataset = commandEngine.submit(cmd);
@@ -3684,7 +3692,8 @@ public class DatasetPage implements java.io.Serializable {
 
                     // and another update command:
                     boolean addFilesSuccess = false;
-                    cmd = new UpdateDatasetVersionCommand(dataset, dvRequestService.getDataverseRequest());
+                    List<FileMetadata> fileMdList = filesAdded.stream().map(i -> i.getLatestFileMetadata()).collect(Collectors.toList());
+                    cmd = new UpdateDatasetVersionCommand(dataset, dvRequestService.getDataverseRequest(), fileMdList);
                     try {
                         dataset = commandEngine.submit(cmd);
                         addFilesSuccess = true;

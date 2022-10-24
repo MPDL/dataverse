@@ -19,6 +19,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.ejb.EJBException;
 
@@ -85,7 +87,9 @@ public class RedetectFileTypeCommand extends AbstractCommand<DataFile> {
             Dataset dataset = fileToRedetect.getOwner();
             try {
                 boolean doNormalSolrDocCleanUp = true;
-                ctxt.index().indexDataset(dataset, doNormalSolrDocCleanUp);
+                List<DataFile> fileList = new ArrayList<>();
+                fileList.add(filetoReturn);
+                ctxt.index().indexDataset(dataset, doNormalSolrDocCleanUp, fileList);
             } catch (Exception ex) {
                 logger.info("Exception while reindexing files during file type redetection: " + ex.getLocalizedMessage());
             }

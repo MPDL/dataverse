@@ -19,6 +19,7 @@ import edu.harvard.iq.dataverse.engine.command.exception.IllegalCommandException
 import edu.harvard.iq.dataverse.util.BundleUtil;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import org.apache.solr.client.solrj.SolrServerException;
 
@@ -70,7 +71,7 @@ public class LinkDatasetCommand extends AbstractCommand<DatasetLinkingDataverse>
         DatasetLinkingDataverse dld = (DatasetLinkingDataverse) r;
 
         try {
-            ctxt.index().indexDataset(dld.getDataset(), true);
+            ctxt.index().indexDataset(dld.getDataset(), true, new ArrayList<>());
         } catch (IOException | SolrServerException e) {
             String failureLogText = "Post link dataset indexing failed. You can kickoff a re-index of this dataset with: \r\n curl http://localhost:8080/api/admin/index/datasets/" + dld.getDataset().getId().toString();
             failureLogText += "\r\n" + e.getLocalizedMessage();

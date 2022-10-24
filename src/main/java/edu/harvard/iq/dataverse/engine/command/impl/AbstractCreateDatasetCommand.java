@@ -79,6 +79,7 @@ public abstract class AbstractCreateDatasetCommand extends AbstractDatasetComman
         }
         
         DatasetVersion dsv = getVersionToPersist(theDataset);
+        theDataset.getVersions().remove(dsv);
         // This re-uses the state setup logic of CreateDatasetVersionCommand, but
         // without persisting the new version, or altering its files. 
         new CreateDatasetVersionCommand(getRequest(), theDataset, dsv).prepareDatasetAndVersion();

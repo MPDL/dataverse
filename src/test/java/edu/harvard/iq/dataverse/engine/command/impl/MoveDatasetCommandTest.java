@@ -5,15 +5,7 @@
  */
 package edu.harvard.iq.dataverse.engine.command.impl;
 
-import edu.harvard.iq.dataverse.Dataset;
-import edu.harvard.iq.dataverse.Dataverse;
-import edu.harvard.iq.dataverse.DataverseServiceBean;
-import edu.harvard.iq.dataverse.DvObject;
-import edu.harvard.iq.dataverse.Guestbook;
-import edu.harvard.iq.dataverse.GuestbookResponse;
-import edu.harvard.iq.dataverse.GuestbookServiceBean;
-import edu.harvard.iq.dataverse.MetadataBlock;
-import edu.harvard.iq.dataverse.PermissionServiceBean;
+import edu.harvard.iq.dataverse.*;
 import edu.harvard.iq.dataverse.authorization.RoleAssignee;
 import edu.harvard.iq.dataverse.authorization.users.AuthenticatedUser;
 import edu.harvard.iq.dataverse.authorization.users.GuestUser;
@@ -193,6 +185,13 @@ public class MoveDatasetCommandTest {
                     public Future<String> indexDataset(Dataset dataset, boolean doNormalSolrDocCleanUp){
                         return null;
                     }
+
+                    @Override
+                    public Future<String> indexDataset(Dataset dataset, boolean doNormalSolrDocCleanUp, List<DataFile> fileList){
+                        return null;
+                    }
+
+
                 };
             }
             

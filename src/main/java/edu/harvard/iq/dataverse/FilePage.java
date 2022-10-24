@@ -635,7 +635,9 @@ public class FilePage implements java.io.Serializable {
         }
         
         try {
-            cmd = new UpdateDatasetVersionCommand(editDataset, dvRequestService.getDataverseRequest(), filesToBeDeleted);
+            List<FileMetadata> changedMetadata = new ArrayList<>();
+            changedMetadata.add(fileMetadata);
+            cmd = new UpdateDatasetVersionCommand(editDataset, dvRequestService.getDataverseRequest(), changedMetadata, filesToBeDeleted);
             commandEngine.submit(cmd);
             updateCommandSuccess = true;
 
