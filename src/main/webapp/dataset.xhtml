@@ -224,7 +224,7 @@
                                                                     </h:commandLink>
                                                                 </li>
                                                             </ui:fragment>
-
+                                                            
                                                         </ui:fragment>
                                                                                                             
                                                         <!-- END: DOWNLOAD -->
@@ -930,7 +930,7 @@
                     <div class="button-block" jsf:rendered="#{!empty DatasetPage.editMode}">
                         <p:commandButton id="saveBottomTerms" styleClass="btn btn-default" rendered="#{DatasetPage.editMode == 'LICENSE'}"
                                          value="#{DatasetPage.editMode == 'CREATE' ? bundle['file.addBtn'] : bundle.saveChanges}" 
-                                         onclick="testTOADatasetPage();"
+                                         onclick="testTOADatasetPage();" 
                                          update=":datasetForm,:messagePanel"
                                          oncomplete="$(document).scrollTop(0);"/>
                         <p:commandButton id="saveBottom" styleClass="btn btn-default" value="#{DatasetPage.editMode == 'CREATE' ? bundle['file.addBtn'] : bundle.saveChanges}" rendered="#{DatasetPage.editMode == 'CREATE' or DatasetPage.editMode == 'METADATA'}"
@@ -1880,19 +1880,21 @@
                         var termsofAccessHidden, fileAccessRequestHidden;
                         try{
                             termsofAccessHidden = document.getElementById("datasetForm:tabView:termsofAccessHiddenLT").value;
-                            fileAccessRequestHidden  = document.getElementById("datasetForm:tabView:fileAccessRequestHiddenLT").value;  
+                            fileAccessRequestHidden  = document.getElementById("datasetForm:tabView:fileAccessRequestHiddenLT").value;
+
+                            if ('#{DatasetPage.isHasRestrictedFiles()}' === 'true' && fileAccessRequestHidden === 'false' && termsofAccessHidden === '') {
+                                //Not compliant show error keep page open...
+                            } else {
+                                PF('blockDatasetForm').show();
+                                datasetSaveCommand();
+                            }
                         }
                         catch (error){
                             //terms not present so save...
                             PF('blockDatasetForm').show();
-                            datasetSaveCommand();                        
-                        }
-                        if ('#{DatasetPage.isHasRestrictedFiles()}' === 'true' && fileAccessRequestHidden === 'false' && termsofAccessHidden === '') {
-                           //Not compliant show error keep page open...
-                        } else {
-                            PF('blockDatasetForm').show();
                             datasetSaveCommand();
                         }
+
                     }
                                         
                     //]]>
