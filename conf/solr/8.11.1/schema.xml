@@ -164,7 +164,7 @@
     <field name="publicationStatus" type="string" stored="true" indexed="true" multiValued="true"/>
     <field name="externalStatus" type="string" stored="true" indexed="true" multiValued="false"/>
     <field name="embargoEndDate" type="long" stored="true" indexed="true" multiValued="false"/>
-
+    
     <field name="subtreePaths" type="string" stored="true" indexed="true" multiValued="true"/>
 
     <field name="fileName" type="text_en" stored="true" indexed="true" multiValued="true"/>
@@ -228,19 +228,25 @@
 
     <field name="dsPersistentId" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="filePersistentId" type="text_en" multiValued="false" stored="true" indexed="true"/>
+    <!-- Dataverse geospatial search -->
+    <!-- https://solr.apache.org/guide/8_11/spatial-search.html#rpt -->
+    <field name="geolocation" type="location_rpt" multiValued="true" stored="true" indexed="true"/>
+    <!-- https://solr.apache.org/guide/8_11/spatial-search.html#bboxfield -->
+    <field name="boundingBox" type="bbox" multiValued="true" stored="true" indexed="true"/>
+
     <!-- Added for charFilterMapping -->
     <field name="authorAffiliation_ss" type="strings_filtered" multiValued="true" stored="true"/>
     <!--
         METADATA SCHEMA FIELDS
         Now following: any fields generated from the metadata schemas loaded into Dataverse.
-
+        
         Note: You can retrieve a list of the following fields from a specific API endpoint of your Dataverse
               installation, available at "http://<your Dataverse host>/api/admin/index/solr/schema".
               See also https://guides.dataverse.org/en/latest/admin/metadatacustomization.html#updating-the-solr-schema
-
+              
         Note: Please see https://guides.dataverse.org/en/latest/admin/metadatacustomization.html for advice on
               how to create your own metadata schemas.
-
+        
         WARNING: Do not remove the following include guards if you intend to use the neat helper scripts we provide.
     -->
     <!-- SCHEMA-FIELDS::BEGIN -->
@@ -270,9 +276,6 @@
     <field name="cleaningOperations" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="collectionMode" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="collectorTraining" type="text_en" multiValued="false" stored="true" indexed="true"/>
-    <field name="workflowType" type="text_en" multiValued="true" stored="true" indexed="true"/>
-    <field name="workflowCodeRepository" type="text_en" multiValued="true" stored="true" indexed="true"/>
-    <field name="workflowDocumentation" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="contributor" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="contributorName" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="contributorType" type="text_en" multiValued="true" stored="true" indexed="true"/>
@@ -358,7 +361,7 @@
     <field name="producerName" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="producerURL" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="productionDate" type="text_en" multiValued="false" stored="true" indexed="true"/>
-    <field name="productionPlace" type="text_en" multiValued="false" stored="true" indexed="true"/>
+    <field name="productionPlace" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="publication" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="publicationCitation" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="publicationIDNumber" type="text_en" multiValued="true" stored="true" indexed="true"/>
@@ -420,7 +423,7 @@
     <field name="weighting" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="westLongitude" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <!-- SCHEMA-FIELDS::END -->
-
+    
 
     <copyField source="description" dest="_text_" maxChars="3000"/>
 
@@ -481,19 +484,19 @@
     <!-- <copyField source="*_s" dest="_text_" maxChars="3000"/> -->
     <!-- <copyField source="*_ss" dest="_text_" maxChars="3000"/> -->
     <!-- <copyField source="*_i" dest="_text_" maxChars="3000"/> -->
-
+    
     <!--
         METADATA SCHEMA FIELDS
         Now following: copyFields to copy the contents of the metadata fields above to a
         catch-all textfield necessary for searching in Dataverse.
-
+        
         Note: You can retrieve a list of the following fields from a specific API endpoint of your Dataverse
               installation, available at "http://<your Dataverse host>/api/admin/index/solr/schema".
               See also https://guides.dataverse.org/en/latest/admin/metadatacustomization.html#updating-the-solr-schema
-
+              
         Note: Please see https://guides.dataverse.org/en/latest/admin/metadatacustomization.html for advice on
               how to create your own metadata schemas.
-
+        
         WARNING: Do not remove the following include guards if you intend to use the neat helper scripts we provide.
     -->
     <!-- SCHEMA-COPY-FIELDS::BEGIN -->
@@ -523,9 +526,6 @@
     <copyField source="cleaningOperations" dest="_text_" maxChars="3000"/>
     <copyField source="collectionMode" dest="_text_" maxChars="3000"/>
     <copyField source="collectorTraining" dest="_text_" maxChars="3000"/>
-    <copyField source="workflowType" dest="_text_" maxChars="3000"/>
-    <copyField source="workflowCodeRepository" dest="_text_" maxChars="3000"/>
-    <copyField source="workflowDocumentation" dest="_text_" maxChars="3000"/>
     <copyField source="contributor" dest="_text_" maxChars="3000"/>
     <copyField source="contributorName" dest="_text_" maxChars="3000"/>
     <copyField source="contributorType" dest="_text_" maxChars="3000"/>
@@ -1153,6 +1153,9 @@
     -->
     <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
                geo="true" distErrPct="0.025" maxDistErr="0.001" distanceUnits="kilometers" />
+    <!-- Dataverse - per GeoBlacklight, adding field type for bboxField that enables, among other things, overlap ratio calculations -->
+    <fieldType name="bbox" class="solr.BBoxField"
+           geo="true" distanceUnits="kilometers" numberType="pdouble" />
 
     <!-- Payloaded field types -->
     <fieldType name="delimited_payloads_float" stored="false" indexed="true" class="solr.TextField">
