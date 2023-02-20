@@ -34,7 +34,7 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
     private static final Logger logger = Logger.getLogger(UpdateDatasetVersionCommand.class.getCanonicalName());
     private final List<FileMetadata> filesToDelete;
     private boolean validateLenient = false;
-    //private final DatasetVersion clone;
+    private final DatasetVersion clone;
     private final FileMetadata fmVarMet;
     private List<FileMetadata> fileMetadatasChanged;
     private List<DataFile> changedFiles = new ArrayList<>();
@@ -42,7 +42,7 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest) {
         super(aRequest, theDataset);
         this.filesToDelete = new ArrayList<>();
-        //this.clone = null;
+        this.clone = null;
         this.fmVarMet = null;
     }
 
@@ -57,25 +57,48 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
 
      */
     
+    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> fileMetadatasChanged, List<FileMetadata> fileMetadatasDelete, DatasetVersion clone) {
+        super(aRequest, theDataset);
+
+        this.fileMetadatasChanged = fileMetadatasChanged;
+        this.filesToDelete = fileMetadatasDelete;
+        this.clone = clone;
+        this.fmVarMet = null;
+
+    }
+
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> fileMetadatasChanged, List<FileMetadata> fileMetadatasDelete) {
         super(aRequest, theDataset);
 
         this.fileMetadatasChanged = fileMetadatasChanged;
         this.filesToDelete = fileMetadatasDelete;
-        //this.clone = null;
+        this.clone = null;
         this.fmVarMet = null;
 
     }
+
+    public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> fileMetadatasChanged, DatasetVersion clone) {
+        super(aRequest, theDataset);
+
+        this.fileMetadatasChanged = fileMetadatasChanged;
+        this.filesToDelete = new ArrayList<>();
+        this.clone = clone;
+        this.fmVarMet = null;
+
+    }
+
 
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> fileMetadatasChanged) {
         super(aRequest, theDataset);
 
         this.fileMetadatasChanged = fileMetadatasChanged;
         this.filesToDelete = new ArrayList<>();
-        //this.clone = null;
+        this.clone = null;
         this.fmVarMet = null;
 
     }
+
+
     /*
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, List<FileMetadata> filesChanged, List<FileMetadata> filesToDelete) {
         super(aRequest, theDataset);
@@ -92,9 +115,9 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
         
         // get the latest file metadata for the file; ensuring that it is a draft version
         this.filesToDelete = new ArrayList<>();
-        //this.clone = null;
+        this.clone = null;
         this.fmVarMet = null;
-        for (FileMetadata fmd : theDataset.getEditVersion().getFileMetadatas()) {
+        for (FileMetadata fmd : theDataset.getOrCreateEditVersion().getFileMetadatas()) {
             if (fmd.getDataFile().equals(fileToDelete)) {
                 filesToDelete.add(fmd);
                 break;
@@ -116,7 +139,7 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
     public UpdateDatasetVersionCommand(Dataset theDataset, DataverseRequest aRequest, FileMetadata fm) {
         super(aRequest, theDataset);
         this.filesToDelete = new ArrayList<>();
-        //this.clone = null;
+        this.clone = null;
         this.fmVarMet = fm;
     }
 
@@ -148,10 +171,10 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
                 logger.log(Level.WARNING, "Failed to lock the dataset (dataset id={0})", getDataset().getId());
             }
             
-            getDataset().getEditVersion(fmVarMet).setDatasetFields(getDataset().getEditVersion(fmVarMet).initDatasetFields());
-            validateOrDie(getDataset().getEditVersion(fmVarMet), isValidateLenient());
+            getDataset().getOrCreateEditVersion(fmVarMet).setDatasetFields(getDataset().getOrCreateEditVersion(fmVarMet).initDatasetFields());
+            validateOrDie(getDataset().getOrCreateEditVersion(fmVarMet), isValidateLenient());
 
-            final DatasetVersion editVersion = getDataset().getEditVersion(fmVarMet);
+            final DatasetVersion editVersion = getDataset().getOrCreateEditVersion(fmVarMet);
 
             DatasetFieldUtil.tidyUpFields(editVersion.getDatasetFields(), true);
 
@@ -257,10 +280,10 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
                     // If the datasetversion doesn't match, we have the fmd from a published version
                     // and we need to remove the one for the newly created draft instead, so we find
                     // it here
-                    logger.fine("Edit ver: " + theDataset.getEditVersion().getId());
+                    logger.fine("Edit ver: " + theDataset.getOrCreateEditVersion().getId());
                     logger.fine("fmd ver: " + fmd.getDatasetVersion().getId());
-                    if (!theDataset.getEditVersion().equals(fmd.getDatasetVersion())) {
-                        fmd = FileMetadataUtil.getFmdForFileInEditVersion(fmd, theDataset.getEditVersion());
+                    if (!theDataset.getOrCreateEditVersion().equals(fmd.getDatasetVersion())) {
+                        fmd = FileMetadataUtil.getFmdForFileInEditVersion(fmd, theDataset.getOrCreateEditVersion());
                     }
                 } 
                 fmd = ctxt.em().merge(fmd);
@@ -282,22 +305,22 @@ public class UpdateDatasetVersionCommand extends AbstractDatasetCommand<Dataset>
                 // In either case, to fully remove the fmd, we have to remove any other possible
                 // references
                 // From the datasetversion
-                FileMetadataUtil.removeFileMetadataFromList(theDataset.getEditVersion().getFileMetadatas(), fmd);
+                FileMetadataUtil.removeFileMetadataFromList(theDataset.getOrCreateEditVersion().getFileMetadatas(), fmd);
                 // and from the list associated with each category
                 for (DataFileCategory cat : theDataset.getCategories()) {
                     FileMetadataUtil.removeFileMetadataFromList(cat.getFileMetadatas(), fmd);
                 }
                 changedFiles.add(fmd.getDataFile());
             }
-            for(FileMetadata fmd: theDataset.getEditVersion().getFileMetadatas()) {
+            for(FileMetadata fmd: theDataset.getOrCreateEditVersion().getFileMetadatas()) {
                 logger.fine("FMD: " + fmd.getId() + " for file: " + fmd.getDataFile().getId() + "is in final draft version");    
             }
             
             if (recalculateUNF) {
-                ctxt.ingest().recalculateDatasetVersionUNF(theDataset.getEditVersion());
+                ctxt.ingest().recalculateDatasetVersionUNF(theDataset.getOrCreateEditVersion());
             }
 
-            theDataset.getEditVersion().setLastUpdateTime(getTimestamp());
+            theDataset.getOrCreateEditVersion().setLastUpdateTime(getTimestamp());
             theDataset.setModificationTime(getTimestamp());
 
             savedDataset = ctxt.em().merge(theDataset);

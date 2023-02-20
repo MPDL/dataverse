@@ -6,6 +6,15 @@ let removeButton= `
             <span class="glyphicon glyphicon-remove no-text" aria-hidden="true"></span>
         </button>
     </span>`;
+    
+let orcidRemoveButton= `
+    <span class="input-group-btn">
+        <button class="btn btn-default" type="button" onclick="removeAuthorIdentifier(this); return false;">
+            <span class="glyphicon glyphicon-remove no-text" aria-hidden="true"></span>
+        </button>
+    </span>`;
+
+const ORCID_URI = 'https://orcid.org/';
 
 function removeAffiliationId(buttonElement){
     let affiliationIdFieldName = $(buttonElement).attr("data-for-affiliationId");
@@ -35,6 +44,33 @@ function removeAffiliationId(buttonElement){
 
 
 }
+
+function removeAuthorIdentifier(buttonElement){
+    let authorIdentifierFieldName = $(buttonElement).attr("data-for-authorIdentifier");
+    let authorNameFieldName = $(buttonElement).attr("data-for-authorName");
+
+    let authorIdentifierField = $(buttonElement).closest(".form-group").find("input[data-fieldtype-name='" + authorIdentifierFieldName + "']");
+    let authorNameField = $(buttonElement).closest(".form-group").find("input[data-fieldtype-name='" + authorNameFieldName + "']");
+
+    authorIdentifierField.val("");
+    authorNameField.val("");
+    authorIdentifierField.prop("readonly",false);
+    authorNameField.prop("readonly",false);
+
+    //Remove delete button
+    $(buttonElement).remove();
+
+    //Move input field back out of input group
+    let inputGroup = authorNameField.parent();
+    authorNameField.parent().parent().append(authorNameField);
+
+    //Remove input group
+    inputGroup.remove();
+
+    bindAuthorNameInputField(authorNameField, authorIdentifierFieldName);
+
+}
+
 function addAffiliationId(affiliationTextField, affiliationIdField){
     //Set both fields readonly
     affiliationIdField.prop("readonly",true);
@@ -53,7 +89,27 @@ function addAffiliationId(affiliationTextField, affiliationIdField){
 
     inputGroup.append(affRemoveButton);
 }
-//function to bind an autosuggest for organization identifiers
+
+function addAAuthorIdentifier(authorNameField, authorIdentifierField){
+    //Set both fields readonly
+    authorNameField.prop("readonly",true);
+    authorIdentifierField.prop("readonly",true);
+
+    //Create and append an bootstrap input group for the delete button
+    let inputGroup = $('<div class="input-group"/>');
+    authorNameField.parent().append(inputGroup);
+
+    //add the text field and the remove button to the input group
+    inputGroup.prepend(authorNameField);
+    let authorRemoveButton = $(orcidRemoveButton)
+    authorRemoveButton.find("button")
+        .attr("data-for-authorName", authorNameField.attr("data-fieldtype-name"))
+        .attr("data-for-authorIdentifier", authorIdentifierField.attr("data-fieldtype-name"));
+
+    inputGroup.append(authorRemoveButton);
+}
+
+//function to bind an autosuggest for organization identifiers & ORCIDs
 function bindAffiliationAutoComplete() {
 
 
@@ -66,10 +122,14 @@ function bindAffiliationAutoComplete() {
     $("input[data-fieldtype-name='authorAffiliation3']").each(function () {
         bindAffiliationInputField(this, "authorAffiliation3Id");
     });
+    $("input[data-fieldtype-name='authorName']").each(function () {
+        bindAuthorNameInputField(this, "authorIdentifier");
+    });
 }
 
+
 function bindAffiliationInputField(element, nameOfIdElement) {
-    console.log("Rebind Autosuggest for " + element);
+    // console.log("Rebind Autosuggest for " + element);
     let idField = $(element).parent().parent().find("input[data-fieldtype-name='" + nameOfIdElement + "']");
 
     if(idField) {
@@ -114,12 +174,63 @@ function bindAffiliationInputField(element, nameOfIdElement) {
     }
 }
 
+function bindAuthorNameInputField(element, nameOfIdElement) {
+    // console.log("Rebind Autosuggest for " + element);
+    let idField = $(element).parent().parent().find("input[data-fieldtype-name='" + nameOfIdElement + "']");
+
+    if(idField) {
+        if (idField.val()) {
+            addAAuthorIdentifier($(element), idField);
+        } else {
+            let orcidAutocompleteWidget = $(element).autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "https://pub.orcid.org/v3.0/expanded-search",
+                        dataType: "json",
+                        data: {
+                            q: request.term,
+                            rows: 50
+                        },
+                        headers: {
+                            'Accept': 'application/json'
+                        },
+                        success: function (data) {
+                            response($.map(data['expanded-result'], function (item) {
+                                return {
+                                    value: item['family-names'] + ", " + item['given-names'],
+                                    // label: item['given-names'] + " " + item['family-names'] + " " + ((item['institution-name'].length > 0) ? ", " + item['institution-name'][0] : ""),
+                                    label: item['given-names'] + " " + item['family-names'] + " " + item['orcid-id'],
+                                    id: item['orcid-id']
+                                };
+                            }));
+                        }
+                    });
+                },
+                select: function (event, ui) {
+                    $(element).val(ui.item.value);
+                    idField.val(ORCID_URI + ui.item.id);
+                    addAAuthorIdentifier($(element), idField);
+
+
+                },
+
+                minLength: 3,
+
+
+            }).autocomplete("widget");
+
+            //wrap the suggest list into a span to enable CSS class scoping, otherwise jqueryui css conflicts with primefaces css
+            orcidAutocompleteWidget.wrap("<span class='jqueryui'></span>");
+        }
+    }
+}
+
+
 
 function bindTaggleKeywordInput() {
 
 
     $("div[data-fieldtype-name='keyword']").each(function () {
-        //console.log("Found keyword div" + this);
 
         //if taggle is not activated yet
         if($(this).has('ul.taggle_list').length == 0)
