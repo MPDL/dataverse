@@ -17,8 +17,11 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+          cache: 'maven'
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots package
+      - name: See dir content 
+        run: ls -l
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -35,6 +38,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/*.war
+          asset_path: ./target/*.war
           asset_name: dataverse-${{ github.ref_name }}.war
           asset_content_type: application/java-archive
