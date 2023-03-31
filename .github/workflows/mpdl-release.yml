@@ -21,7 +21,7 @@ jobs:
       - name: Set POM version env variable and build number
         run: |
           echo "POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
-          BRANCH_COMMIT=$(git rev-parse --abbrev-ref HEAD)-$(git log --oneline | head -1 | awk '{print $1}')
+          BRANCH_COMMIT=$(git branch --show-current)-$(git log --oneline | head -1 | awk '{print $1}')
           echo "build.number=$BRANCH_COMMIT" > ./src/main/java/BuildNumber.properties
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots package
