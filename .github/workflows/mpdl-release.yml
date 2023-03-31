@@ -17,6 +17,12 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+          cache: 'maven'
+      - name: Set POM version env variable and build number
+        run: |
+          echo "POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+          BRANCH_COMMIT=$(git rev-parse --abbrev-ref HEAD)-$(git log --oneline | head -1 | awk '{print $1}')
+          echo "build.number=$BRANCH_COMMIT" > ./src/main/java/BuildNumber.properties
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots package
       - name: Create Release
@@ -35,6 +41,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/*.war
+          asset_path: ./target/dataverse-${{ env.POM_VERSION }}.war
           asset_name: dataverse-${{ github.ref_name }}.war
           asset_content_type: application/java-archive
