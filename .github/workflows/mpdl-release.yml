@@ -12,6 +12,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
@@ -21,8 +23,10 @@ jobs:
       - name: Set POM version env variable and build number
         run: |
           echo "POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
-          BRANCH_COMMIT=$(git rev-parse --abbrev-ref HEAD)-$(git log --oneline | head -1 | awk '{print $1}')
-          echo "build.number=$BRANCH_COMMIT" > ./src/main/java/BuildNumber.properties
+          RAW_BRANCH=$(git branch -r --contains ${{ github.ref }})
+          BRANCH_NAME=${RAW_BRANCH##*/}
+          COMMIT_HASH=$(git rev-parse --short "$GITHUB_SHA")
+          echo "build.number=$BRANCH_NAME - $COMMIT_HASH" > ./src/main/java/BuildNumber.properties
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots package
       - name: Create Release
