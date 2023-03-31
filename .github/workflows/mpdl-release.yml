@@ -24,7 +24,7 @@ jobs:
         run: |
           echo "POM_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
           RAW_BRANCH=$(git branch -r --contains ${{ github.ref }})
-          BRANCH_NAME=${RAW##*/}
+          BRANCH_NAME=${RAW_BRANCH##*/}
           COMMIT_HASH=$(git rev-parse --short "$GITHUB_SHA")
           echo "build.number=$BRANCH_NAME - $COMMIT_HASH" > ./src/main/java/BuildNumber.properties
       - name: Build with Maven
