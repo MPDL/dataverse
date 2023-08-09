@@ -234,8 +234,12 @@
     <!-- https://solr.apache.org/guide/8_11/spatial-search.html#bboxfield -->
     <field name="boundingBox" type="bbox" multiValued="true" stored="true" indexed="true"/>
 
+    <!-- incomplete datasets issue 8822 -->
+    <field name="datasetValid" type="boolean" stored="true" indexed="true" multiValued="false"/>
+
     <!-- Added for charFilterMapping -->
     <field name="authorAffiliation_ss" type="strings_filtered" multiValued="true" stored="true"/>
+
     <!--
         METADATA SCHEMA FIELDS
         Now following: any fields generated from the metadata schemas loaded into Dataverse.
@@ -378,9 +382,9 @@
     <field name="responseRate" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="samplingErrorEstimates" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="samplingProcedure" type="text_en" multiValued="false" stored="true" indexed="true"/>
-    <field name="series" type="text_en" multiValued="false" stored="true" indexed="true"/>
-    <field name="seriesInformation" type="text_en" multiValued="false" stored="true" indexed="true"/>
-    <field name="seriesName" type="text_en" multiValued="false" stored="true" indexed="true"/>
+    <field name="series" type="text_en" multiValued="true" stored="true" indexed="true"/>
+    <field name="seriesInformation" type="text_en" multiValued="true" stored="true" indexed="true"/>
+    <field name="seriesName" type="text_en" multiValued="true" stored="true" indexed="true"/>
     <field name="socialScienceNotes" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="socialScienceNotesSubject" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <field name="socialScienceNotesText" type="text_en" multiValued="false" stored="true" indexed="true"/>
@@ -485,6 +489,8 @@
     <!-- <copyField source="*_ss" dest="_text_" maxChars="3000"/> -->
     <!-- <copyField source="*_i" dest="_text_" maxChars="3000"/> -->
     
+    <copyField source="datasetValid" dest="_text_" maxChars="3000"/>
+
     <!--
         METADATA SCHEMA FIELDS
         Now following: copyFields to copy the contents of the metadata fields above to a
@@ -689,7 +695,7 @@
     <!-- End: Dataverse-specific Affiliations Copyfileds -->
 
     <!-- SCHEMA-COPY-FIELDS::END -->
-
+    
     <!-- This can be enabled, in case the client does not know what fields may be searched. It isn't enabled by default
          because it's very expensive to index everything twice. -->
     <!--<copyField source="*" dest="_text_"/>-->

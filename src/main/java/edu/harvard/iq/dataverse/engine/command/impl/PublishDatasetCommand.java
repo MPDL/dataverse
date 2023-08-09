@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import static java.util.stream.Collectors.joining;
 import static edu.harvard.iq.dataverse.engine.command.impl.PublishDatasetResult.Status;
 import static edu.harvard.iq.dataverse.dataset.DatasetUtil.validateDatasetMetadataExternally;
+import edu.harvard.iq.dataverse.util.StringUtil;
 
 
 /**
@@ -134,7 +135,7 @@ public class PublishDatasetCommand extends AbstractPublishDatasetCommand<Publish
             String dataFilePIDFormat = ctxt.settings().getValueForKey(SettingsServiceBean.Key.DataFilePIDFormat, "DEPENDENT");
             boolean registerGlobalIdsForFiles = 
                     (currentGlobalIdProtocol.equals(theDataset.getProtocol()) || dataFilePIDFormat.equals("INDEPENDENT")) 
-                    && ctxt.systemConfig().isFilePIDsEnabled();
+                    && ctxt.systemConfig().isFilePIDsEnabledForCollection(theDataset.getOwner());
             
             if ( registerGlobalIdsForFiles ){
                 registerGlobalIdsForFiles = currentGlobalAuthority.equals( theDataset.getAuthority() );
@@ -207,6 +208,12 @@ public class PublishDatasetCommand extends AbstractPublishDatasetCommand<Publish
         //MPDL-specific change: Only allow publish of datasets which have files attached
         if(getDataset().getFiles()==null || getDataset().getFiles().isEmpty()) {
             throw new IllegalCommandException("At least one file is required to publish a dataset.", this);
+        }
+        
+        if (getDataset().getLatestVersion().getTermsOfUseAndAccess() == null
+                || (getDataset().getLatestVersion().getTermsOfUseAndAccess().getLicense() == null 
+                && StringUtil.isEmpty(getDataset().getLatestVersion().getTermsOfUseAndAccess().getTermsOfUse()))) {
+            throw new IllegalCommandException("Dataset must have a valid license or Custom Terms Of Use configured before it can be published.", this);
         }
         
         if ( (getDataset().isLockedFor(DatasetLock.Reason.Workflow)&&!ctxt.permissions().isMatchingWorkflowLock(getDataset(),request.getUser().getIdentifier(),request.getWFInvocationId())) 
