@@ -34,6 +34,9 @@ RUN chmod +x ${SCRIPT_DIR}/*.sh ${BOOTSTRAP_DIR}/*/*.sh
 COPY --from=solr /opt/solr/server/solr/configsets/_default ${SOLR_TEMPLATE}/
 COPY maven/solr/*.xml ${SOLR_TEMPLATE}/conf/
 
+# Copy the Solr filter_mapping.txt (#41)
+COPY maven/solr/filter_mapping.txt ${SOLR_TEMPLATE}/conf/
+
 # Copy the data from scripts/api that provide the common base setup you'd get from the installer.
 # ".dockerignore" will take care of taking only the bare necessities
 COPY maven/setup ${SCRIPT_DIR}/bootstrap/base/
