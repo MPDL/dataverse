@@ -230,7 +230,8 @@
     <field name="filePersistentId" type="text_en" multiValued="false" stored="true" indexed="true"/>
     <!-- Dataverse geospatial search -->
     <!-- https://solr.apache.org/guide/8_11/spatial-search.html#rpt -->
-    <field name="geolocation" type="location_rpt" multiValued="true" stored="true" indexed="true"/>
+    <!-- Remove field 'geolocation' for Dataverse geospatial search, due to duplicate field definition 'geolocation' for Edmond! -->
+    <!-- <field name="geolocation" type="location_rpt" multiValued="true" stored="true" indexed="true"/> -->
     <!-- https://solr.apache.org/guide/8_11/spatial-search.html#bboxfield -->
     <field name="boundingBox" type="bbox" multiValued="true" stored="true" indexed="true"/>
 
