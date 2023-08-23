@@ -602,6 +602,7 @@ class DataCiteMetadataTemplate {
         Element grantElement = doc.createElement("fundingReferences");
         grantElement.html(grantInformation);
         resourceElement.appendChild(grantElement);
+        doc.outputSettings().indentAmount(4).prettyPrint(true); //Problem: formatAsInlineTags can not be changed
         xmlMetadata = doc.toString();
 
         return xmlMetadata;
