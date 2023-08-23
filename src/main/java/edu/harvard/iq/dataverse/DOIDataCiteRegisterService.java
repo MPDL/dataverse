@@ -7,10 +7,7 @@ package edu.harvard.iq.dataverse;
 
 import edu.harvard.iq.dataverse.branding.BrandingUtil;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,6 +26,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 /**
@@ -558,9 +556,54 @@ class DataCiteMetadataTemplate {
 
         String relIdentifiers = generateRelatedIdentifiers(dvObject);
 
+        xmlMetadata = this.addGrantInformation(dvObject, xmlMetadata);
+
         xmlMetadata = xmlMetadata.replace("${relatedIdentifiers}", relIdentifiers);
 
         xmlMetadata = xmlMetadata.replace("{$contributors}", contributorsElement.toString());
+        return xmlMetadata;
+    }
+
+    private String addGrantInformation(DvObject dvObject, String xmlMetadata) {
+        StringBuilder sb = new StringBuilder();
+
+        Dataset dataset = (Dataset) dvObject;
+        String grantAgency = "";
+        String grantNumber = "";
+        if (dvObject.isInstanceofDataset()) {
+            for (DatasetField field : dataset.getLatestVersion().getDatasetFields()) {
+                if (field.getDatasetFieldType().getName().equals("grantNumber")) {
+                    for (DatasetFieldCompoundValue compoundValue : field.getDatasetFieldCompoundValues()) {
+                        for (DatasetField child : compoundValue.getChildDatasetFields()) {
+                            switch (child.getDatasetFieldType().getName()) {
+                                case "grantNumberAgency": grantAgency = child.getValue(); break;
+                                case "grantNumberValue": grantNumber = child.getValue(); break;
+                                default: break;
+                            }
+                        }
+                    }
+                    //TODO Check if grantInformation is not empty...
+                    //sb.append("<fundingReferences>");
+                    sb.append("<fundingReference>");
+                    sb.append("<funderName>" + grantAgency + "</funderName>");
+                    sb.append("<awardNumber>" + grantNumber + "</awardNumber>");
+                    sb.append("</fundingReference>");
+                    //sb.append("</fundingReferences>");
+                }
+            }
+        }else{
+            //TODO ...
+        }
+
+        String grantInformation = sb.toString();
+
+        Document doc = Jsoup.parse(xmlMetadata, "", Parser.xmlParser());
+        Element resourceElement = doc.select("resource").get(0);
+        Element grantElement = doc.createElement("fundingReferences");
+        grantElement.html(grantInformation);
+        resourceElement.appendChild(grantElement);
+        xmlMetadata = doc.toString();
+
         return xmlMetadata;
     }
 
