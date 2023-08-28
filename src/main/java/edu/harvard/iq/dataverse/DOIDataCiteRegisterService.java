@@ -8,6 +8,8 @@ package edu.harvard.iq.dataverse;
 import edu.harvard.iq.dataverse.branding.BrandingUtil;
 
 import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
+import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
 /**
@@ -597,15 +600,53 @@ class DataCiteMetadataTemplate {
 
         String grantInformation = sb.toString();
 
+        //TODO: Replace this Workaround to format leaf node tags as inline tags in Jsoup using reflection.
+        this.formatLeafNodeAsInlineTagsInJsoup(xmlMetadata);
         Document doc = Jsoup.parse(xmlMetadata, "", Parser.xmlParser());
         Element resourceElement = doc.select("resource").get(0);
         Element grantElement = doc.createElement("fundingReferences");
         grantElement.html(grantInformation);
         resourceElement.appendChild(grantElement);
-        doc.outputSettings().indentAmount(4).prettyPrint(true); //Problem: formatAsInlineTags can not be changed
+        doc.outputSettings().indentAmount(4).prettyPrint(true);
         xmlMetadata = doc.toString();
 
         return xmlMetadata;
+    }
+
+
+    /**
+     *
+     * This method is used to format leaf node tags as inline tags in Jsoup using reflection.
+     * See: https://github.com/jhy/jsoup/issues/1428
+     *
+     * @param xmlMetadata
+     */
+    private void formatLeafNodeAsInlineTagsInJsoup(String xmlMetadata){
+        try {
+            Document doc = Jsoup.parse(xmlMetadata, "", Parser.xmlParser());
+
+            //String[] inlineTags = {"identifier", "publisher", "publicationYear", "description", "contributors", "funderName"};
+            List<String> inlineTags = new java.util.ArrayList<String>();
+            doc.getAllElements().forEach(element -> {
+                if (element.childrenSize() == 0) {
+                    inlineTags.add(element.tagName());
+                }
+            });
+
+            for(String tagName : inlineTags) {
+                Tag tag = Tag.valueOf(tagName);
+                Field field = null;
+                field = Tag.class.getDeclaredField("formatAsBlock");
+                field.setAccessible(true);
+                field.set(tag, false);
+
+                Method method = Tag.class.getDeclaredMethod("register", Tag.class);
+                method.setAccessible(true);
+                method.invoke(null, tag);
+            }
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error changing the format for Jsoup: " + e.getMessage());
+        }
     }
 
     private String generateRelatedIdentifiers(DvObject dvObject) {
