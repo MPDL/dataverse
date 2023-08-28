@@ -7,15 +7,8 @@ package edu.harvard.iq.dataverse;
 
 import edu.harvard.iq.dataverse.branding.BrandingUtil;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -23,6 +16,16 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import edu.harvard.iq.dataverse.settings.JvmSettings;
 import org.apache.commons.text.StringEscapeUtils;
@@ -30,6 +33,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -561,6 +566,30 @@ class DataCiteMetadataTemplate {
         xmlMetadata = xmlMetadata.replace("${relatedIdentifiers}", relIdentifiers);
 
         xmlMetadata = xmlMetadata.replace("{$contributors}", contributorsElement.toString());
+
+        xmlMetadata = extendXmlMetadata(dvObject, xmlMetadata);
+
+        return xmlMetadata;
+    }
+
+    private String extendXmlMetadata(DvObject dvObject, String xmlMetadata) {
+        try {
+            Optional<String> grantAgency = DataCiteMetadataUtil.readDatasetFieldValue(dvObject, DatasetFieldConstant.grantNumber, DatasetFieldConstant.grantNumberAgency);
+            Optional<String> grantNumber = DataCiteMetadataUtil.readDatasetFieldValue(dvObject, DatasetFieldConstant.grantNumber, DatasetFieldConstant.grantNumberValue);
+
+            if(grantAgency.isPresent() || grantNumber.isPresent()) {
+                org.w3c.dom.Document xmlDocument = DataCiteMetadataUtil.parseXml(xmlMetadata);
+                DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "resource", "fundingReferences", null);
+                DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReferences", "fundingReference", null);
+                grantAgency.ifPresent(grantAgencyValue -> DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReference", "funderName", grantAgencyValue));
+                grantNumber.ifPresent(grantNumberValue -> DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReference", "awardNumber", grantNumberValue));
+
+                xmlMetadata = DataCiteMetadataUtil.prettyPrintXML(xmlDocument, 4);
+            }
+        } catch(Exception e) {
+            logger.log(Level.SEVERE, "Error extending xmlMetadata: {0}", e.getMessage());
+        }
+
         return xmlMetadata;
     }
 
@@ -725,4 +754,59 @@ class Util {
         return str.toString();
     }
     
+}
+
+class DataCiteMetadataUtil {
+
+    public static org.w3c.dom.Document parseXml(String xml) throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        org.w3c.dom.Document document = builder.parse(new InputSource(new StringReader(xml)));
+
+        return document;
+    }
+
+    public static void appendElementToDocument(org.w3c.dom.Document document, String parentTagName, String tagName, String textContent) {
+        org.w3c.dom.Element element = document.createElement(tagName);
+        if(textContent != null && !textContent.isEmpty()) {
+            element.setTextContent(textContent);
+        }
+        org.w3c.dom.Element parentElement = (org.w3c.dom.Element) document.getElementsByTagName(parentTagName).item(0);
+        if(parentElement != null){
+            parentElement.appendChild(element);
+        }
+    }
+
+    public static String prettyPrintXML(org.w3c.dom.Document document, int indent) throws TransformerException {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        InputStream inputStream = DataCiteMetadataTemplate.class.getResourceAsStream("prettyprint.xsl");
+        String prettyPrintXsl = Util.readAndClose(inputStream, "utf-8");
+        Transformer transformer = transformerFactory.newTransformer(new StreamSource(new StringReader(prettyPrintXsl)));
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", Integer.toString(indent));
+        transformer.setOutputProperty(OutputKeys.STANDALONE, "no");
+
+        StringWriter stringWriter = new StringWriter();
+        transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
+        return stringWriter.toString();
+    }
+
+    public static Optional<String> readDatasetFieldValue(DvObject dvObject, String parentFieldName, String fieldName) {
+        if (dvObject.isInstanceofDataset()) {
+            Dataset dataset = (Dataset) dvObject;
+            for (DatasetField field : dataset.getLatestVersion().getDatasetFields()) {
+                if (field.getDatasetFieldType().getName().equals(parentFieldName)) {
+                    for (DatasetFieldCompoundValue compoundValue : field.getDatasetFieldCompoundValues()) {
+                        for (DatasetField child : compoundValue.getChildDatasetFields()) {
+                            if (child.getDatasetFieldType().getName().equals(fieldName)) {
+                                return Optional.of(child.getValue());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return Optional.empty();
+    }
 }
