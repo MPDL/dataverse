@@ -567,27 +567,40 @@ class DataCiteMetadataTemplate {
 
         xmlMetadata = xmlMetadata.replace("{$contributors}", contributorsElement.toString());
 
-        xmlMetadata = extendXmlMetadata(dvObject, xmlMetadata);
+        xmlMetadata = addGrantNumberMetadata(dvObject, xmlMetadata);
 
         return xmlMetadata;
     }
 
-    private String extendXmlMetadata(DvObject dvObject, String xmlMetadata) {
+    private String addGrantNumberMetadata(DvObject dvObject, String xmlMetadata) {
         try {
-            Optional<String> grantAgency = DataCiteMetadataUtil.readDatasetFieldValue(dvObject, DatasetFieldConstant.grantNumber, DatasetFieldConstant.grantNumberAgency);
-            Optional<String> grantNumber = DataCiteMetadataUtil.readDatasetFieldValue(dvObject, DatasetFieldConstant.grantNumber, DatasetFieldConstant.grantNumberValue);
+            Dataset dataset = (Dataset) dvObject;
+            List<Map<String, String>> grantNumberChildValues = new ArrayList<>();
+            List<DatasetField> grantNumberDatasetFields = DataCiteMetadataUtil.searchForFirstLevelDatasetFields(dataset, DatasetFieldConstant.grantNumber);
+            if(!grantNumberDatasetFields.isEmpty()){
+                //There should only be one 'grantNumber' DatasetField
+                DatasetField datasetField = grantNumberDatasetFields.get(0);
+                grantNumberChildValues = DataCiteMetadataUtil.extractCompoundValueChildDatasetFieldValues(datasetField);
+            }
 
-            if(grantAgency.isPresent() || grantNumber.isPresent()) {
+            if(!grantNumberChildValues.isEmpty()) {
                 org.w3c.dom.Document xmlDocument = DataCiteMetadataUtil.parseXml(xmlMetadata);
                 DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "resource", "fundingReferences", null);
-                DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReferences", "fundingReference", null);
-                grantAgency.ifPresent(grantAgencyValue -> DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReference", "funderName", grantAgencyValue));
-                grantNumber.ifPresent(grantNumberValue -> DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReference", "awardNumber", grantNumberValue));
-
+                for (Map<String, String> childValue : grantNumberChildValues) {
+                    if (!childValue.isEmpty()) {
+                        DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReferences", "fundingReference", null);
+                        if(childValue.get(DatasetFieldConstant.grantNumberAgency) != null) {
+                            DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReference", "funderName", childValue.get(DatasetFieldConstant.grantNumberAgency));
+                        }
+                        if(childValue.get(DatasetFieldConstant.grantNumberValue) != null) {
+                            DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReference", "awardNumber", childValue.get(DatasetFieldConstant.grantNumberValue));
+                        }
+                    }
+                }
                 xmlMetadata = DataCiteMetadataUtil.prettyPrintXML(xmlDocument, 4);
             }
         } catch(Exception e) {
-            logger.log(Level.SEVERE, "Error extending xmlMetadata: {0}", e.getMessage());
+            logger.log(Level.SEVERE, "Error adding grantNumber to the DataCite Metadata: {0}", e.getMessage());
         }
 
         return xmlMetadata;
@@ -766,14 +779,23 @@ class DataCiteMetadataUtil {
         return document;
     }
 
+    /**
+     * Append Element to the last parent element.
+     *
+     * @param document
+     * @param parentTagName
+     * @param tagName
+     * @param textContent
+     */
     public static void appendElementToDocument(org.w3c.dom.Document document, String parentTagName, String tagName, String textContent) {
         org.w3c.dom.Element element = document.createElement(tagName);
         if(textContent != null && !textContent.isEmpty()) {
             element.setTextContent(textContent);
         }
-        org.w3c.dom.Element parentElement = (org.w3c.dom.Element) document.getElementsByTagName(parentTagName).item(0);
-        if(parentElement != null){
-            parentElement.appendChild(element);
+        org.w3c.dom.NodeList parentElements = document.getElementsByTagName(parentTagName);
+        if(parentElements.getLength() > 0){
+            org.w3c.dom.Element lastParentElement = (org.w3c.dom.Element) parentElements.item(parentElements.getLength() - 1);
+            lastParentElement.appendChild(element);
         }
     }
 
@@ -792,21 +814,37 @@ class DataCiteMetadataUtil {
         return stringWriter.toString();
     }
 
-    public static Optional<String> readDatasetFieldValue(DvObject dvObject, String parentFieldName, String fieldName) {
-        if (dvObject.isInstanceofDataset()) {
-            Dataset dataset = (Dataset) dvObject;
-            for (DatasetField field : dataset.getLatestVersion().getDatasetFields()) {
-                if (field.getDatasetFieldType().getName().equals(parentFieldName)) {
-                    for (DatasetFieldCompoundValue compoundValue : field.getDatasetFieldCompoundValues()) {
-                        for (DatasetField child : compoundValue.getChildDatasetFields()) {
-                            if (child.getDatasetFieldType().getName().equals(fieldName)) {
-                                return Optional.of(child.getValue());
-                            }
-                        }
-                    }
-                }
+    /**
+     * Search for a fist-level DatasetFields by name.
+     *
+     * @param dataset
+     * @param datasetFieldName
+     * @return List of DatasetFields with the given name.
+     */
+    public static List<DatasetField> searchForFirstLevelDatasetFields(Dataset dataset, String datasetFieldName) {
+        List<DatasetField> datasetFields = new ArrayList<>();
+        for (DatasetField datasetField : dataset.getLatestVersion().getDatasetFields()) {
+            if (datasetField.getDatasetFieldType().getName().equals(datasetFieldName)) {
+                datasetFields.add(datasetField);
             }
         }
-        return Optional.empty();
+        return datasetFields;
     }
+
+    public static List<Map<String, String>> extractCompoundValueChildDatasetFieldValues(DatasetField datasetField){
+        List<Map<String, String>> fieldValues = new ArrayList<>();
+        for (DatasetFieldCompoundValue compoundValue : datasetField.getDatasetFieldCompoundValues()) {
+            fieldValues.add(DataCiteMetadataUtil.extractChildDatasetFieldValues(compoundValue));
+        }
+        return fieldValues;
+    }
+
+    public static Map<String, String> extractChildDatasetFieldValues(DatasetFieldCompoundValue datasetFieldCompoundValue) {
+        Map<String, String> datasetFieldValues = new HashMap<>();
+        for (DatasetField childDatasetField : datasetFieldCompoundValue.getChildDatasetFields()) {
+            datasetFieldValues.put(childDatasetField.getDatasetFieldType().getName(), childDatasetField.getValue());
+        }
+        return datasetFieldValues;
+    }
+
 }
