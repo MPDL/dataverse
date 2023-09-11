@@ -575,35 +575,41 @@ class DataCiteMetadataTemplate {
     private String addGrantNumberMetadata(DvObject dvObject, String xmlMetadata) {
         try {
             Dataset dataset = (Dataset) dvObject;
-            List<Map<String, String>> grantNumberChildValues = new ArrayList<>();
-            List<DatasetField> grantNumberDatasetFields = DataCiteMetadataUtil.searchForFirstLevelDatasetFields(dataset, DatasetFieldConstant.grantNumber);
-            if(!grantNumberDatasetFields.isEmpty()){
-                //There should only be one 'grantNumber' DatasetField
-                DatasetField datasetField = grantNumberDatasetFields.get(0);
-                grantNumberChildValues = DataCiteMetadataUtil.extractCompoundValueChildDatasetFieldValues(datasetField);
-            }
-
-            if(!grantNumberChildValues.isEmpty()) {
-                org.w3c.dom.Document xmlDocument = DataCiteMetadataUtil.parseXml(xmlMetadata);
-                DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "resource", "fundingReferences", null);
-                for (Map<String, String> childValue : grantNumberChildValues) {
-                    if (!childValue.isEmpty()) {
-                        DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReferences", "fundingReference", null);
-                        if(childValue.get(DatasetFieldConstant.grantNumberAgency) != null) {
-                            DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReference", "funderName", childValue.get(DatasetFieldConstant.grantNumberAgency));
-                        }
-                        if(childValue.get(DatasetFieldConstant.grantNumberValue) != null) {
-                            DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReference", "awardNumber", childValue.get(DatasetFieldConstant.grantNumberValue));
-                        }
-                    }
-                }
-                xmlMetadata = DataCiteMetadataUtil.prettyPrintXML(xmlDocument, 4);
-            }
+            List<Map<String, String>> grantNumberChildValues = extractGrantNumberValues(dataset);
+            org.w3c.dom.Document xmlDocument = DataCiteMetadataUtil.parseXml(xmlMetadata);
+            xmlDocument = addGrantNumberMetadata(grantNumberChildValues, xmlDocument);
+            xmlMetadata = DataCiteMetadataUtil.prettyPrintXML(xmlDocument, 4);
         } catch(Exception e) {
             logger.log(Level.SEVERE, "Error adding grantNumber to the DataCite Metadata: {0}", e.getMessage());
         }
-
         return xmlMetadata;
+    }
+
+    public List<Map<String, String>> extractGrantNumberValues(Dataset dataset) {
+        List<Map<String, String>> grantNumberChildValues = new ArrayList<>();
+        List<DatasetField> grantNumberDatasetFields = DataCiteMetadataUtil.searchForFirstLevelDatasetFields(dataset, DatasetFieldConstant.grantNumber);
+        if(!grantNumberDatasetFields.isEmpty()){
+            //There should only be one 'grantNumber' DatasetField
+            DatasetField datasetField = grantNumberDatasetFields.get(0);
+            grantNumberChildValues = DataCiteMetadataUtil.extractCompoundValueChildDatasetFieldValues(datasetField);
+        }
+        return grantNumberChildValues;
+    }
+
+    public org.w3c.dom.Document addGrantNumberMetadata(List<Map<String, String>> grantNumberChildValues, org.w3c.dom.Document xmlDocument) {
+        for (Map<String, String> childValue : grantNumberChildValues) {
+            if (childValue.containsKey(DatasetFieldConstant.grantNumberAgency)) {
+                if(xmlDocument.getElementsByTagName("fundingReferences").getLength() == 0){
+                    DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "resource", "fundingReferences", null);
+                }
+                DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReferences", "fundingReference", null);
+                DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReference", "funderName", childValue.get(DatasetFieldConstant.grantNumberAgency));
+                if (childValue.containsKey(DatasetFieldConstant.grantNumberValue)) {
+                    DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReference", "awardNumber", childValue.get(DatasetFieldConstant.grantNumberValue));
+                }
+            }
+        }
+        return xmlDocument;
     }
 
     private String generateRelatedIdentifiers(DvObject dvObject) {
