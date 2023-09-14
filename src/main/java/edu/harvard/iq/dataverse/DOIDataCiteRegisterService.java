@@ -567,37 +567,54 @@ class DataCiteMetadataTemplate {
 
         xmlMetadata = xmlMetadata.replace("{$contributors}", contributorsElement.toString());
 
-        xmlMetadata = addGrantNumberMetadata(dvObject, xmlMetadata);
+        xmlMetadata = this.addFundingReferences(dvObject, xmlMetadata);
 
         return xmlMetadata;
     }
 
-    private String addGrantNumberMetadata(DvObject dvObject, String xmlMetadata) {
+    private String addFundingReferences(DvObject dvObject, String xmlMetadata) {
         try {
-            Dataset dataset = (Dataset) dvObject;
-            List<Map<String, String>> grantNumberChildValues = extractGrantNumberValues(dataset);
-            org.w3c.dom.Document xmlDocument = DataCiteMetadataUtil.parseXml(xmlMetadata);
-            xmlDocument = addGrantNumberMetadata(grantNumberChildValues, xmlDocument);
-            xmlMetadata = DataCiteMetadataUtil.prettyPrintXML(xmlDocument, 4);
+            if (dvObject.isInstanceofDataset()) {
+                Dataset dataset = (Dataset) dvObject;
+                List<Map<String, String>> grantNumberChildValues = this.extractGrantNumberValues(dataset);
+                if (!grantNumberChildValues.isEmpty()) {
+                    org.w3c.dom.Document xmlDocument = DataCiteMetadataUtil.parseXml(xmlMetadata);
+                    xmlDocument = this.appendFundingReferences(grantNumberChildValues, xmlDocument);
+                    xmlMetadata = DataCiteMetadataUtil.prettyPrintXML(xmlDocument, 4);
+                }
+            }
         } catch(Exception e) {
-            logger.log(Level.SEVERE, "Error adding grantNumber to the DataCite Metadata: {0}", e.getMessage());
+            logger.log(Level.SEVERE, "Error adding fundingReferences to the DataCite Metadata: {0}", e.getMessage());
         }
         return xmlMetadata;
     }
 
-    public List<Map<String, String>> extractGrantNumberValues(Dataset dataset) {
+    private List<Map<String, String>> extractGrantNumberValues(Dataset dataset) {
         List<Map<String, String>> grantNumberChildValues = new ArrayList<>();
         List<DatasetField> grantNumberDatasetFields = DataCiteMetadataUtil.searchForFirstLevelDatasetFields(dataset, DatasetFieldConstant.grantNumber);
+        //There should only be one DatasetField with name 'grantNumber' (Premise: There are values for grantNumber)
         if(!grantNumberDatasetFields.isEmpty()){
-            //There should only be one 'grantNumber' DatasetField
-            DatasetField datasetField = grantNumberDatasetFields.get(0);
-            grantNumberChildValues = DataCiteMetadataUtil.extractCompoundValueChildDatasetFieldValues(datasetField);
+            DatasetField grantNumber = grantNumberDatasetFields.get(0);
+            grantNumberChildValues = DataCiteMetadataUtil.extractCompoundValueChildDatasetFieldValues(grantNumber);
         }
         return grantNumberChildValues;
     }
 
-    public org.w3c.dom.Document addGrantNumberMetadata(List<Map<String, String>> grantNumberChildValues, org.w3c.dom.Document xmlDocument) {
+    /**
+     * <pre>
+     * Appends fundingReferences to the DataCite xml.
+     * Mappings:
+     * - grantNumberAgency -> funderName
+     * - grantNumberValue -> awardNumber
+     * </pre>
+     *
+     * @param grantNumberChildValues
+     * @param xmlDocument
+     * @return The xmlDocument with fundingReferences
+     */
+    private org.w3c.dom.Document appendFundingReferences(List<Map<String, String>> grantNumberChildValues, org.w3c.dom.Document xmlDocument) {
         for (Map<String, String> childValue : grantNumberChildValues) {
+            // funderName (=grantNumberAgency) is a required subfield of fundingReference
             if (childValue.containsKey(DatasetFieldConstant.grantNumberAgency)) {
                 if(xmlDocument.getElementsByTagName("fundingReferences").getLength() == 0){
                     DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "resource", "fundingReferences", null);
@@ -786,7 +803,7 @@ class DataCiteMetadataUtil {
     }
 
     /**
-     * Append Element to the last parent element.
+     * Append Element to the last parent element in order.
      *
      * @param document
      * @param parentTagName
