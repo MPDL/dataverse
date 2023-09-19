@@ -7,15 +7,8 @@ package edu.harvard.iq.dataverse;
 
 import edu.harvard.iq.dataverse.branding.BrandingUtil;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -23,6 +16,16 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import edu.harvard.iq.dataverse.settings.JvmSettings;
 import org.apache.commons.text.StringEscapeUtils;
@@ -30,6 +33,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -561,7 +566,67 @@ class DataCiteMetadataTemplate {
         xmlMetadata = xmlMetadata.replace("${relatedIdentifiers}", relIdentifiers);
 
         xmlMetadata = xmlMetadata.replace("{$contributors}", contributorsElement.toString());
+
+        xmlMetadata = this.addFundingReferences(dvObject, xmlMetadata);
+
         return xmlMetadata;
+    }
+
+    private String addFundingReferences(DvObject dvObject, String xmlMetadata) {
+        try {
+            if (dvObject.isInstanceofDataset()) {
+                Dataset dataset = (Dataset) dvObject;
+                List<Map<String, String>> grantNumberChildValues = this.extractGrantNumberValues(dataset);
+                if (!grantNumberChildValues.isEmpty()) {
+                    org.w3c.dom.Document xmlDocument = DataCiteMetadataUtil.parseXml(xmlMetadata);
+                    xmlDocument = this.appendFundingReferences(grantNumberChildValues, xmlDocument);
+                    xmlMetadata = DataCiteMetadataUtil.prettyPrintXML(xmlDocument, 4);
+                }
+            }
+        } catch(Exception e) {
+            logger.log(Level.SEVERE, "Error adding fundingReferences to the DataCite Metadata: {0}", e.getMessage());
+        }
+        return xmlMetadata;
+    }
+
+    private List<Map<String, String>> extractGrantNumberValues(Dataset dataset) {
+        List<Map<String, String>> grantNumberChildValues = new ArrayList<>();
+        List<DatasetField> grantNumberDatasetFields = DataCiteMetadataUtil.searchForFirstLevelDatasetFields(dataset, DatasetFieldConstant.grantNumber);
+        //There should only be one DatasetField with name 'grantNumber' (Premise: There are values for grantNumber)
+        if(!grantNumberDatasetFields.isEmpty()){
+            DatasetField grantNumber = grantNumberDatasetFields.get(0);
+            grantNumberChildValues = DataCiteMetadataUtil.extractCompoundValueChildDatasetFieldValues(grantNumber);
+        }
+        return grantNumberChildValues;
+    }
+
+    /**
+     * <pre>
+     * Appends fundingReferences to the DataCite xml.
+     * Mappings:
+     * - grantNumberAgency -> funderName
+     * - grantNumberValue -> awardNumber
+     * </pre>
+     *
+     * @param grantNumberChildValues
+     * @param xmlDocument
+     * @return The xmlDocument with fundingReferences
+     */
+    private org.w3c.dom.Document appendFundingReferences(List<Map<String, String>> grantNumberChildValues, org.w3c.dom.Document xmlDocument) {
+        for (Map<String, String> childValue : grantNumberChildValues) {
+            // funderName (=grantNumberAgency) is a required subfield of fundingReference
+            if (childValue.containsKey(DatasetFieldConstant.grantNumberAgency)) {
+                if(xmlDocument.getElementsByTagName("fundingReferences").getLength() == 0){
+                    DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "resource", "fundingReferences", null);
+                }
+                DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReferences", "fundingReference", null);
+                DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReference", "funderName", childValue.get(DatasetFieldConstant.grantNumberAgency));
+                if (childValue.containsKey(DatasetFieldConstant.grantNumberValue)) {
+                    DataCiteMetadataUtil.appendElementToDocument(xmlDocument, "fundingReference", "awardNumber", childValue.get(DatasetFieldConstant.grantNumberValue));
+                }
+            }
+        }
+        return xmlDocument;
     }
 
     private String generateRelatedIdentifiers(DvObject dvObject) {
@@ -725,4 +790,84 @@ class Util {
         return str.toString();
     }
     
+}
+
+class DataCiteMetadataUtil {
+
+    public static org.w3c.dom.Document parseXml(String xml) throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        org.w3c.dom.Document document = builder.parse(new InputSource(new StringReader(xml)));
+
+        return document;
+    }
+
+    /**
+     * Append Element to the last parent element in order.
+     *
+     * @param document
+     * @param parentTagName
+     * @param tagName
+     * @param textContent
+     */
+    public static void appendElementToDocument(org.w3c.dom.Document document, String parentTagName, String tagName, String textContent) {
+        org.w3c.dom.Element element = document.createElement(tagName);
+        if(textContent != null && !textContent.isEmpty()) {
+            element.setTextContent(textContent);
+        }
+        org.w3c.dom.NodeList parentElements = document.getElementsByTagName(parentTagName);
+        if(parentElements.getLength() > 0){
+            org.w3c.dom.Element lastParentElement = (org.w3c.dom.Element) parentElements.item(parentElements.getLength() - 1);
+            lastParentElement.appendChild(element);
+        }
+    }
+
+    public static String prettyPrintXML(org.w3c.dom.Document document, int indent) throws TransformerException {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        InputStream inputStream = DataCiteMetadataTemplate.class.getResourceAsStream("prettyprint.xsl");
+        String prettyPrintXsl = Util.readAndClose(inputStream, "utf-8");
+        Transformer transformer = transformerFactory.newTransformer(new StreamSource(new StringReader(prettyPrintXsl)));
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", Integer.toString(indent));
+        transformer.setOutputProperty(OutputKeys.STANDALONE, "no");
+
+        StringWriter stringWriter = new StringWriter();
+        transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
+        return stringWriter.toString();
+    }
+
+    /**
+     * Search for a fist-level DatasetFields by name.
+     *
+     * @param dataset
+     * @param datasetFieldName
+     * @return List of DatasetFields with the given name.
+     */
+    public static List<DatasetField> searchForFirstLevelDatasetFields(Dataset dataset, String datasetFieldName) {
+        List<DatasetField> datasetFields = new ArrayList<>();
+        for (DatasetField datasetField : dataset.getLatestVersion().getDatasetFields()) {
+            if (datasetField.getDatasetFieldType().getName().equals(datasetFieldName)) {
+                datasetFields.add(datasetField);
+            }
+        }
+        return datasetFields;
+    }
+
+    public static List<Map<String, String>> extractCompoundValueChildDatasetFieldValues(DatasetField datasetField){
+        List<Map<String, String>> fieldValues = new ArrayList<>();
+        for (DatasetFieldCompoundValue compoundValue : datasetField.getDatasetFieldCompoundValues()) {
+            fieldValues.add(DataCiteMetadataUtil.extractChildDatasetFieldValues(compoundValue));
+        }
+        return fieldValues;
+    }
+
+    public static Map<String, String> extractChildDatasetFieldValues(DatasetFieldCompoundValue datasetFieldCompoundValue) {
+        Map<String, String> datasetFieldValues = new HashMap<>();
+        for (DatasetField childDatasetField : datasetFieldCompoundValue.getChildDatasetFields()) {
+            datasetFieldValues.put(childDatasetField.getDatasetFieldType().getName(), childDatasetField.getValue());
+        }
+        return datasetFieldValues;
+    }
+
 }
