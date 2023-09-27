@@ -2865,6 +2865,11 @@ public class DatasetPage implements java.io.Serializable {
     public String refresh() {
         logger.fine("refreshing");
 
+        //TODO remove in 6.0 - fix for https://github.com/IQSS/dataverse/issues/9954
+        if(versionId == null && workingVersion != null) {
+            versionId = workingVersion.getId();
+        }
+
         //dataset = datasetService.find(dataset.getId());
         dataset = null;
         workingVersion = null; 
