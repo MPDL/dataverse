@@ -6,8 +6,11 @@ import edu.harvard.iq.dataverse.engine.command.DataverseRequest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotEmpty;
 ;
 
 /**
@@ -27,7 +30,6 @@ public class MailDomainGroup extends PersistedGlobalGroup {
      * to this group, concatenated with ";" (thus avoiding another relation)
      */
     @NotEmpty
-    @Column(columnDefinition = "TEXT")
     private String emailDomains;
     
     private boolean isRegEx = false;
