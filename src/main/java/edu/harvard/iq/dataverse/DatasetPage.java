@@ -11,6 +11,9 @@ import edu.harvard.iq.dataverse.authorization.users.PrivateUrlUser;
 import edu.harvard.iq.dataverse.authorization.users.User;
 import edu.harvard.iq.dataverse.branding.BrandingUtil;
 import edu.harvard.iq.dataverse.dataaccess.StorageIO;
+import edu.harvard.iq.dataverse.dataaccess.AbstractRemoteOverlayAccessIO;
+import edu.harvard.iq.dataverse.dataaccess.DataAccess;
+import edu.harvard.iq.dataverse.dataaccess.GlobusAccessibleStore;
 import edu.harvard.iq.dataverse.dataaccess.ImageThumbConverter;
 import edu.harvard.iq.dataverse.dataaccess.SwiftAccessIO;
 import edu.harvard.iq.dataverse.datacapturemodule.DataCaptureModuleUtil;
@@ -361,6 +364,8 @@ public class DatasetPage implements java.io.Serializable {
      * other boolean. 
      */
     private boolean versionHasTabular = false;
+    private boolean versionHasGlobus = false;
+    private boolean globusTransferRequested = false;
 
     private boolean showIngestSuccess;
     
@@ -374,6 +379,19 @@ public class DatasetPage implements java.io.Serializable {
 
     public void setShowIngestSuccess(boolean showIngestSuccess) {
         this.showIngestSuccess = showIngestSuccess;
+    }
+
+    private String termsGuestbookPopupAction = "";
+
+    public void setTermsGuestbookPopupAction(String popupAction){
+        if(popupAction != null && popupAction.length() > 0){
+            this.termsGuestbookPopupAction = popupAction;
+        }
+
+    }
+
+    public String getTermsGuestbookPopupAction(){
+        return termsGuestbookPopupAction;
     }
 
     // TODO: Consider renaming "configureTools" to "fileConfigureTools".
@@ -391,6 +409,9 @@ public class DatasetPage implements java.io.Serializable {
     Map<Long, List<ExternalTool>> fileQueryToolsByFileId = new HashMap<>();
     List<ExternalTool> fileQueryTools = new ArrayList<>();
     private List<ExternalTool> datasetExploreTools;
+    private List<ExternalTool> datasetConfigureTools;
+    // The selected dataset-level configure tool
+    private ExternalTool datasetConfigureTool;
 
     public Boolean isHasRsyncScript() {
         return hasRsyncScript;
@@ -490,7 +511,7 @@ public class DatasetPage implements java.io.Serializable {
 
             thumbnailString = datasetThumbnail.getBase64image();
         } else {
-            thumbnailString = thumbnailServiceWrapper.getDatasetCardImageAsBase64Url(dataset,
+            thumbnailString = thumbnailServiceWrapper.getDatasetCardImageAsUrl(dataset,
                     workingVersion.getId(),
                     !workingVersion.isDraft(),
                     ImageThumbConverter.DEFAULT_DATASETLOGO_SIZE);
@@ -738,17 +759,29 @@ public class DatasetPage implements java.io.Serializable {
         if (isIndexedVersion != null) {
             return isIndexedVersion;
         }
-        // The version is SUPPOSED to be indexed if it's the latest published version, or a
-        // draft. So if none of the above is true, we return false right away:
 
-        if (!(workingVersion.isDraft() || isThisLatestReleasedVersion())) {
+        // Just like on the collection page, facets on the Dataset page can be
+        // disabled instance-wide by an admin:
+        if (settingsWrapper.isTrueForKey(SettingsServiceBean.Key.DisableSolrFacets, false)) {
             return isIndexedVersion = false;
         }
 
-        // ... but if it is the latest published version or a draft, we want to test
-        // and confirm that this version *has* actually been indexed and is searchable
-        // (and that solr is actually up and running!), by running a quick solr search:
-        return isIndexedVersion = isThisVersionSearchable();
+        // The version is SUPPOSED to be indexed if it's the latest published version, or a
+        // draft. So if none of the above is true, we can return false right away.
+        if (!(workingVersion.isDraft() || isThisLatestReleasedVersion())) {
+            return isIndexedVersion = false;
+        }
+        // If this is the latest published version, we want to confirm that this
+        // version was successfully indexed after the last publication
+
+        if (isThisLatestReleasedVersion()) {
+            return isIndexedVersion = (workingVersion.getDataset().getIndexTime() != null)
+                    && workingVersion.getDataset().getIndexTime().after(workingVersion.getReleaseTime());
+        }
+
+        // Drafts don't have the indextime stamps set/incremented when indexed,
+        // so we'll just assume it is indexed, and will then hope for the best.
+        return isIndexedVersion = true;
     }
 
     /**
@@ -804,8 +837,18 @@ public class DatasetPage implements java.io.Serializable {
     /**
      * Verifies that solr is running and that the version is indexed and searchable
      * @return boolean
-     */
+     * Commenting out this method for now, since we have decided it was not
+     * necessary, to query solr just to figure out if we can query solr. We will
+     * rely solely on the latest-relesed status and the indexed timestamp from
+     * the database for that. - L.A.
+     *
     public boolean isThisVersionSearchable() {
+        // Just like on the collection page, facets on the Dataset page can be
+        // disabled instance-wide by an admin:
+        if (settingsWrapper.isTrueForKey(SettingsServiceBean.Key.DisableSolrFacets, false)) {
+            return false;
+        }
+
         SolrQuery solrQuery = new SolrQuery();
 
         solrQuery.setQuery(SearchUtil.constructQuery(SearchFields.ENTITY_ID, workingVersion.getDataset().getId().toString()));
@@ -840,6 +883,7 @@ public class DatasetPage implements java.io.Serializable {
 
         return false;
     }
+    */
 
     /**
      * Finds the list of numeric datafile ids in the Version specified, by running
@@ -951,10 +995,19 @@ public class DatasetPage implements java.io.Serializable {
             logger.fine("Remote Solr Exception: " + ex.getLocalizedMessage());
             String msg = ex.getLocalizedMessage();
             if (msg.contains(SearchFields.FILE_DELETED)) {
+                // This is a backward compatibility hook put in place many versions
+                // ago, to accommodate instances running Solr with schemas that
+                // don't include this flag yet. Running Solr with an up-to-date
+                // schema has been a hard requirement for a while now; should we
+                // remove it at this point? - L.A.
                 fileDeletedFlagNotIndexed = true;
+            } else {
+                isIndexedVersion = false;
+                return resultIds;
             }
         } catch (Exception ex) {
             logger.warning("Solr exception: " + ex.getLocalizedMessage());
+            isIndexedVersion = false;
             return resultIds;
         }
 
@@ -967,6 +1020,7 @@ public class DatasetPage implements java.io.Serializable {
                 queryResponse = solrClientService.getSolrClient().query(solrQuery);
             } catch (Exception ex) {
                 logger.warning("Caught a Solr exception (again!): " + ex.getLocalizedMessage());
+                isIndexedVersion = false;
                 return resultIds;
             }
         }
@@ -2087,7 +2141,7 @@ public class DatasetPage implements java.io.Serializable {
                         selectedTemplate = testT;
                     }
                 }
-                //Initalize with the default if there is one
+                //Initalize with the default if there is one 
                 dataset.setTemplate(selectedTemplate);
                 workingVersion = dataset.getOrCreateEditVersion(selectedTemplate, null);
                 updateDatasetFieldInputLevels();
@@ -2135,10 +2189,19 @@ public class DatasetPage implements java.io.Serializable {
         // the total "originals" size of the dataset with direct custom queries; 
         // then we'll be able to drop the lookup hint for DataTable from the 
         // findDeep() method for the version and further speed up the lookup 
-        // a little bit. 
+        // a little bit.
+        boolean globusDownloadEnabled = systemConfig.isGlobusDownload();
         for (FileMetadata fmd : workingVersion.getFileMetadatas()) {
-            if (fmd.getDataFile().isTabularData()) {
+            DataFile df = fmd.getDataFile();
+            if (df.isTabularData()) {
                 versionHasTabular = true;
+            }
+            if(globusDownloadEnabled) {
+                if(GlobusAccessibleStore.isGlobusAccessible(DataAccess.getStorageDriverFromIdentifier(df.getStorageIdentifier()))) {
+                    versionHasGlobus= true;
+                }
+            }
+            if(versionHasTabular &&(!globusDownloadEnabled || versionHasGlobus)) {
                 break;
             }
         }
@@ -2154,6 +2217,7 @@ public class DatasetPage implements java.io.Serializable {
         previewTools = externalToolService.findFileToolsByType(ExternalTool.Type.PREVIEW);
         fileQueryTools = externalToolService.findFileToolsByType(ExternalTool.Type.QUERY);
         datasetExploreTools = externalToolService.findDatasetToolsByType(ExternalTool.Type.EXPLORE);
+        datasetConfigureTools = externalToolService.findDatasetToolsByType(ExternalTool.Type.CONFIGURE);
         rowsPerPage = 10;
         if (dataset.getId() != null && canUpdateDataset()) {
             hasRestrictedFiles = workingVersion.isHasRestrictedFile();
@@ -2433,6 +2497,10 @@ public class DatasetPage implements java.io.Serializable {
 
     public boolean isVersionHasTabular() {
         return versionHasTabular;
+    }
+
+    public boolean isVersionHasGlobus() {
+        return versionHasGlobus;
     }
 
     public boolean isReadOnly() {
@@ -2864,11 +2932,12 @@ public class DatasetPage implements java.io.Serializable {
     public String refresh() {
         logger.fine("refreshing");
 
-        //TODO remove in 6.0 - fix for https://github.com/IQSS/dataverse/issues/9954
-        if(versionId == null && workingVersion != null) {
+        //In v5.14, versionId was null here. In 6.0, it appears not to be.
+        //This check is to handle the null if it reappears/occurs under other circumstances
+        if(versionId==null) {
+            logger.warning("versionId was null in refresh");
             versionId = workingVersion.getId();
         }
-
         //dataset = datasetService.find(dataset.getId());
         dataset = null;
         workingVersion = null; 
@@ -2878,10 +2947,9 @@ public class DatasetPage implements java.io.Serializable {
         DatasetVersionServiceBean.RetrieveDatasetVersionResponse retrieveDatasetVersionResponse = null;
 
         if (versionId != null) {
-            // versionId must have been set by now, in the init() method, 
-            // regardless of how the page was originally called - by the dataset
-            // database id, by the persistent identifier, or by the db id of
-            // the version. 
+            // versionId must have been set by now (see null check above), in the init()
+            // method, regardless of how the page was originally called - by the dataset
+            // database id, by the persistent identifier, or by the db id of the version.
             this.workingVersion = datasetVersionService.findDeep(versionId);
             dataset = workingVersion.getDataset();
         } 
@@ -3040,6 +3108,26 @@ public class DatasetPage implements java.io.Serializable {
         this.selectedNonDownloadableFiles = selectedNonDownloadableFiles;
     }
 
+    private List<FileMetadata> selectedGlobusTransferableFiles;
+
+    public List<FileMetadata> getSelectedGlobusTransferableFiles() {
+        return selectedGlobusTransferableFiles;
+    }
+
+    public void setSelectedGlobusTransferableFiles(List<FileMetadata> selectedGlobusTransferableFiles) {
+        this.selectedGlobusTransferableFiles = selectedGlobusTransferableFiles;
+    }
+
+    private List<FileMetadata> selectedNonGlobusTransferableFiles;
+
+    public List<FileMetadata> getSelectedNonGlobusTransferableFiles() {
+        return selectedNonGlobusTransferableFiles;
+    }
+
+    public void setSelectedNonGlobusTransferableFiles(List<FileMetadata> selectedNonGlobusTransferableFiles) {
+        this.selectedNonGlobusTransferableFiles = selectedNonGlobusTransferableFiles;
+    }
+
     public String getSizeOfDataset() {
         return DatasetUtil.getDownloadSize(workingVersion, false);
     }
@@ -3149,9 +3237,9 @@ public class DatasetPage implements java.io.Serializable {
 
     private void startDownload(boolean downloadOriginal){
         boolean guestbookRequired = isDownloadPopupRequired();
-        boolean validate = validateFilesForDownload(guestbookRequired, downloadOriginal);
+        boolean validate = validateFilesForDownload(downloadOriginal);
         if (validate) {
-            updateGuestbookResponse(guestbookRequired, downloadOriginal);
+            updateGuestbookResponse(guestbookRequired, downloadOriginal, false);
             if(!guestbookRequired && !getValidateFilesOutcome().equals("Mixed")){
                 startMultipleFileDownload();
             }
@@ -3172,9 +3260,14 @@ public class DatasetPage implements java.io.Serializable {
         this.validateFilesOutcome = validateFilesOutcome;
     }
 
-    public boolean validateFilesForDownload(boolean guestbookRequired, boolean downloadOriginal) {
-        setSelectedDownloadableFiles(new ArrayList<>());
-        setSelectedNonDownloadableFiles(new ArrayList<>());
+    public boolean validateFilesForDownload(boolean downloadOriginal){
+        if (this.selectedFiles.isEmpty()) {
+            PrimeFaces.current().executeScript("PF('selectFilesForDownload').show()");
+            return false;
+        } else {
+            this.filterSelectedFiles();
+        }
+
         //assume Pass unless something bad happens
         setValidateFilesOutcome("Pass");
         Long bytes = (long) 0;
@@ -3184,22 +3277,17 @@ public class DatasetPage implements java.io.Serializable {
             return false;
         }
 
-        for (FileMetadata fmd : this.selectedFiles) {
-            if (this.fileDownloadHelper.canDownloadFile(fmd)) {
-                getSelectedDownloadableFiles().add(fmd);
-                DataFile dataFile = fmd.getDataFile();
-                if (downloadOriginal && dataFile.isTabularData()) {
-                    bytes += dataFile.getOriginalFileSize() == null ? 0 : dataFile.getOriginalFileSize();
-                } else {
-                    bytes += dataFile.getFilesize();
-                }
+        for (FileMetadata fmd : getSelectedDownloadableFiles()) {
+            DataFile dataFile = fmd.getDataFile();
+            if (downloadOriginal && dataFile.isTabularData()) {
+                bytes += dataFile.getOriginalFileSize() == null ? 0 : dataFile.getOriginalFileSize();
             } else {
-                getSelectedNonDownloadableFiles().add(fmd);
+                bytes += dataFile.getFilesize();
             }
         }
 
-        //if there are two or more files with a total size
-        //over the zip limit post a "too large" popup
+        //if there are two or more files, with a total size
+        //over the zip limit, post a "too large" popup
         if (bytes > settingsWrapper.getZipDownloadLimit() && selectedDownloadableFiles.size() > 1) {
             setValidateFilesOutcome("FailSize");
             return false;
@@ -3208,41 +3296,126 @@ public class DatasetPage implements java.io.Serializable {
         // If some of the files were restricted and we had to drop them off the
         // list, and NONE of the files are left on the downloadable list
         // - we show them a "you're out of luck" popup:
-        if (getSelectedDownloadableFiles().isEmpty() && !getSelectedNonDownloadableFiles().isEmpty()) {
+        if (getSelectedDownloadableFiles().isEmpty() && getSelectedGlobusTransferableFiles().isEmpty() && !getSelectedNonDownloadableFiles().isEmpty()) {
             setValidateFilesOutcome("FailRestricted");
             return false;
         }
 
-        if (!getSelectedDownloadableFiles().isEmpty() && !getSelectedNonDownloadableFiles().isEmpty()) {
+        //Some are selected and there are non-downloadable ones or there are both downloadable and globus transferable files
+        if ((!(getSelectedDownloadableFiles().isEmpty() && getSelectedGlobusTransferableFiles().isEmpty())
+                && (!getSelectedNonDownloadableFiles().isEmpty()) || (!getSelectedDownloadableFiles().isEmpty() && !getSelectedGlobusTransferableFiles().isEmpty()))) {
             setValidateFilesOutcome("Mixed");
             return true;
         }
-
-        if (guestbookRequired) {
+        //ToDo - should Mixed not trigger this?
+        if (isTermsPopupRequired() || isGuestbookPopupRequiredAtDownload()) {
             setValidateFilesOutcome("GuestbookRequired");
         }
-
         return true;
 
     }
 
-    private void updateGuestbookResponse (boolean guestbookRequired, boolean downloadOriginal) {
+    private void updateGuestbookResponse (boolean guestbookRequired, boolean downloadOriginal, boolean isGlobusTransfer) {
         // Note that the GuestbookResponse object may still have information from
         // the last download action performed by the user. For example, it may
         // still have the non-null Datafile in it, if the user has just downloaded
         // a single file; or it may still have the format set to "original" -
         // even if that's not what they are trying to do now.
         // So make sure to reset these values:
-        guestbookResponse.setDataFile(null);
-        guestbookResponse.setSelectedFileIds(getSelectedDownloadableFilesIdsString());
+        if(fileMetadataForAction == null) {
+            guestbookResponse.setDataFile(null);
+        } else {
+            guestbookResponse.setDataFile(fileMetadataForAction.getDataFile());
+        }
+        if(isGlobusTransfer) {
+            guestbookResponse.setSelectedFileIds(getFilesIdsString(getSelectedGlobusTransferableFiles()));
+        } else {
+            guestbookResponse.setSelectedFileIds(getSelectedDownloadableFilesIdsString());
+        }
         if (downloadOriginal) {
             guestbookResponse.setFileFormat("original");
         } else {
             guestbookResponse.setFileFormat("");
         }
-        guestbookResponse.setDownloadtype("Download");
+        guestbookResponse.setEventType(GuestbookResponse.DOWNLOAD);
     }
 
+    /*helper function to filter the selected files into <selected downloadable>,
+    and <selected, non downloadable> and <selected restricted> for reuse*/
+
+    /*helper function to filter the selected files into <selected downloadable>,
+    and <selected, non downloadable> and <selected restricted> for reuse*/
+
+    private boolean filterSelectedFiles(){
+        setSelectedDownloadableFiles(new ArrayList<>());
+        setSelectedNonDownloadableFiles(new ArrayList<>());
+        setSelectedRestrictedFiles(new ArrayList<>());
+        setSelectedUnrestrictedFiles(new ArrayList<>());
+        setSelectedGlobusTransferableFiles(new ArrayList<>());
+        setSelectedNonGlobusTransferableFiles(new ArrayList<>());
+
+        boolean someFiles = false;
+        boolean globusDownloadEnabled = settingsWrapper.isGlobusDownload();
+        for (FileMetadata fmd : this.selectedFiles){
+            boolean downloadable=this.fileDownloadHelper.canDownloadFile(fmd);
+
+            boolean globusTransferable = false;
+            if(globusDownloadEnabled) {
+                String driverId = DataAccess.getStorageDriverFromIdentifier(fmd.getDataFile().getStorageIdentifier());
+                globusTransferable = GlobusAccessibleStore.isGlobusAccessible(driverId);
+                downloadable = downloadable && !AbstractRemoteOverlayAccessIO.isNotDataverseAccessible(driverId);
+            }
+            if(downloadable){
+                getSelectedDownloadableFiles().add(fmd);
+                someFiles=true;
+            } else {
+                getSelectedNonDownloadableFiles().add(fmd);
+            }
+            if(globusTransferable) {
+                getSelectedGlobusTransferableFiles().add(fmd);
+                someFiles=true;
+            } else {
+                getSelectedNonGlobusTransferableFiles().add(fmd);
+            }
+            if(fmd.isRestricted()){
+                getSelectedRestrictedFiles().add(fmd); //might be downloadable to user or not
+                someFiles=true;
+            } else {
+                getSelectedUnrestrictedFiles().add(fmd);
+                someFiles=true;
+            }
+
+        }
+        return someFiles;
+    }
+
+    public void validateFilesForRequestAccess(){
+        this.filterSelectedFiles();
+
+        if(!dataset.isFileAccessRequest()){ //is this needed? wouldn't be able to click Request Access if this !isFileAccessRequest()
+            return;
+        }
+
+        if(!this.selectedRestrictedFiles.isEmpty()){
+            ArrayList<FileMetadata> nonDownloadableRestrictedFiles = new ArrayList<>();
+
+            List<DataFile> userRequestedDataFiles = ((AuthenticatedUser) session.getUser()).getRequestedDataFiles();
+
+            for(FileMetadata fmd : this.selectedRestrictedFiles){
+                if(!this.fileDownloadHelper.canDownloadFile(fmd) && !userRequestedDataFiles.contains(fmd.getDataFile())){
+                    nonDownloadableRestrictedFiles.add(fmd);
+                }
+            }
+
+            if(!nonDownloadableRestrictedFiles.isEmpty()){
+                guestbookResponse.setDataFile(null);
+                guestbookResponse.setSelectedFileIds(this.getFilesIdsString(nonDownloadableRestrictedFiles));
+                this.requestAccessMultipleFiles();
+            } else {
+                //popup select data files
+            }
+        }
+    }
 
     private boolean selectAllFiles;
 
@@ -3268,26 +3441,23 @@ public class DatasetPage implements java.io.Serializable {
 
     // helper Method
     public String getSelectedFilesIdsString() {
-        String downloadIdString = "";
-        for (FileMetadata fmd : this.selectedFiles){
-            if (!StringUtil.isEmpty(downloadIdString)) {
-                downloadIdString += ",";
-            }
-            downloadIdString += fmd.getDataFile().getId();
-        }
-        return downloadIdString;
+        return this.getFilesIdsString(this.selectedFiles);
     }
 
     // helper Method
     public String getSelectedDownloadableFilesIdsString() {
-        String downloadIdString = "";
-        for (FileMetadata fmd : this.selectedDownloadableFiles){
-            if (!StringUtil.isEmpty(downloadIdString)) {
-                downloadIdString += ",";
+        return this.getFilesIdsString(this.selectedDownloadableFiles);
+    }
+
+    public String getFilesIdsString(List<FileMetadata> fileMetadatas){ //for reuse
+        String idString = "";
+        for (FileMetadata fmd : fileMetadatas){
+            if (!StringUtil.isEmpty(idString)) {
+                idString += ",";
             }
-            downloadIdString += fmd.getDataFile().getId();
+            idString += fmd.getDataFile().getId();
         }
-        return downloadIdString;
+        return idString;
     }
 
 
@@ -3325,7 +3495,7 @@ public class DatasetPage implements java.io.Serializable {
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, BundleUtil.getStringFromBundle("dataset.notlinked"), linkingDataverseErrorMessage);
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
-
+        alreadyLinkedDataverses = null; //force update to list of linked dataverses
     }
 
     private String linkingDataverseErrorMessage = "";
@@ -3362,6 +3532,22 @@ public class DatasetPage implements java.io.Serializable {
         return retVal;
     }
 
+    private String alreadyLinkedDataverses = null;
+
+    public String getAlreadyLinkedDataverses(){
+        if (alreadyLinkedDataverses != null) {
+            return alreadyLinkedDataverses;
+        }
+        List<Dataverse> dataverseList = dataverseService.findDataversesThatLinkToThisDatasetId(dataset.getId());
+        for (Dataverse dv: dataverseList){
+            if (alreadyLinkedDataverses == null){
+                alreadyLinkedDataverses = dv.getCurrentName();
+            } else {
+                alreadyLinkedDataverses = alreadyLinkedDataverses + ", " + dv.getCurrentName();
+            }
+        }
+        return alreadyLinkedDataverses;
+    }
 
     public List<Dataverse> completeLinkingDataverse(String query) {
         dataset = datasetService.find(dataset.getId());
@@ -5103,7 +5289,7 @@ public class DatasetPage implements java.io.Serializable {
         for (FileMetadata fmd : workingVersion.getFileMetadatas()){
             AuthenticatedUser authenticatedUser = (AuthenticatedUser) session.getUser();
             //Change here so that if all restricted files have pending requests there's no Request Button
-            if ((!this.fileDownloadHelper.canDownloadFile(fmd) && !fmd.getDataFile().containsFileAccessRequestFromUser(authenticatedUser))) {
+            if ((!this.fileDownloadHelper.canDownloadFile(fmd) && !fmd.getDataFile().containsActiveFileAccessRequestFromUser(authenticatedUser))) {
                 return true;
             }
         }
@@ -5114,40 +5300,14 @@ public class DatasetPage implements java.io.Serializable {
         if (!isSessionUserAuthenticated() || !dataset.isFileAccessRequest()){
             return false;
         }
+        //populate file lists
+        filterSelectedFiles();
+
         if( this.selectedRestrictedFiles == null || this.selectedRestrictedFiles.isEmpty() ){
             return false;
         }
         for (FileMetadata fmd : this.selectedRestrictedFiles){
             if (!this.fileDownloadHelper.canDownloadFile(fmd)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private Boolean downloadButtonAllEnabled = null;
-
-    public boolean isDownloadAllButtonEnabled() {
-
-        if (downloadButtonAllEnabled == null) {
-            for (FileMetadata fmd : workingVersion.getFileMetadatas()) {
-                if (!this.fileDownloadHelper.canDownloadFile(fmd)) {
-                    downloadButtonAllEnabled = false;
-                    break;
-                }
-            }
-            downloadButtonAllEnabled = true;
-        }
-        return downloadButtonAllEnabled;
-    }
-
-    public boolean isDownloadSelectedButtonEnabled(){
-
-        if( this.selectedFiles == null || this.selectedFiles.isEmpty() ){
-            return false;
-        }
-        for (FileMetadata fmd : this.selectedFiles){
-            if (this.fileDownloadHelper.canDownloadFile(fmd)){
                 return true;
             }
         }
@@ -5197,6 +5357,23 @@ public class DatasetPage implements java.io.Serializable {
         return FileUtil.isRequestAccessPopupRequired(workingVersion);
     }
 
+    public boolean isGuestbookAndTermsPopupRequired() {
+        return FileUtil.isGuestbookAndTermsPopupRequired(workingVersion);
+    }
+
+    public boolean isGuestbookPopupRequired(){
+        return FileUtil.isGuestbookPopupRequired(workingVersion);
+    }
+
+    public boolean isTermsPopupRequired(){
+        return FileUtil.isTermsPopupRequired(workingVersion);
+    }
+
+    public boolean isGuestbookPopupRequiredAtDownload(){
+        // Only show guestbookAtDownload if guestbook at request is disabled (legacy behavior)
+        return isGuestbookPopupRequired() && !workingVersion.getDataset().getEffectiveGuestbookEntryAtRequest();
+    }
+
     public String requestAccessMultipleFiles() {
 
         if (selectedFiles.isEmpty()) {
@@ -5211,11 +5388,11 @@ public class DatasetPage implements java.io.Serializable {
             for (FileMetadata fmd : selectedFiles){
                  fileDownloadHelper.addMultipleFilesForRequestAccess(fmd.getDataFile());
             }
-            if (isRequestAccessPopupRequired()) {
+            if (isGuestbookAndTermsPopupRequired()) {
                 //RequestContext requestContext = RequestContext.getCurrentInstance();
-                PrimeFaces.current().executeScript("PF('requestAccessPopup').show()");
+                PrimeFaces.current().executeScript("PF('guestbookAndTermsPopup').show()"); //the popup will call writeGuestbookAndRequestAccess();
                 return "";
-            } else {
+            }else {
                 //No popup required
                 fileDownloadHelper.requestAccessIndirect();
                 return "";
@@ -5401,6 +5578,14 @@ public class DatasetPage implements java.io.Serializable {
         this.fileDownloadService = fileDownloadService;
     }
 
+    public FileDownloadHelper getFileDownloadHelper() {
+        return fileDownloadHelper;
+    }
+
+    public void setFileDownloadHelper(FileDownloadHelper fileDownloadHelper) {
+        this.fileDownloadHelper = fileDownloadHelper;
+    }
+
 
     public GuestbookResponseServiceBean getGuestbookResponseService() {
         return guestbookResponseService;
@@ -5576,6 +5761,18 @@ public class DatasetPage implements java.io.Serializable {
 
     public List<ExternalTool> getDatasetExploreTools() {
         return datasetExploreTools;
+    }
+
+    public List<ExternalTool> getDatasetConfigureTools() {
+        return datasetConfigureTools;
+    }
+
+    public ExternalTool getDatasetConfigureTool() {
+        return datasetConfigureTool;
+    }
+
+    public void setDatasetConfigureTool(ExternalTool datasetConfigureTool) {
+        this.datasetConfigureTool = datasetConfigureTool;
     }
 
     Boolean thisLatestReleasedVersion = null;
@@ -5783,16 +5980,20 @@ public class DatasetPage implements java.io.Serializable {
     public void explore(ExternalTool externalTool) {
         ApiToken apiToken = null;
         User user = session.getUser();
-        if (user instanceof AuthenticatedUser) {
-            apiToken = authService.findApiTokenByUser((AuthenticatedUser) user);
-        } else if (user instanceof PrivateUrlUser) {
-            PrivateUrlUser privateUrlUser = (PrivateUrlUser) user;
-            PrivateUrl privUrl = privateUrlService.getPrivateUrlFromDatasetId(privateUrlUser.getDatasetId());
-            apiToken = new ApiToken();
-            apiToken.setTokenString(privUrl.getToken());
-        }
+        apiToken = authService.getValidApiTokenForUser(user);
         ExternalToolHandler externalToolHandler = new ExternalToolHandler(externalTool, dataset, apiToken, session.getLocaleCode());
         PrimeFaces.current().executeScript(externalToolHandler.getExploreScript());
+    }
+
+    public void configure(ExternalTool externalTool) {
+        ApiToken apiToken = null;
+        User user = session.getUser();
+        //Not enabled for PrivateUrlUsers (who wouldn't have write permissions anyway)
+        if (user instanceof AuthenticatedUser) {
+            apiToken = authService.getValidApiTokenForAuthenticatedUser((AuthenticatedUser) user);
+        }
+        ExternalToolHandler externalToolHandler = new ExternalToolHandler(externalTool, dataset, apiToken, session.getLocaleCode());
+        PrimeFaces.current().executeScript(externalToolHandler.getConfigureScript());
     }
 
     private FileMetadata fileMetadataForAction;
@@ -5838,7 +6039,7 @@ public class DatasetPage implements java.io.Serializable {
     }
     public String getEffectiveMetadataLanguage(boolean ofParent) {
         String mdLang = ofParent ? dataset.getOwner().getEffectiveMetadataLanguage() : dataset.getEffectiveMetadataLanguage();
-        if (mdLang.equals(DvObjectContainer.UNDEFINED_METADATA_LANGUAGE_CODE)) {
+        if (mdLang.equals(DvObjectContainer.UNDEFINED_CODE)) {
             mdLang = settingsWrapper.getDefaultMetadataLanguage();
         }
         return mdLang;
@@ -5846,7 +6047,7 @@ public class DatasetPage implements java.io.Serializable {
 
     public String getLocaleDisplayName(String code) {
         String displayName = settingsWrapper.getBaseMetadataLanguageMap(false).get(code);
-        if(displayName==null && !code.equals(DvObjectContainer.UNDEFINED_METADATA_LANGUAGE_CODE)) {
+        if(displayName==null && !code.equals(DvObjectContainer.UNDEFINED_CODE)) {
             //Default (for cases such as :when a Dataset has a metadatalanguage code but :MetadataLanguages is no longer defined).
             displayName = new Locale(code).getDisplayName();
         }
@@ -6113,18 +6314,49 @@ public class DatasetPage implements java.io.Serializable {
         return settingsWrapper.isTrueForKey(SettingsServiceBean.Key.PublicInstall, StorageIO.isPublicStore(dataset.getEffectiveStorageDriverId()));
     }
     
-    public void startGlobusTransfer() {
-        ApiToken apiToken = null;
-        User user = session.getUser();
-        if (user instanceof AuthenticatedUser) {
-            apiToken = authService.findApiTokenByUser((AuthenticatedUser) user);
-        } else if (user instanceof PrivateUrlUser) {
-            PrivateUrlUser privateUrlUser = (PrivateUrlUser) user;
-            PrivateUrl privUrl = privateUrlService.getPrivateUrlFromDatasetId(privateUrlUser.getDatasetId());
-            apiToken = new ApiToken();
-            apiToken.setTokenString(privUrl.getToken());
+    public boolean isGlobusTransferRequested() {
+        return globusTransferRequested;
+    }
+
+    /**
+     * Analagous with the startDownload method, this method is called when the user
+     * tries to start a Globus transfer out (~download). The
+     * validateFilesForDownload call checks to see if there are some files that can
+     * be Globus transfered and, if so and there are no files that can't be
+     * transferre, this method will launch the globus transfer app. If there is a
+     * mix of files or if the guestbook popup is required, the method passes back to
+     * the UI so those popup(s) can be shown. Once they are, this method is called
+     * with the popupShown param true and the app will be shown.
+     *
+     * @param transferAll - when called from the dataset Access menu, this should be
+     *                    true so that all files are included in the processing.
+     *                    When it is called from the file table, the current
+     *                    selection is used and the param should be false.
+     * @param popupShown  - This method is called twice if the the mixed files or
+     *                    guestbook popups are needed. On the first call, popupShown
+     *                    is false so that the transfer is not started and those
+     *                    popups can be shown. On the second call, popupShown is
+     *                    true and processing will occur as long as there are some
+     *                    valid files to transfer.
+     */
+    public void startGlobusTransfer(boolean transferAll, boolean popupShown) {
+        if (transferAll) {
+            this.setSelectedFiles(workingVersion.getFileMetadatas());
         }
-        PrimeFaces.current().executeScript(globusService.getGlobusDownloadScript(dataset, apiToken));
+        boolean guestbookRequired = isDownloadPopupRequired();
+
+        boolean validated = validateFilesForDownload(true);
+        if (validated) {
+            globusTransferRequested = true;
+            boolean mixed = "Mixed".equals(getValidateFilesOutcome());
+            // transfer is
+            updateGuestbookResponse(guestbookRequired, true, true);
+            if ((!guestbookRequired && !mixed) || popupShown) {
+                boolean doNotSaveGuestbookResponse = workingVersion.isDraft();
+                globusService.writeGuestbookAndStartTransfer(guestbookResponse, doNotSaveGuestbookResponse);
+                globusTransferRequested = false;
+            }
+        }
     }
 
     public String getWebloaderUrlForDataset(Dataset d) {
@@ -6150,7 +6382,10 @@ public class DatasetPage implements java.io.Serializable {
     String signpostingLinkHeader = null;
 
     public String getSignpostingLinkHeader() {
-        if (!workingVersion.isReleased()) {
+        if ((workingVersion==null) || (!workingVersion.isReleased())) {
+            if(workingVersion==null) {
+                logger.warning("workingVersion was null in getSignpostingLinkHeader");
+            }
             return null;
         }
         if (signpostingLinkHeader == null) {
