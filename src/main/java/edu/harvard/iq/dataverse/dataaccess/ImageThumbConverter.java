@@ -235,7 +235,6 @@ public class ImageThumbConverter {
                 return false;
             }
 
-
             OutputStream outputStream = null;
             try {
                 tempFile = File.createTempFile("tempFileToRescale", ".tmp");
