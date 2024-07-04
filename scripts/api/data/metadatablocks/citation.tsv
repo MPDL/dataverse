@@ -73,7 +73,7 @@
 	seriesName	Name	Name of the dataset series to which the Dataset belongs.		text	69	#VALUE	TRUE	FALSE	FALSE	TRUE	FALSE	FALSE	series	citation
 	seriesInformation	Information	History of the series and summary of those features that apply to the series as a whole.		textbox	70	#VALUE	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	series	citation
 	software	Software	Information about the software used to generate the Dataset.		none	71	,	FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	https://www.w3.org/TR/prov-o/#wasGeneratedBy
-	softwareName	Software Name	Name of software used to generate the Dataset.		text	72	#VALUE	FALSE	TRUE	FALSE	FALSE	TRUE	FALSE	software	citation
+	softwareName	Software Name	Name of software used to generate the Dataset.		text	72	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	software	citation
 	softwareVersion	Software Version	Version of the software used to generate the Dataset.		text	73	#NAME: #VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	software	citation
 	relatedMaterial	Related Material	Any material related to this Dataset.		textbox	88		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation
 	relatedDatasets	Related Datasets	Any Datasets that are related to this Dataset, such as previous research on this subject.		textbox	77		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	http://purl.org/dc/terms/relation
