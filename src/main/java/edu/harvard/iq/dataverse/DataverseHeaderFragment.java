@@ -14,6 +14,7 @@ import edu.harvard.iq.dataverse.util.BundleUtil;
 import edu.harvard.iq.dataverse.util.SystemConfig;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -220,6 +221,16 @@ public class DataverseHeaderFragment implements java.io.Serializable {
      }
      */
     public String logout() {
+
+        boolean loggedInViaShib = false;
+        User user = dataverseSession.getUser();
+        AuthenticatedUser au = null;
+        if (user.isAuthenticated()) {
+            if(((AuthenticatedUser) user).getAuthenticatedUserLookup().getAuthenticationProviderId().equals("shib")) {
+                loggedInViaShib = true;
+            }
+        }
+
         dataverseSession.setUser(null);
         dataverseSession.setStatusDismissed(false);
         
@@ -248,7 +259,11 @@ public class DataverseHeaderFragment implements java.io.Serializable {
         }
 
         logger.log(Level.INFO, "Sending user to = " + redirectPage);
-        return redirectPage + (!redirectPage.contains("?") ? "?" : "&") + "faces-redirect=true";
+        redirectPage = redirectPage + (!redirectPage.contains("?") ? "?" : "&") + "faces-redirect=true";
+        if(!loggedInViaShib)
+            return redirectPage;
+        else
+            return "/Shibboleth.sso/Logout?return="+ URLEncoder.encode(systemConfig.getDataverseSiteUrl()+"/"+redirectPage);
     }
 
     private Boolean signupAllowed = null;
