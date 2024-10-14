@@ -142,14 +142,13 @@
         <!-- in the application code, to the value that is configurable -->
         <!-- (LoginSessionTimeout in the settings table), with the -->
         <!-- default value of 8 hours. -->
-	    
-      <cookie-config>
-        <http-only>true</http-only>
-      </cookie-config>
-	    
+	     
         <session-timeout>
             10
         </session-timeout>
+	<cookie-config>
+	        <http-only>true</http-only>
+      	</cookie-config>
         <!-- Uncomment the line below to disble `;jsessionid=` in URLs -->
 	<!-- tracking-mode>COOKIE</tracking-mode -->
     </session-config>
