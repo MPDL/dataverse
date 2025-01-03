@@ -8,12 +8,13 @@
                 xmlns:jsf="http://xmlns.jcp.org/jsf">
     <!-- TERMS -->
     <ui:param name="toaNotEmpty" value="#{!empty termsOfUseAndAccess.termsOfAccess
-                                        or !empty termsOfUseAndAccess.dataAccessPlace
-                                        or !empty termsOfUseAndAccess.originalArchive or !empty termsOfUseAndAccess.availabilityStatus
-                                        or !empty termsOfUseAndAccess.contactForAccess or !empty termsOfUseAndAccess.sizeOfCollection
+                                        or !empty termsOfUseAndAccess.dataAccessPlace 
+                                        or !empty termsOfUseAndAccess.originalArchive or !empty termsOfUseAndAccess.availabilityStatus 
+                                        or !empty termsOfUseAndAccess.contactForAccess or !empty termsOfUseAndAccess.sizeOfCollection 
                                         or !empty termsOfUseAndAccess.studyCompletion
-                                        or termsOfUseAndAccess.fileAccessRequest}"/>
-
+                                        or termsOfUseAndAccess.fileAccessRequest
+                                        }"/>
+    
     <div class="text-right margin-bottom"
          jsf:rendered="#{dataverseSession.user.authenticated and empty editMode and !widgetWrapper.widgetView
                          and permissionsWrapper.canIssueUpdateDatasetCommand(DatasetPage.dataset)}">
@@ -248,13 +249,8 @@
             </div>
         </div>
         <ui:fragment rendered="false">
-        <div class="panel panel-default" jsf:rendered="#{managePage==true or !empty editMode or (datasetPage == true and DatasetPage.restrictedFileCount > 0)
-                                        or toaNotEmpty
-                                        or !empty termsOfUseAndAccess.termsOfAccess
-                                        or !empty termsOfUseAndAccess.dataAccessPlace
-                                        or !empty termsOfUseAndAccess.originalArchive or !empty termsOfUseAndAccess.availabilityStatus 
-                                        or !empty termsOfUseAndAccess.contactForAccess or !empty termsOfUseAndAccess.sizeOfCollection 
-                                        or !empty termsOfUseAndAccess.studyCompletion}">
+       <div class="panel panel-default" jsf:rendered="#{managePage==true or !empty editMode or (datasetPage == true and DatasetPage.restrictedFileCount > 0) 
+                                                        or toaNotEmpty}">
            <div data-toggle="collapse" data-target="#panelCollapseTOA" class="panel-heading text-info">
                <h:outputText value="#{publicStore ? bundle['file.dataFilesTab.terms.list.termsOfAccess.termsOfsAccess'] : bundle['file.dataFilesTab.terms.list.termsOfAccess.header']}"/>
                &#160;<span class="glyphicon glyphicon-chevron-up"/>
