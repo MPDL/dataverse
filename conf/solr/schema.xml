@@ -243,10 +243,6 @@
     <field name="license" type="string" stored="true" indexed="true" multiValued="false"/>
     <field name="fileCount" type="plong" stored="true" indexed="true" multiValued="false"/>
 
-
-    <!-- Added for charFilterMapping -->
-    <field name="authorAffiliation_ss" type="strings_filtered" multiValued="true" stored="true"/>
-
     <!--
         METADATA SCHEMA FIELDS
         Now following: any fields generated from the metadata schemas loaded into Dataverse.
@@ -728,6 +724,8 @@
     <copyField source="authorAffiliation3Department" dest="authorAffiliationDepartment" maxChars="3000"/>
     <copyField source="authorAffiliation3Id" dest="authorAffiliationId" maxChars="3000"/>
     <!-- Dataverse-specific Affiliations Copyfileds for Facets _ss Solr Fields -->
+    <!-- Added for charFilterMapping -->
+    <field name="authorAffiliation_ss" type="affiliation_mapping"/>
     <copyField source="authorAffiliation" dest="authorAffiliation_ss" maxChars="3000"/>
     <copyField source="authorAffiliation2" dest="authorAffiliation_ss" maxChars="3000"/>
     <copyField source="authorAffiliation3" dest="authorAffiliation_ss" maxChars="3000"/>
@@ -851,11 +849,11 @@
     <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true" />
     <fieldType name="strings" class="solr.StrField" sortMissingLast="true" multiValued="true" docValues="true" />
     <!-- Added for charFilterMapping -->
-    <fieldType name="strings_filtered" class="solr.TextField" multiValued="true">
-      <analyzer type="index">
-        <charFilter class="solr.MappingCharFilterFactory" mapping="filter_mapping.txt"/>
-        <tokenizer class="solr.KeywordTokenizerFactory"/>
-      </analyzer>
+    <fieldType name="affiliation_mapping" class="solr.TextField" multiValued="true" indexed="true" stored="true" docValues="false" uninvertible="true">
+        <analyzer type="index">
+            <charFilter class="solr.MappingCharFilterFactory" mapping="filter_mapping.txt"/>
+            <tokenizer class="solr.KeywordTokenizerFactory"/>
+        </analyzer>
     </fieldType>
     <!-- boolean type: "true" or "false" -->
     <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
