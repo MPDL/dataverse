@@ -31,7 +31,7 @@ public class ShibUtil {
      * to always send "eppn" as an attribute, via attribute mappings or what
      * have you.
      */
-    public static final String uniquePersistentIdentifier = "eppn";
+    public static final String uniquePersistentIdentifier = "uid";
     public static final String usernameAttribute = "uid";
     public static final String displayNameAttribute = "cn";
     public static final String firstNameAttribute = "givenName";

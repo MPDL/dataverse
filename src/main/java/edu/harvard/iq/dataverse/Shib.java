@@ -251,6 +251,35 @@ public class Shib implements java.io.Serializable {
         userPersistentId = shibIdp + persistentUserIdSeparator + shibUserIdentifier;
         ShibAuthenticationProvider shibAuthProvider = new ShibAuthenticationProvider();
         AuthenticatedUser au = authSvc.lookupUser(shibAuthProvider.getId(), userPersistentId);
+        //MPDL specific: Retry to find user by its eppn or by its personal number @vw.mpg.de, if uid was not found in database.
+        //This is for the migration of using uid instead of the eppn as primary identifier
+        if(au == null) {
+            //user by eppn
+            String shibUserIdentifierEppn = getValueFromAssertion("eppn");
+            if(shibUserIdentifierEppn != null) {
+                String userPersistentIdEppn = shibIdp + persistentUserIdSeparator + shibUserIdentifierEppn;
+                au = authSvc.lookupUser(shibAuthProvider.getId(), userPersistentIdEppn);
+                if(au != null) {
+                    logger.info("Found user based on shib eppn " + userPersistentIdEppn);
+                }
+            }
+
+            //if still null, user by simulated "other users" eppn  - XXXXX@vw.mpg.de
+            if(au == null) {
+                String userPersistentIdOtherUsersEppn = shibIdp + persistentUserIdSeparator + shibUserIdentifier + "@vw.mpg.de";
+                au = authSvc.lookupUser(shibAuthProvider.getId(), userPersistentIdOtherUsersEppn);
+                if(au != null) {
+                    logger.info("Found user based on simulated eppn " + userPersistentIdOtherUsersEppn);
+                }
+            }
+            if(au != null) {
+                logger.info("Updating persistent id to match uid...");
+                au.getAuthenticatedUserLookup().setPersistentUserId(userPersistentId);
+                authSvc.update(au);
+                logger.info("Updated persistent id to " + userPersistentId);
+            }
+        }
+        //END MPDL specific
         if (au != null) {
             //See if there's another account with this email
             AuthenticatedUser auEmail = authSvc.getAuthenticatedUserByEmail(emailAddress);
