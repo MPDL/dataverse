@@ -112,7 +112,7 @@ public class XmlMetadataTemplateTest {
         df2.setSingleValue("Harvard University");
         alice.setAffiliation(df2);
         alice.setIdType("ORCID");
-        alice.setIdValue("0000-0002-1825-0097");
+        alice.setIdValue("https://orcid.org/0000-0002-1825-0097");
         DatasetAuthor bob = new DatasetAuthor();
         DatasetField df3 = new DatasetField();
         df3.setDatasetFieldType(dft);
@@ -128,7 +128,7 @@ public class XmlMetadataTemplateTest {
         df5.setSingleValue("Harvard University");
         harvard.setName(df5);
         harvard.setIdType("ROR");
-        harvard.setIdValue("03vek6s52");
+        harvard.setIdValue("https://ror.org/03vek6s52");
         DatasetAuthor qdr = new DatasetAuthor();
         DatasetField df6 = new DatasetField();
         df6.setDatasetFieldType(dft);
