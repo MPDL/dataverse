@@ -194,12 +194,6 @@ public class PublishDatasetCommand extends AbstractPublishDatasetCommand<Publish
         if ( ! getUser().isAuthenticated() ) {
             throw new IllegalCommandException("Only authenticated users can release a Dataset. Please authenticate and try again.", this);
         }
-
-        //MPDL-specific change: Only allow publish of datasets which have files attached
-        if(getDataset().getFiles()==null || getDataset().getFiles().isEmpty()) {
-            throw new IllegalCommandException("At least one file is required to publish a dataset.", this);
-        }
-        
         if (getDataset().getLatestVersion().getTermsOfUseAndAccess() == null
                 || (getDataset().getLatestVersion().getTermsOfUseAndAccess().getLicense() == null 
                 && StringUtil.isEmpty(getDataset().getLatestVersion().getTermsOfUseAndAccess().getTermsOfUse()))) {
