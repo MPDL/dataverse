@@ -1,28 +1,27 @@
 #metadataBlock	name	dataverseAlias	displayName	blockURI												
 	citation		Citation Metadata	https://dataverse.org/schema/citation/												
 #datasetField	name	title	description	watermark	 fieldType	displayOrder	displayFormat	advancedSearchField	allowControlledVocabulary	allowmultiples	facetable	displayoncreate	required	parent	metadatablock_id	termURI
-	curationLevel	Curation Level	To Do		text	0		FALSE	TRUE	FALSE	TRUE	TRUE	TRUE		citation	
-	title	Title	The main title of the Dataset		text	1		TRUE	FALSE	FALSE	FALSE	TRUE	TRUE		citation	http://purl.org/dc/terms/title
-	subtitle	Subtitle	A secondary title that amplifies or states certain limitations on the main title		text	2		FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation	
-	alternativeTitle	Alternative Title	Either 1) a title commonly used to refer to the Dataset or 2) an abbreviation of the main title		text	3		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	http://purl.org/dc/terms/alternative
-	alternativeURL	Alternative URL	Another URL where one can view or access the data in the Dataset, e.g. a project or personal webpage	https://	url	4	"<a href=""#VALUE"" target=""_blank"">#VALUE</a>"	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation	https://schema.org/distribution
-	otherId	Other Identifier	Another unique identifier for the Dataset (e.g. producer's or another repository's identifier)		none	5	:	FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	
-	otherIdAgency	Agency	The name of the agency that generated the other identifier		text	6	#VALUE	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	otherId	citation	
-	otherIdValue	Identifier	Another identifier uniquely identifies the Dataset		text	7	#VALUE	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	otherId	citation	
-	author	Author	The person(s) responsible for creating the work		none	8	";"	FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation	http://purl.org/dc/terms/creator
-	authorName	Name	The author's family name, given name	Family name, Given name	text	9	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	TRUE	author	citation	
-	authorIdentifier	ORCID	Uniquely identifies an individual author	https://orcid.org/0000-0000-0000-0000	URL	10	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	http://purl.org/spar/datacite/AgentIdentifier
-	authorAffiliation	Organization	The organization with which the author is affiliated	Type for autosuggest...	text	11	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	TRUE	author	citation	
-	authorAffiliationId	ROR ID	Uniquely identifies an organization.	https://ror.org/000000000	URL	12	<a href=#VALUE>#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
-	authorAffiliationDepartment	Department/Group	The department or group with which the author is affiliated within the organization.		text	13	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	https://schema.org/department
-	authorAffiliation2	2. Organization	The organization with which the author is affiliated.	Type for autosuggest...	text	14	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
-	authorAffiliation2Id	2. ROR ID	Uniquely identifies an organization.	https://ror.org/000000000	URL	15	<a href=#VALUE>#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
-	authorAffiliation2Department	2. Department/Group	The department or group with which the author is affiliated within the organization.		text	16	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	https://schema.org/department
-	authorAffiliation3	3. Organization	The organization with which the author is affiliated.	Type for autosuggest...	text	17	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
-	authorAffiliation3Id	3. ROR ID	Uniquely identifies an organization.	https://ror.org/000000000	URL	18	<a href=#VALUE>#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
-	authorAffiliation3Department	3. Department/Group	The department or group with which the author is affiliated within the organization.		text	19	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	https://schema.org/department
-	datasetContact	Contact	The entity, e.g. a person or organization, that users of the Dataset can contact with questions		none	20		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation	
-	datasetContactEmail	E-mail	The e-mail address(es) of the contact(s) for the Dataset. This will not be displayed	name@email.xyz	email	21	#EMAIL	FALSE	FALSE	FALSE	FALSE	TRUE	TRUE	datasetContact	citation	
+	title	Title	The main title of the Dataset		text	0		TRUE	FALSE	FALSE	FALSE	TRUE	TRUE		citation	http://purl.org/dc/terms/title
+	subtitle	Subtitle	A secondary title that amplifies or states certain limitations on the main title		text	1		FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation	
+	alternativeTitle	Alternative Title	Either 1) a title commonly used to refer to the Dataset or 2) an abbreviation of the main title		text	2		FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	http://purl.org/dc/terms/alternative
+	alternativeURL	Alternative URL	Another URL where one can view or access the data in the Dataset, e.g. a project or personal webpage	https://	url	3	"<a href=""#VALUE"" target=""_blank"">#VALUE</a>"	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE		citation	https://schema.org/distribution
+	otherId	Other Identifier	Another unique identifier for the Dataset (e.g. producer's or another repository's identifier)		none	4	:	FALSE	FALSE	TRUE	FALSE	FALSE	FALSE		citation	
+	otherIdAgency	Agency	The name of the agency that generated the other identifier		text	5	#VALUE	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	otherId	citation	
+	otherIdValue	Identifier	Another identifier uniquely identifies the Dataset		text	6	#VALUE	FALSE	FALSE	FALSE	FALSE	FALSE	FALSE	otherId	citation	
+	author	Author	The person(s) responsible for creating the work		none	7	";"	FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation	http://purl.org/dc/terms/creator
+	authorName	Name	The author's family name, given name	Family name, Given name	text	8	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	TRUE	author	citation	
+	authorIdentifier	ORCID	Uniquely identifies an individual author	https://orcid.org/0000-0000-0000-0000	URL	9	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	http://purl.org/spar/datacite/AgentIdentifier
+	authorAffiliation	Organization	The organization with which the author is affiliated	Type for autosuggest...	text	10	#VALUE	TRUE	FALSE	FALSE	TRUE	TRUE	TRUE	author	citation	
+	authorAffiliationId	ROR ID	Uniquely identifies an organization.	https://ror.org/000000000	URL	11	<a href=#VALUE>#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
+	authorAffiliationDepartment	Department/Group	The department or group with which the author is affiliated within the organization.		text	12	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	https://schema.org/department
+	authorAffiliation2	2. Organization	The organization with which the author is affiliated.	Type for autosuggest...	text	13	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
+	authorAffiliation2Id	2. ROR ID	Uniquely identifies an organization.	https://ror.org/000000000	URL	14	<a href=#VALUE>#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
+	authorAffiliation2Department	2. Department/Group	The department or group with which the author is affiliated within the organization.		text	15	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	https://schema.org/department
+	authorAffiliation3	3. Organization	The organization with which the author is affiliated.	Type for autosuggest...	text	16	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
+	authorAffiliation3Id	3. ROR ID	Uniquely identifies an organization.	https://ror.org/000000000	URL	17	<a href=#VALUE>#VALUE</a>	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	
+	authorAffiliation3Department	3. Department/Group	The department or group with which the author is affiliated within the organization.		text	18	#VALUE	FALSE	FALSE	FALSE	FALSE	TRUE	FALSE	author	citation	https://schema.org/department
+	datasetContact	Contact	The entity, e.g. a person or organization, that users of the Dataset can contact with questions		none	19		FALSE	FALSE	TRUE	FALSE	TRUE	TRUE		citation	
+	datasetContactEmail	E-mail	The e-mail address(es) of the contact(s) for the Dataset. This will not be displayed	name@email.xyz	email	20	#EMAIL	FALSE	FALSE	FALSE	FALSE	TRUE	TRUE	datasetContact	citation	
 	dsDescription	Description	A summary describing the purpose, nature, and scope of the Dataset		none	22		FALSE	FALSE	TRUE	FALSE	TRUE	FALSE		citation	
 	dsDescriptionValue	Text	A summary describing the purpose, nature, and scope of the Dataset		textbox	23	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	dsDescription	citation	http://purl.org/dc/terms/description
 	subject	Subject	Domain-specific Subject Categories that are topically relevant to the Dataset		text	24		TRUE	TRUE	TRUE	TRUE	TRUE	FALSE		citation	http://purl.org/dc/terms/subject
@@ -88,6 +87,7 @@
 	geolocationLatitude	Latitude	Latitude (-90 to 90)		float	84	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	
 	geolocationLongitude	Longitude	Longitude (-180 to 180)		float	85	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	
 	geolocationDescription	Description	Additional information like the named place or the altitude of the geolocation.		textbox	86	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	http://purl.org/dc/terms/coverage
+	curationLevel	Curation Level	To Do		text	87		FALSE	TRUE	FALSE	TRUE	TRUE	FALSE		citation	
 #controlledVocabulary	DatasetField	Value	identifier	displayOrder												
 	subject	Humanities		0												
 	subject	Social and Behavioural Sciences		1												
