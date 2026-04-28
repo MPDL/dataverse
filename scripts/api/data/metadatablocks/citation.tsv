@@ -87,7 +87,7 @@
 	geolocationLatitude	Latitude	Latitude (-90 to 90)		float	84	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	
 	geolocationLongitude	Longitude	Longitude (-180 to 180)		float	85	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	
 	geolocationDescription	Description	Additional information like the named place or the altitude of the geolocation.		textbox	86	#VALUE	TRUE	FALSE	FALSE	FALSE	TRUE	FALSE	geolocation	citation	http://purl.org/dc/terms/coverage
-	curationLevel	Curation Level	To Do		text	87		FALSE	TRUE	FALSE	TRUE	TRUE	FALSE		citation	
+	curationLevel	Curation Level	Curation level of the dataset. See help page Data_Usage for more information.		text	87		FALSE	TRUE	FALSE	TRUE	TRUE	FALSE		citation
 #controlledVocabulary	DatasetField	Value	identifier	displayOrder												
 	subject	Humanities		0												
 	subject	Social and Behavioural Sciences		1												
