@@ -265,8 +265,8 @@ public class Shib implements java.io.Serializable {
             }
             if(au != null) {
                 logger.info("Updating persistent id to match uid...");
+                authSvc.updateProvider(au, shibAuthProvider.getId(), userPersistentId);
                 au.getAuthenticatedUserLookup().setPersistentUserId(userPersistentId);
-                authSvc.update(au);
                 logger.info("Updated persistent id to " + userPersistentId);
             }
         }
