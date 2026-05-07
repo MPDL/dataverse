@@ -312,6 +312,6 @@
 	studyType	derived/compiled		3												
 	studyType	survey		4												
 	studyType	other		5												
-	curationLevel	Preliminary Review	preliminary	2												
-	curationLevel	Basic Review	basic	0												
-	curationLevel	Enhanced Review	enhanced	1												
+	curationLevel	PreliminaryReview	preliminary	2
+	curationLevel	BasicReview	basic	0
+	curationLevel	EnhancedReview	enhanced	1
