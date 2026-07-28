@@ -786,7 +786,11 @@ public class SettingsServiceBean {
         // JSON specification of the targets to send announcements to
         COARNotifyRelationshipAnnouncementTargets,
         // Configurable delay between harvesting calls, when required to avoid triggering rate limits
-        HarvestingClientCallRateLimit
+        HarvestingClientCallRateLimit,
+
+        //MPDL-Specific
+        ApplicationTermsOfUseUrl,
+        ApplicationDisclaimerUrl
         ;
 
         @Override
