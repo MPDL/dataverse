@@ -402,11 +402,11 @@
     <!--Maven checks for dependencies from these repos in the order shown in the pom.xml
         This isn't well documented and seems to change between maven versions -MAD 4.9.4 -->
     <repositories>
-	    <repository>
-            <id>central-repo</id>
-            <name>Central Repository</name>
-            <url>https://repo1.maven.org/maven2</url>
-            <layout>default</layout>
+	<!-- this is TEMPORARY, adding local repository, in order to build with a custom version of xoai -->
+	<repository>
+            <id>dvn.private</id>
+            <name>Local repository for hosting jars not available from network repositories.</name>
+            <url>file://${project.basedir}/local_lib</url>
         </repository>
         <repository>
             <id>payara-nexus-artifacts</id>
@@ -418,6 +418,12 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>central-repo</id>
+            <name>Central Repository</name>
+            <url>https://repo1.maven.org/maven2</url>
+            <layout>default</layout>
         </repository>
         <repository>
             <id>prime-repo</id>
@@ -442,12 +448,6 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-        </repository>
-        <!-- this is TEMPORARY, adding local repository, in order to build with a custom version of xoai -->
-        <repository>
-            <id>dvn.private</id>
-            <name>Local repository for hosting jars not available from network repositories.</name>
-            <url>file://${project.basedir}/local_lib</url>
         </repository>
         <!-- Uncomment when using snapshot releases from Maven Central -->
         <!--
